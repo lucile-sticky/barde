@@ -93,8 +93,7 @@
             </div>
             <div>
                 <h2><%= user.alias %></h2>
-                <span class='number'>132</span><span><% gt "songs submitted" %></span>
-                <span class='number'>30</span><span><% gt "comments posted" %></span>
+                <span class='number'><%= user.proposedSongs.size() %></span><span><% gt "songs submitted" %></span>
             </div>
             <div class='logout'>
                 <form action="<% url "/login" %>">
