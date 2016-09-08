@@ -68,7 +68,7 @@
                                 <%= song.playlist.name %>
                             </a>
                         <% else %>
-                            <span style="text-decoration: line-through" title="<%= song.playlist.name%>">
+                            <span style="opacity: 0.35" title="<%= song.playlist.name%>">
                                 <%= song.playlist.name %>
                             </span>
                         <% end %>
@@ -88,7 +88,7 @@
             <div>
                 <div class='avatar'>
                     <div>Click to <br> change :) </div>
-                    <img src='http://www.unamourdechat.com/images/Chatons/e471188b-2ca5-4af2-8d34-57b0c2a615a4-ChatonsSmall.jpg' alt='avatar'>
+                    <img src='<%= mediaRootUrl %>/images/default-user.jpg' alt='avatar'>
                 </div>
             </div>
             <div>
