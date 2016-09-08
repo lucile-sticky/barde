@@ -1,0 +1,45 @@
+<% c++ #include <data/login.h> %>
+<% skin pasta %>
+<% view login uses data::PageLogin extends master %>
+
+<% template pageJs() %>
+<% include master::pageJs() %>
+<script type="text/javascript" src="<%= mediaRootUrl %>/js/views/login.js"></script>
+<% end %>
+
+<% template header() %>
+<% end template %>
+
+<% template pageContent() %>
+    <div id='login-background'>
+
+    <% if user.isAuthenticated %>
+        <p>Welcome <%= user.alias %></p>
+        <p>
+            You want to click here:
+            <br />
+            <a href='<% url "/playlist" %>'>Current playlist</a>
+        </p>
+    <% else %>
+        <img class='loader' src="<%= mediaRootUrl %>/images/loader.svg" width="80" alt="">
+        <div id='login-wrapper'>
+            <div class='title'>
+                <div class='logo'>
+                    <img src="<%= mediaRootUrl %>/images/logo.svg"
+                            alt="<% include title() %>" />
+                </div>
+                <h1><% include title() %></h1>
+            </div>
+
+            <form method="post">
+            <% include alerts() %>
+            <% form as_p input %>
+            </form>
+        </div>
+    <% end %>
+
+    </div>
+<% end template %>
+
+<% end view %>
+<% end skin %>

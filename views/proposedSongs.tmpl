@@ -1,0 +1,76 @@
+<% c++ #include <data/song.h> %>
+<% skin pasta %>
+<% view proposedSongs uses data::AdminPageSong extends master %>
+
+<% template pageCss() %>
+<% include master::pageCss() %>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/jq-2.2.0,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.11,af-2.1.1,b-1.1.2,b-colvis-1.1.2,b-html5-1.1.2,b-print-1.1.2,cr-1.3.1,fc-3.2.1,fh-3.1.1,r-2.0.2,rr-1.1.1,se-1.1.2/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" href="<%= mediaRootUrl %>/css/song/proposed.css" />
+<% end %>
+
+<% template pageJs() %>
+<% include master::pageJs() %>
+<script type="text/javascript" src="https://cdn.datatables.net/t/bs/jq-2.2.0,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.11,af-2.1.1,b-1.1.2,b-colvis-1.1.2,b-html5-1.1.2,b-print-1.1.2,cr-1.3.1,fc-3.2.1,fh-3.1.1,r-2.0.2,rr-1.1.1,se-1.1.2/datatables.min.js"></script>
+<script type="text/javascript" src="<%= mediaRootUrl %>/js/song/proposed.js"></script>
+<% end %>
+
+<% template pageContent() %>
+<h2><% include title() %></h2>
+
+<% foreach song in pendingSongs %>
+<article id="proposed-songs">
+    <h4><% gt "Proposed songs waiting for assignation to a playlist" %></h4>
+    <table class="table" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Song</th>
+            <th>Artist</th>
+            <th></th>
+            <th>Proposer</th>
+            <th>Playlist</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% item %>
+        <tr>
+            <td><%= song.id %></td>
+            <td>
+                <a href="<% url "/song" %>/edit/<%= song.id %>"
+                        target="_blank"
+                        title="<% gt "Modify song {1}" using song.title %>" >
+                    <%= song.title %>
+                </a>
+            </td>
+            <td><%= song.artist %></td>
+            <td>
+                <a href="<%= song.url %>" alt="<%= song.url %>"
+                        target="_blank"
+                        title="<% gt "Watch {1} video clip" using song.title %>" >
+                    <span class="glyphicon glyphicon-film"></span>
+                </a>
+            </td>
+            <td><%= song.proposer %></td>
+            <td>
+                <select class="choose-playlist" data-song-id="<%= song.id %>" >
+                    <% foreach playlist in comingPlaylists %>
+                    <option value="0"></option>
+                        <% item %>
+                        <option value="<%= playlist.id %>">
+                            <%= playlist.name %> (<%= playlist.nbSongs %>)
+                        </option>
+                        <% end %>
+                    <% end foreach %>
+                </select>
+            </td>
+        </tr>
+        <% end %>
+        </tbody>
+    </table>
+</article>
+<% end foreach %>
+
+<% end template %>
+
+<% end view %>
+<% end skin %>

@@ -1,0 +1,18 @@
+<% c++ #include <data/playlist.h> %>
+<% skin pasta %>
+<% view playlistHtml5 uses data::Playlist extends playlist %>
+
+<% template pageJs() %>
+<% include playlist::pageJs() %>
+<script type="text/javascript" src="<%= mediaRootUrl %>/js/simple-player.js"></script>
+<% end %>
+
+<% template player() %>
+    <audio style="width:100%" preload="auto" tabindex="0" controls="true" autoplay="false">
+        <source src="">
+        Can not play the playlist, your browser does not support HTML5.
+    </audio>
+<% end template %>
+
+<% end view %>
+<% end skin %>

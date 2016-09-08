@@ -1,0 +1,162 @@
+/****** DESCRIPTION DE LA PLAYLIST ******/
+
+/* Stucture */
+.playlist-wrapper {
+    .description {
+        display: table;
+        width: 100%;
+
+        > div {
+            display: table-cell;
+            vertical-align: top;
+        }
+
+        > div:nth-child(1) {
+            width: 120px;
+            text-align: left;
+        }
+
+        > div:nth-child(2) {
+            text-align: left;
+        }
+
+        > div:nth-child(3) {
+            text-align: right;
+        }
+    }
+}
+
+/* Image  */
+.playlist-wrapper .description > div:nth-child(1) {
+    img {
+        @include border-radius(4px);
+        width: 100px;
+    }
+}
+
+/* Titre + nombre de musique + date + note  */
+.playlist-wrapper .description > div:nth-child(2) {
+    width: 200px;
+
+    h2 {
+        margin-bottom: 10px;
+    }
+
+    > span {
+        font-size: 16px;
+        font-weight: 300;
+        color: white;
+
+        &.date {
+            text-transform: capitalize;
+        }
+
+        &.nb-song:before {
+            margin: 0 10px;
+            content: '•';
+        }
+    }
+
+    .rating-wrapper {
+        margin-top: 10px;
+        [class*='flaticon-'] {
+            font-size: 24px;
+            cursor: pointer;
+
+            & + [class*='flaticon-'] {
+                margin-left: 6px;
+            }
+        }
+
+        .rating {
+            font-size: 20px;
+            color: $light-contrast-color;
+
+            &:before {
+                margin: 0 10px;
+                content: '•';
+            }
+        }
+    }
+}
+
+/* Texte descriptif  */
+.playlist-wrapper .description > div:nth-child(3) {
+    padding-left: 20px;
+    font-size: 14px;
+    color: $light-contrast-color;
+    border-left: 2px solid $medium-contrast-color;
+    text-align: left;
+    text-align: justify;
+}
+
+
+/****** TABLEAU DES MORCEAUX ******/
+
+.tracks {
+    width: 100%;
+    margin-top: 40px;
+    font-size: 16px;
+    table-layout: fixed;
+    color: white;
+    border-top: 1px solid $medium-contrast-color;
+    counter-reset: section;
+
+    .num-song:before {
+        color: $light-contrast-color;
+        content: counter(section);
+        counter-increment: section;
+    }
+
+    [class*='flaticon-'] {
+        font-size: 22px;
+        cursor: pointer;
+
+        & + [class*='flaticon-'] {
+            margin-left: 8px;
+        }
+
+        &:hover {
+            color: $primary-color;
+        }
+    }
+
+    tbody tr {
+        height: 40px;
+        border-bottom: 1px solid $medium-contrast-color;
+
+        &:hover {
+            background: $medium-contrast-color;
+        }
+    }
+
+    tr.selected {
+        background: $medium-contrast-color;
+
+        td:not(.secondary-information) {
+            color: $primary-color;
+        }
+
+        .flaticon-play {
+            font-size: 14px;
+            color: $primary-color;
+        }
+
+        a {
+            color: $primary-color;
+        }
+    }
+
+    td {
+        vertical-align: middle;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        padding: 0 5px;
+    }
+
+    td.secondary-information {
+        color: $light-contrast-color;
+        text-align: center;
+    }
+}

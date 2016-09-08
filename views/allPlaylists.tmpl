@@ -1,0 +1,43 @@
+<% c++ #include <data/playlist.h> %>
+<% skin pasta %>
+<% view allPlaylists uses data::AllPlaylists extends master %>
+
+<% template pageJs() %>
+<% include master::pageJs() %>
+<% end %>
+
+<% template pageContent() %>
+    <div class="content-wrap">
+        <section id="section-linebox-2" class="content-current">
+        <% foreach playlist in playlists %>
+            <div id='gallery-playlist'>
+            <% item %>
+                <div class='item'>
+                    <div>
+                        <a href='<% url "/playlist" %>/<%= playlist.id %>'>
+                            <span class='flaticon-play'></span>
+                            <div class='description'>
+                            <% if empty playlist.description %>
+                                <% gt "Playlist with bitter sweet old fashion songs ! Perfect for coding ! ;)" %>
+                            <% else %>
+                                <%= playlist.description %>
+                            <% end %>
+                            </div>
+                        </a>
+                    </div>
+                    <div>
+                        <img src='<%= mediaRootUrl %><%= playlist.image %>' />
+                        <h3><%= playlist.name %></h3>
+                        <span class="date"><%= playlist.publication | strftime("%d %B %Y") %></span>
+                        <span class='nb-tracks'><%= playlist.nbSongs %> <% gt "tracks" %></span>
+                    </div>
+                </div>
+            <% end %>
+            </div>
+        <% end foreach %>
+        </section>
+    </div>
+<% end %>
+
+<% end view %>
+<% end skin %>

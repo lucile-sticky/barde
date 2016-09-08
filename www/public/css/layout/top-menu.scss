@@ -1,0 +1,178 @@
+header {
+    display: table;
+    width: 100%;
+    height: 60px;
+    font-size: 0;
+    background: white;
+
+    .logo,
+    .title,
+    nav,
+    .propose-song,
+    #open-profile {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .logo {
+        width: 100px;
+        text-align: center;
+
+        img {
+            height: 60px;
+        }
+    }
+
+    .title {
+        width: 250px;
+
+        h1 {
+            position: relative;
+            top: -3px;
+            margin: 0 20px;
+            line-height: 58px;
+        }
+    }
+
+    nav {
+        font-family: $secondary-font;
+        font-size: 14px;
+        line-height: 58px;
+        text-transform: uppercase;
+
+        ul li {
+            -webkit-flex: none;
+                    flex: none;
+        }
+
+        a {
+            color: $medium-contrast-color;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        a:hover,
+        a:focus {
+            color: $primary-color;
+        }
+        li.tab-current a {
+            color: #ffffff;
+        }
+
+        a::after {
+            z-index: -1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            content: '';
+            -webkit-transition: background-color 0.3s, -webkit-transform 0.3s;
+                    transition: background-color 0.3s, transform 0.3s;
+            -webkit-transition-timing-function: ease, cubic-bezier(0.7,0,0.3,1);
+                    transition-timing-function: ease, cubic-bezier(0.7,0,0.3,1);
+            -webkit-transform: translate3d(0,100%,0) translate3d(0,-3px,0);
+                    transform: translate3d(0,100%,0) translate3d(0,-3px,0);
+        }
+
+        li.tab-current a::after {
+            -webkit-transform: translate3d(0,0,0);
+                    transform: translate3d(0,0,0);
+        }
+
+        a:hover::after,
+        a:focus::after,
+        li.tab-current a::after {
+            background: $primary-color;
+        }
+    }
+
+    .propose-song {
+        width: 200px;
+        padding-right: 20px;
+        text-align: right;
+        position: relative;
+
+        > button {
+            position: relative;
+            height: 40px;
+            padding: 0 20px 0 50px;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            border: none;
+            background: $primary-color;
+            cursor: pointer;
+            text-transform: uppercase;
+
+            @include border-radius(4px);
+
+            &:before {
+                position: absolute;
+                top: 7px;
+                left: 13px;
+                font-size: 26px;
+            }
+
+            &:hover {
+                background-color: lighten($primary-color, 7%);
+            }
+
+            &:focus {
+                outline: none;
+            }
+
+            &:active {
+                outline: none;
+                background-color: darken($primary-color, 7%);
+
+                @include box-shadow(inset 0 1px 3px 0 rgba(0,0,0,0.3));
+            }
+        }
+    }
+
+    #open-profile {
+        position: relative;
+        width: 180px;
+        padding-left: 20px;
+        transition: all 0.5s ease;
+
+        &:hover {
+            background: $primary-color;
+            cursor: pointer;
+
+            &:before,
+            h3 {
+                color: white;
+            }
+        }
+
+        &:after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
+            width: 1px;
+            height: 100%;
+            background: $light-contrast-color;
+            content: '';
+        }
+
+        &:before {
+            position: absolute;
+            top: 25px;
+            right: 20px;
+            display: block;
+            font-size: 10px;
+            width: 10px;
+            height: 10px;
+            color: $primary-color;
+        }
+
+        span {
+            font-size: 14px;
+            font-weight: 300;
+            color: $light-contrast-color;
+        }
+    }
+}

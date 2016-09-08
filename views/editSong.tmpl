@@ -1,0 +1,15 @@
+<% c++ #include <data/song.h> %>
+<% skin pasta %>
+<% view editSong uses data::PageEditSong extends master %>
+
+<% template pageContent() %>
+<h2><% include title() %></h2>
+<article id="edit-song">
+    <form method="post">
+    <% form as_p input %>
+    </form>
+</article>
+<% end template %>
+
+<% end view %>
+<% end skin %>

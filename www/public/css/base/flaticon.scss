@@ -1,0 +1,61 @@
+    /*
+    Flaticon icon font: Flaticon
+    Creation date: 01/07/2016 11:24
+    */
+
+    @font-face {
+  font-family: "Flaticon";
+  src: url("../font-flaticon/Flaticon.eot");
+  src: url("../font-flaticon/Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("../font-flaticon/Flaticon.woff") format("woff"),
+       url("../font-flaticon/Flaticon.ttf") format("truetype"),
+       url("../font-flaticon/Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+[class*='flaticon-']:before {
+    display: inline-block;
+    font-family: 'Flaticon';
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+    line-height: 1;
+    text-decoration: inherit;
+    text-transform: none;
+
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+            font-smoothing: antialiased;
+}
+
+
+    .flaticon-arrows:before { content: "\f100"; }
+.flaticon-big-play-button:before { content: "\f101"; }
+.flaticon-music:before { content: "\f102"; }
+.flaticon-music-player-pause-lines:before { content: "\f103"; }
+.flaticon-play:before { content: "\f104"; }
+.flaticon-previous-track:before { content: "\f105"; }
+.flaticon-sad-face-in-rounded-square:before { content: "\f106"; }
+.flaticon-send-symbol:before { content: "\f107"; }
+.flaticon-shapes:before { content: "\f108"; }
+.flaticon-square:before { content: "\f109"; }
+
+    $font-Flaticon-arrows: "\f100";
+    $font-Flaticon-big-play-button: "\f101";
+    $font-Flaticon-music: "\f102";
+    $font-Flaticon-music-player-pause-lines: "\f103";
+    $font-Flaticon-play: "\f104";
+    $font-Flaticon-previous-track: "\f105";
+    $font-Flaticon-sad-face-in-rounded-square: "\f106";
+    $font-Flaticon-send-symbol: "\f107";
+    $font-Flaticon-shapes: "\f108";
+    $font-Flaticon-square: "\f109";

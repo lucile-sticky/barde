@@ -1,0 +1,132 @@
+<% c++ #include <data/playlist.h> %>
+<% skin pasta %>
+<% view playlist uses data::Playlist extends master %>
+
+<% template pageJs() %>
+<% include master::pageJs() %>
+<script type="text/javascript" src="<%= mediaRootUrl %>/js/vote-playlist.js"></script>
+<% end %>
+
+<% template player() %>
+Missing player!
+<% end %>
+
+<% template pageContent() %>
+    <div class="content-wrap">
+        <section id="section-linebox-1" class="content-current">
+            <div class='playlist-wrapper' id='js-playlist' data-id='<%= id %>'>
+                <div class='description'>
+                    <div>
+                    <% if not empty image %>
+                        <img class="img-thumbnail" src="<%= mediaRootUrl %><%= image %>" />
+                    <% end %>
+                    </div>
+                    <div>
+                        <h2><% include title() %></h2>
+                        <span class="date"><%= publication | strftime("%B %Y") %></span>
+                        <span class='nb-song'><%= songs.size() %> <% gt "tracks" %></span>
+                        <% if not votesEnabled %>
+                        <% elif ( content.user.level >= content.user.CITIZEN ) %>
+                        <div class='rating-wrapper'>
+                            <span id='js-pl-like'
+                                class='flaticon-square <% if vote.isLike() %>selected<% end %>'
+                                title='<% gt "I like {1}" using name %>'></span>
+                            <span id='js-pl-dislike'
+                                class='flaticon-sad-face-in-rounded-square <% if vote.isDislike() %>selected<% end %>'
+                                title="<% gt "I don't like {1}" using name %>"></span>
+                        </div>
+                        <% end %>
+                    </div>
+                    <div>
+                    <% if empty description %>
+                        <% gt "This playlist is about love and passion." %>
+                    <% else %>
+                        <%= description %>
+                    <% end %>
+                    </div>
+                </div>
+
+                <% include player() %>
+
+                <table class='tracks' id='js-songs'>
+                    <thead>
+                        <tr>
+                            <td style='width: 60px;'></td>
+                            <td style='width: 60px;'></td>
+                            <td style='width: 30%;'></td>
+                            <td style='width: 30%;'></td>
+                            <td style='width: 15%;'></td>
+                            <td style='width: 15%;'></td>
+                            <% if ( content.user.level >= content.user.ADMINISTRATOR ) %>
+                            <td style='width: 60px;'></td>
+                            <% end %>
+                            <td style='width: 15%;'></td>
+                            <% if not votesEnabled %>
+                            <td style='width: 60px;'></td>
+                            <% elif ( content.user.level >= content.user.CITIZEN ) %>
+                            <td style='width: 30px;'></td>
+                            <td style='width: 30px;'></td>
+                            <% end %>
+                        </tr>
+                    </thead>
+                    <% foreach song in songs %>
+                    <tbody>
+                        <% item %>
+                        <tr>
+                            <td class='selectable secondary-information'><span class='num-song'></span></td>
+                            <td class='selectable play'><span /></td>
+                            <td class='selectable'>
+                                <a class="js-song" href="<%= mediaRootUrl %><%= song.file %>">
+                                    <%= song.title %>
+                                </a>
+                            </td>
+                            <td class='selectable'><%= song.artist %></td>
+                            <td class='selectable secondary-information duration'>--:--</td>
+                            <td class='selectable secondary-information'>Anonymous</td>
+                            <% if ( content.user.level >= content.user.ADMINISTRATOR ) %>
+                            <td class='secondary-information'>
+                                <a href="<% url "/song" %>/edit/<%= song.id %>"
+                                        target="_blank"
+                                        title="<% gt "Modify song {1}" using song.title %>" >
+                                    <span><small>EDIT</small></span>
+                                </a>
+                            </td>
+                            <% end %>
+                            <td class='secondary-information'>
+                            <% if empty song.url %>
+                            <% elif song.showVideo %>
+                                <a class='js-show-video' target="_blank" href="<%= song.url %>" alt="<%= song.url %>"
+                                        title="<% gt "Watch {1} video clip" using song.title %>" >
+                                    <span class='flaticon-big-play-button'></span>
+                                </a>
+                            <% end %>
+                            </td>
+                            <% if not votesEnabled %>
+                            <td class='selectable secondary-information'>
+                                <span title='<% gt "Total song votes + (playlist votes)/2 = {1,num=fix,p=1}" using song.vote.totalValues %>'>
+                                    <% gt "{1,num=fix,p=1}" using song.vote.totalValues %>
+                                </span>
+                            </td>
+                            <% elif ( content.user.level >= content.user.CITIZEN ) %>
+                            <td class='secondary-information' data-id='<%= song.id %>'>
+                                <span class='flaticon-square js-song-like <% if song.vote.isLike() %>selected<% end %>'
+                                        title='<% gt "I like {1}" using song.title %>'></span>
+                            </td>
+                            <td class='secondary-information' data-id='<%= song.id %>'>
+                                <span class='flaticon-sad-face-in-rounded-square js-song-dislike <% if song.vote.isDislike() %>selected<% end %>'
+                                        title="<% gt "I don't like {1}" using song.title %>"></span>
+                            </td>
+                            <% end %>
+                        </tr>
+                        <% end %>
+                    </tbody>
+                    <% end foreach %>
+                </table>
+
+            </div>
+        </section>
+    </div>
+<% end %>
+
+<% end view %>
+<% end skin %>

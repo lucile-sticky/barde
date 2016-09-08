@@ -1,0 +1,120 @@
+#login-background {
+    background: url('../images/bg-login.jpg') no-repeat center fixed;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+}
+
+.loader {
+    position: absolute;
+    top: 50%;
+    left: calc(50% - 40px);
+    -moz-transform: translateY(-50%);
+         transform: translateY(-50%);
+}
+
+#login-wrapper {
+    position: absolute;
+    top: 50%;
+    left: calc(50% - 250px);
+    display: table;
+    width: 500px;
+    height: 333px;
+    background: white;
+    -moz-transform: translateY(-50%);
+         transform: translateY(-50%);
+
+    @include border-radius(4px);
+    @include box-shadow(0 1px 10px 0 rgba(black, 0.50));
+}
+
+#login-wrapper .title {
+
+    height: 80px;
+    display: table;
+    margin: 0 auto;
+
+    .logo {
+        text-align: right;
+        display: table-cell;
+        vertical-align: middle;
+        padding-right: 10px;
+
+        img {
+            height: 80px;
+        }
+    }
+
+    h1 {
+        padding-left: 10px;
+        text-align: left;
+        display: table-cell;
+        vertical-align: middle;
+    }
+}
+
+#login-wrapper form {
+    width: 80%;
+    margin: 20px auto;
+
+    p:not(:last-child) {
+        border-bottom: 1px solid $primary-color;
+    }
+
+    p:last-child {
+        text-align: center;
+    }
+
+    p {
+        label {
+            color: $light-contrast-color;
+            padding: 10px 0;
+            display: inline-block;
+            width: 150px;
+            font-size: 15px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        input {
+            border: none;
+            font-size: 14px;
+            color: $dark-contrast-color;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        input.validation-button {
+            width: 200px;
+            height: 40px;
+            border: none;
+            background: $primary-color;
+            @include border-radius(4px);
+            cursor: pointer;
+            color: white;
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 600;
+
+            &:hover {
+                background-color: lighten($primary-color, 7%);
+            }
+
+            &:focus {
+                outline: none;
+            }
+
+            &:active {
+                outline: none;
+                @include box-shadow(inset 0 1px 3px 0 rgba(0,0,0,0.3));
+                background-color: darken($primary-color, 7%);
+            }
+        }
+
+        + p {
+            margin-top: 40px;
+        }
+    }
+}

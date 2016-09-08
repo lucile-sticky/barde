@@ -1,0 +1,45 @@
+#section-linebox-1 {
+    display: flex;
+
+    justify-content: space-between;
+
+    .playlist-wrapper,
+    .comments-wrapper {
+        overflow-y: auto;
+        height: calc(100vh - 180px);
+        margin: 40px 20px 40px 0;
+        padding-right: 20px;
+        padding-left: 40px;
+    }
+
+    .playlist-wrapper {
+        width: 70%;
+
+        flex-grow: 1;
+    }
+
+    .comments-wrapper {
+        width: 30%;
+    }
+}
+
+
+
+.comments-wrapper::-webkit-scrollbar-track,
+.playlist-wrapper::-webkit-scrollbar-track, {
+    width: 10px;
+    border-radius: 2px;
+    background-color: #111111;
+}
+
+.comments-wrapper::-webkit-scrollbar,
+.playlist-wrapper::-webkit-scrollbar {
+    width: 4px;
+}
+
+.comments-wrapper::-webkit-scrollbar-thumb,
+.playlist-wrapper::-webkit-scrollbar-thumb {
+    width: 4px;
+    border-radius: 2px;
+    background-color: $light-contrast-color;
+}

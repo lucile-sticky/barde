@@ -1,0 +1,11 @@
+*~
+*.bak
+*.css
+_*
+
+.sass-cache
+build
+tmp
+
+www/public/img/playlists/*100x100.png
+www/public/media

@@ -1,0 +1,51 @@
+// Vendor prefixing for shorthand properties
+@mixin vendor-prefixes($property, $value) {
+    -webkit-#{$property}: $value;
+    -moz-#{$property}: $value;
+    -ms-#{$property}: $value;
+    -o-#{$property}: $value;
+}
+
+// Border radius shorthand
+@mixin border-radius($radius) {
+  border-radius: $radius;
+  @include vendor-prefixes(border-radius, $radius);
+}
+
+// Top border radius
+@mixin border-top-radius($radius) {
+  border-top-left-radius: $radius;
+  border-top-right-radius: $radius;
+}
+
+// Bottom border radius
+@mixin border-bottom-radius($radius) {
+  border-bottom-left-radius: $radius;
+  border-bottom-right-radius: $radius;
+}
+
+// Left border radius
+@mixin border-left-radius($radius) {
+  border-bottom-left-radius: $radius;
+  border-top-left-radius: $radius;
+}
+
+// Right border radius
+@mixin border-right-radius($radius) {
+  border-bottom-right-radius: $radius;
+  border-top-right-radius: $radius;
+}
+
+// Box shadow
+@mixin box-shadow($params) {
+    box-shadow: $params;
+    @include vendor-prefixes(box-shadow, $params);
+}
+
+// Styles of placeholder
+@mixin placeholder {
+    &::-webkit-input-placeholder {@content}
+    &:-moz-placeholder           {@content}
+    &::-moz-placeholder          {@content}
+    &:-ms-input-placeholder      {@content}
+}

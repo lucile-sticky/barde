@@ -1,0 +1,38 @@
+* {
+    font-family: $secondary-font;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+}
+
+h1 {
+    font-family: $primary-font;
+    font-size: 38px;
+    font-weight: 400;
+    color: $dark-contrast-color;
+    text-transform: uppercase;
+}
+
+h2 {
+    font-family: $primary-font;
+    font-size: 36px;
+    font-weight: 400;
+    color: $primary-color;
+    text-transform: uppercase;
+}
+
+h3 {
+    font-family: $primary-font;
+    font-size: 28px;
+    font-weight: 400;
+    color: $dark-contrast-color;
+    text-transform: uppercase;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}

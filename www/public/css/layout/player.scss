@@ -1,0 +1,90 @@
+#player {
+    position: absolute;
+    bottom: -40px;
+    display: table;
+    width: 100%;
+    height: 40px;
+    background: $medium-contrast-color;
+
+    > div {
+        display: table-cell;
+        width: (100% /3);
+        vertical-align: middle;
+
+        &:nth-child(1) {
+            text-align: left;
+        }
+
+        &:nth-child(2) {
+            text-align: center;
+        }
+
+        &:nth-child(3) {
+            text-align: right;
+        }
+    }
+}
+
+#player > div:nth-child(1) {
+    padding-left: 20px;
+
+    .title-song {
+        font-size: 20px;
+        color: white;
+    }
+
+    .artist {
+        font-size: 18px;
+        color: $light-contrast-color;
+
+        &:before {
+            margin: 0 10px;
+            content: '•';
+        }
+    }
+}
+
+#player > div:nth-child(2) {
+    [class*='flaticon-'] {
+        font-size: 20px;
+        color: white;
+        cursor: pointer;
+
+        &:first-child,
+        &:last-child {
+            font-size: 14px;
+        }
+
+        &:not(:first-child) {
+            margin-left: 40px;
+        }
+
+        &:last-child:before {
+            @include vendor-prefixes(transform, rotate(180deg));
+        }
+
+        &:hover {
+            color: $primary-color;
+        }
+    }
+}
+
+#player > div:nth-child(3) {
+    padding-right: 20px;
+    font-size: 16px;
+    color: $light-contrast-color;
+}
+
+#slider {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 4px;
+    background: #111111;
+
+    > div {
+        width: 60%;
+        height: 100%;
+        background: $primary-color;
+    }
+}

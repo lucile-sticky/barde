@@ -1,0 +1,148 @@
+@keyframes zoomInDown {
+    from {
+        opacity: 0;
+        transform: scale3d(0.1, 0.1, 0.1) translate3d(0, -1000px, 0);
+        animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale3d(0.475, 0.475, 0.475) translate3d(0, 60px, 0);
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+    }
+}
+
+@keyframes bounceOutLeft {
+    from {
+        opacity: 1;
+    }
+    20% {
+        transform: translate3d(150px, 0, 0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate3d(-2000px, 0, 0);
+    }
+}
+
+.propose-song form {
+    z-index: 500;
+    position: absolute;
+    top: 80px;
+    left: -100px;
+    width: 400px;
+    height: 0;
+    z-index: 0;
+    opacity: 0;
+    background: $primary-color;
+
+    @include border-radius(4px);
+    @include box-shadow(0 0 8px 0 rgba(black, 0.80));
+
+    &.displayed {
+        opacity: 1;
+        height: 210px;
+        z-index: 500;
+        animation-name: zoomInDown;
+        -webkit-animation-duration: 1s;
+                animation-duration: 1s;
+
+        -webkit-animation-fill-mode: both;
+                animation-fill-mode: both;
+    }
+
+    &.not-displayed {
+        z-index: 0;
+        height: 0;
+        animation-name: bounceOutLeft;
+        -webkit-animation-duration: 1s;
+                animation-duration: 1s;
+
+        -webkit-animation-fill-mode: both;
+                animation-fill-mode: both;
+    }
+
+    &:before {
+        position: absolute;
+        top: -20px;
+        left: calc(50% - 10px);
+        width: 1px;
+        border: transparent 10px solid;
+        border-bottom-color: $primary-color;
+        content: '';
+    }
+
+    label {
+        display: flex;
+        margin: 10px 20px;
+
+        span {
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 30px;
+            color: white;
+            text-align: left;
+            text-transform: uppercase;
+
+            flex-grow: 1;
+        }
+        input[type='text'] {
+            width: 260px;
+            height: 30px;
+            margin-left: 40px;
+            padding: 5px;
+            font-size: 14px;
+            color: $dark-contrast-color;
+            border: 1px solid darken($primary-color,7%);
+
+            @include border-radius(4px);
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+
+    .validation-button {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background: darken($primary-color,7%);
+        text-align: center;
+
+        @include border-bottom-radius(4px);
+
+        span {
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            height: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-transform: uppercase;
+
+            @include border-radius(4px);
+
+            &:hover {
+                background-color: lighten($primary-color, 7%);
+            }
+
+            &:focus {
+                outline: none;
+            }
+
+            &:active {
+                outline: none;
+
+                @include box-shadow(inset 0 1px 3px 0 rgba(0,0,0,0.3));
+            }
+        }
+    }
+}

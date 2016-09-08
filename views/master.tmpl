@@ -1,0 +1,195 @@
+<% c++ #include <data/htmlPage.h> %>
+<% html %>
+<% skin pasta %>
+<% view master uses data::HtmlPage %>
+
+
+<% template title() %><%= pageTitle %><% end %>
+
+<% template pageCss() %>
+    <link href="https://fonts.googleapis.com/css?family=Amatica+SC|Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="<%= mediaRootUrl %>/css/playlist.css" />
+<% end %>
+
+<% template pageJs() %>
+    <script type="text/javascript" src="<%= mediaRootUrl %>/js/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="<%= mediaRootUrl %>/js/modernizr.custom.js"></script>
+    <script type="text/javascript" src="<%= mediaRootUrl %>/js/moment.js"></script>
+    <script type="text/javascript" src="<%= mediaRootUrl %>/js/views/master.js"></script>
+    <script type="text/javascript" src="<%= mediaRootUrl %>/js/song/new.js"></script>
+    <script type="text/javascript" src="<%= mediaRootUrl %>/js/user/profile.js"></script>
+<% end %>
+
+<% template proposeSong() %>
+    <form>
+        <label>
+            <span>Artist</span>
+            <input type='text' name='artist' maxlength='50' />
+        </label>
+        <label>
+            <span>Song</span>
+            <input type='text' name='title' maxlength='45' />
+        </label>
+        <label>
+            <span>Url</span>
+            <input type='text' name='url' maxlength='200' />
+        </label>
+        <label><span class='message'></span></label>
+        <div class='validation-button'>
+            <button type='submit'><% gt "SUBMIT THIS SONG" %></button>
+        </div>
+    </form>
+<% end %>
+
+<% template proposedSong() %>
+    <div class='proposed-songs'>
+        <div>
+            <h3><% gt "Song submitted" %></h3>
+            <input placeholder='Search something!' type='text' class='search'/>
+        </div>
+        <div>
+            <% foreach song in user.proposedSongs %>
+            <table>
+                <thead>
+                    <th width='10%'></th>
+                    <th width='22.5%'></th>
+                    <th width='22.5%'></th>
+                    <th width='22.5%'></th>
+                </thead>
+                <tbody>
+                <% item %>
+                    <tr>
+                        <td><%= song.id %> </td>
+                        <td><span title="<%= song.title %>"><%= song.title %></span></td>
+                        <td><span title="<%= song.artist %>"><%= song.artist %></span></td>
+                        <td>
+                        <% if song.playlist.enabled %>
+                            <a href="<% url "/playlist" using song.playlist.id %>" title="<%= song.playlist.name%>">
+                                <%= song.playlist.name %>
+                            </a>
+                        <% else %>
+                            <span style="text-decoration: line-through" title="<%= song.playlist.name%>">
+                                <%= song.playlist.name %>
+                            </span>
+                        <% end %>
+                        </td>
+                    </tr>
+                <% end %>
+                </tbody>
+            </table>
+            <% end %>
+        </div>
+    </div>
+<% end %>
+
+<% template profile() %>
+    <div id='profile'>
+        <div>
+            <div>
+                <div class='avatar'>
+                    <div>Click to <br> change :) </div>
+                    <img src='http://www.unamourdechat.com/images/Chatons/e471188b-2ca5-4af2-8d34-57b0c2a615a4-ChatonsSmall.jpg' alt='avatar'>
+                </div>
+            </div>
+            <div>
+                <h2><%= user.alias %></h2>
+                <span class='number'>132</span><span><% gt "songs submitted" %></span>
+                <span class='number'>30</span><span><% gt "comments posted" %></span>
+            </div>
+            <div class='logout'>
+                <form action="<% url "/login" %>">
+                    <button class='flaticon-arrows'><% gt "Logout" %></button>
+                </form>
+            </div>
+        </div>
+        <% include proposedSong() %>
+    </div>
+<% end %>
+
+<% template header() %>
+    <header>
+        <div class='logo'>
+            <a href="<% url "/playlist" %>">
+                <img src="<%= mediaRootUrl %>/images/logo.svg" alt="<%= siteTitle %>" />
+            </a>
+        </div>
+        <div class='title'>
+            <h1><%= siteTitle %></h1>
+        </div>
+        <% if user.isAuthenticated %>
+        <nav>
+            <ul>
+                <li id='current'><a href="<% url "/playlist" %>"><% gt "Current playlist" %></a></li>
+                <li id='all'><a href="<% url "/playlist" %>/all"><% gt "All playlists" %></a></li>
+                <li id='top'><a href="<% url "/playlist" %>/top"><% gt "Top songs" %></a></li>
+                <li id='random'><a href="<% url "/playlist" %>/random"><% gt "Random playlist" %></a></li>
+            </ul>
+        </nav>
+        <div class='propose-song'>
+            <button class='flaticon-music' type='button'>
+                <% gt "Submit a song" %>
+            </button>
+            <% include proposeSong() %>
+        </div>
+        <div id='open-profile' class='flaticon-play'>
+            <h3><% gt "My account" %></h3>
+            <span><%= user.alias %></span>
+        </div>
+        <% end %>
+    </header>
+<% end %>
+
+<% template alerts() %>
+    <% foreach message in alerts.errors %>
+        <% item %>
+            <div class="alert-danger"><%= message %></div>
+        <% end %>
+    <% end foreach %>
+    <% foreach message in alerts.warnings %>
+        <% item %>
+            <div class="alert-warming"><%= message %></div>
+        <% end %>
+    <% end foreach %>
+    <% foreach message in alerts.infos %>
+        <% item %>
+            <div class="alert-info"><%= message %></div>
+        <% end %>
+    <% end foreach %>
+    <% foreach message in alerts.success %>
+        <% item %>
+            <div class="alert-success"><%= message %></div>
+        <% end %>
+    <% end foreach %>
+<% end %>
+
+<% template pageContent() %>Welcome<% end %>
+
+<% template render() %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="<%= mediaRootUrl %>/favicon.png" />
+    <title><%= siteTitle %> - <% include title() %></title>
+    <% include pageCss() %>
+    <% include pageJs() %>
+</head>
+<body>
+    <% if user.isAuthenticated %>
+        <% include profile() %>
+    <% end %>
+    <div class="tabs">
+        <% include header() %>
+
+        <% if user.isAllowed %>
+            <% include pageContent() %>
+        <% else %>
+            <p><strong>You are not allowed to access this content.</strong><p>
+        <% end %>
+    </div>
+</body>
+</html>
+<% end template %>
+<% end view %>
+<% end skin %>

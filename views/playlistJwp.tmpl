@@ -1,0 +1,46 @@
+<% c++ #include <data/playlist.h> %>
+<% skin pasta %>
+<% view playlistJwp uses data::Playlist extends playlist %>
+
+<% template pageJs() %>
+<% include playlist::pageJs() %>
+<script type="text/javascript" src="<%= mediaRootUrl %>/js/jwplayer/jwplayer.js"></script>
+<script type="text/javascript">jwplayer.key="JWZill3AkNpb29hKjm8CBfwE4UU0+VXTUoLiAg==";</script>
+<% end %>
+
+<% template player() %>
+<div id="player">Loading the player...</div>
+
+<script type="text/javascript">
+jwplayer("player").setup({
+    width: "600",
+    height: "300",
+    autostart: true,
+    <% foreach song in songs %>
+        playlist: [
+        <% item %>
+        {
+            title: "<%= song.title %>",
+            descritpion: "by <%= song.artist %>",
+                sources: [
+                <% if not empty song.file %>
+                    { file: "<%= mediaRootUrl %><%= song.file %>" },
+                <% end %>
+                <% if not empty song.url %>
+                    { file: "<%= song.url %>" },
+                <% end %>
+                ],
+            },
+        <% end %>
+        ],
+    <% end foreach %>
+    listbar: {
+        layout: "basic",
+        position: "right"
+    }
+});
+</script>
+<% end template %>
+
+<% end view %>
+<% end skin %>
