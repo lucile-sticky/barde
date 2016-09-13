@@ -49,8 +49,6 @@ set(SKIN_TEMPLATES
     views/login.tmpl
     views/allPlaylists.tmpl
     views/playlist.tmpl
-    views/playlistHtml5.tmpl
-    views/playlistJwp.tmpl
     views/newPlaylist.tmpl
     views/editSong.tmpl
     views/proposedSongs.tmpl

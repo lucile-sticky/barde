@@ -4,11 +4,14 @@
 
 <% template pageJs() %>
 <% include master::pageJs() %>
-<script type="text/javascript" src="<%= mediaRootUrl %>/js/vote-playlist.js"></script>
+    <script type="text/javascript" src="<%= mediaRootUrl %>/js/simple-player.js"></script>
+    <script type="text/javascript" src="<%= mediaRootUrl %>/js/vote-playlist.js"></script>
 <% end %>
 
 <% template player() %>
-Undefined player!
+    <audio style="width:100%" preload="auto" tabindex="0" controls="true" autoplay="false">
+        <source src="">
+    </audio>
 <% end %>
 
 <% template pageContent() %>

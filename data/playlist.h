@@ -8,15 +8,11 @@
 namespace data {
 
     struct Playlist: public HtmlPage {
-        static constexpr const char* TYPE_SIMPLE = "simple";
-        static constexpr const char* TYPE_JWPLAYER = "jwplayer";
-
         std::string id;
         std::string name;
         std::string image;
         std::string description;
         time_t publication;
-        std::string player;
         bool votesEnabled;
         std::vector<Song> songs;
         PlaylistVote vote;

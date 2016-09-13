@@ -42,7 +42,6 @@ CREATE TABLE `playlist` (
   `image` varchar(100) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
   `publication` date DEFAULT NULL,
-  `player` enum('simple','jwplayer') NOT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -108,8 +107,8 @@ CREATE TABLE `song` (
   PRIMARY KEY (`id`),
   KEY `proposer_id` (`proposer_id`),
   KEY `artist_id` (`artist_id`),
-  CONSTRAINT `song_ibfk_2` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`),
-  CONSTRAINT `song_ibfk_1` FOREIGN KEY (`proposer_id`) REFERENCES `user` (`id`)
+  CONSTRAINT `song_ibfk_1` FOREIGN KEY (`proposer_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `song_ibfk_2` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -144,9 +143,10 @@ CREATE TABLE `user` (
   `alias` varchar(20) NOT NULL,
   `username` varchar(30) CHARACTER SET latin1 NOT NULL,
   `password` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `level` smallint(3) unsigned NOT NULL,
+  `level` smallint(3) unsigned NOT NULL DEFAULT '10',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username_UNIQUE` (`username`)
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `alias` (`alias`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -159,4 +159,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-22 22:24:55
+-- Dump completed on 2016-09-13 22:24:46

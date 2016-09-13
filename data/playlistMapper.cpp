@@ -37,7 +37,7 @@ namespace data {
         dest.songs.clear();
 
         std::string query = "SELECT p.id, p.name AS playlist_name, p.image, "
-            "p.description, UNIX_TIMESTAMP(p.publication), p.player, "
+            "p.description, UNIX_TIMESTAMP(p.publication), "
             "IFNULL(vp.vote, 0) AS vote, "
             "s.id AS song_id, s.title AS song_title, a.name AS artist_name, s.file, s.url, "
             "s.show_video, IFNULL(vs.vote, 0) AS song_vote "
@@ -63,8 +63,7 @@ namespace data {
             data::Song song;
             unsigned short showVideo;
             result >> dest.id >> dest.name >> dest.image >>
-                dest.description >> dest.publication >>
-                dest.player >> dest.vote.value >>
+                dest.description >> dest.publication >> dest.vote.value >>
                 song.id >> song.title >> song.artist >> song.file >> song.url >> showVideo >> song.vote.value;
             song.showVideo = showVideo;
             dest.songs.push_back(song);
@@ -218,14 +217,14 @@ namespace data {
 
     bool PlaylistMapper::insert(const Playlist& playlist) {
         std::string query = "INSERT INTO playlist "
-            "(name, image, description, player, enabled) "
+            "(name, image, description, enabled) "
             "VALUES (?, ?, ?, ?, 0) ";
 
         BOOSTER_DEBUG("insert") << query << ", " << playlist.name << ", " << playlist.image
-            << ", " << playlist.description << ", " << Playlist::TYPE_SIMPLE;
+            << ", " << playlist.description;
 
         cppdb::statement st = sql() << query <<  playlist.name << playlist.image
-            << playlist.description << Playlist::TYPE_SIMPLE
+            << playlist.description
             << cppdb::exec;
 
         return st.affected() >= 1;

@@ -140,7 +140,6 @@ namespace app {
         playlist_.id = TOP_LIST_ID;
         playlist_.name = TOP_LIST_NAME;
         playlist_.image = TOP_LIST_IMAGE;
-        playlist_.player = data::Playlist::TYPE_SIMPLE;
         playlist_.votesEnabled = false;
 
         std::string key = TOP_LIST_ID;
@@ -171,7 +170,6 @@ namespace app {
         playlist_.id = WORST_LIST_ID;
         playlist_.name = WORST_LIST_NAME;
         playlist_.image = WORST_LIST_IMAGE;
-        playlist_.player = data::Playlist::TYPE_SIMPLE;
         playlist_.votesEnabled = false;
 
         std::string key = WORST_LIST_ID;
@@ -202,7 +200,6 @@ namespace app {
         playlist_.id = RANDOM_LIST_ID;
         playlist_.name = RANDOM_LIST_NAME;
         playlist_.image = RANDOM_LIST_IMAGE;
-        playlist_.player = data::Playlist::TYPE_SIMPLE;
         playlist_.votesEnabled = false;
 
         std::string key = getCacheKey(playlist_.id, page_.user);
@@ -234,7 +231,6 @@ namespace app {
         dbPlaylistMapper_->clear();
 
         playlist_.name = PROPOSED_LIST_NAME;
-        playlist_.player = data::Playlist::TYPE_JWPLAYER;
         playlist_.votesEnabled = false;
 
         doDisplay();
@@ -302,12 +298,7 @@ namespace app {
     void Playlist::doDisplay() {
         playlist_.resetFrom(page_);
         playlist_.pageTitle = playlist_.name;
-
-        if (playlist_.player == data::Playlist::TYPE_JWPLAYER) {
-            render("playlistJwp", playlist_);
-        } else {
-            render("playlistHtml5", playlist_);
-        }
+        render("playlist", playlist_);
     }
 
 }   // namespace app
