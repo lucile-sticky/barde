@@ -8,7 +8,7 @@
 <% end %>
 
 <% template player() %>
-Missing player!
+Undefined player!
 <% end %>
 
 <% template pageContent() %>
@@ -45,9 +45,6 @@ Missing player!
                     <% end %>
                     </div>
                 </div>
-
-                <% include player() %>
-
                 <table class='tracks' id='js-songs'>
                     <thead>
                         <tr>
@@ -126,6 +123,7 @@ Missing player!
             </div>
         </section>
     </div>
+    <% include player() %>
 <% end %>
 
 <% end view %>
