@@ -2,6 +2,7 @@ $(document).ready(function() {
     var userProfile = {
         button: $('#open-profile'),
         profile: $('#profile'),
+        search: $('#profile .proposed-songs .search'),
         init: function() {
             var that = this;
 

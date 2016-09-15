@@ -218,7 +218,7 @@ namespace data {
     bool PlaylistMapper::insert(const Playlist& playlist) {
         std::string query = "INSERT INTO playlist "
             "(name, image, description, enabled) "
-            "VALUES (?, ?, ?, ?, 0) ";
+            "VALUES (?, ?, ?, 0) ";
 
         BOOSTER_DEBUG("insert") << query << ", " << playlist.name << ", " << playlist.image
             << ", " << playlist.description;

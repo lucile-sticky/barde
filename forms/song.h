@@ -44,7 +44,7 @@ namespace form {
 
 			position.id("position");
 			position.message(translate("Position:"));
-			position.range(1, 2000);
+			position.range(1, 10000);
 
 			submit.value(translate("Submit"));
         }
@@ -75,5 +75,5 @@ namespace form {
         }
     };
 
-}   // namespace data
+}   // namespace form
 #endif  // FORM_SONG_H
