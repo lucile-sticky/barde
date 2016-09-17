@@ -29,8 +29,6 @@ namespace app {
         static const std::string PROPOSED_LIST_NAME;
 
         data::Playlist playlist_;
-        std::unique_ptr<data::SongMapper> dbSongMapper_;
-        std::unique_ptr<data::PlaylistMapper> dbPlaylistMapper_;
 
     public:
         Playlist(cppcms::service& s);

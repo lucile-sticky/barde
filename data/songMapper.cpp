@@ -20,7 +20,7 @@ namespace data {
 
         BOOSTER_DEBUG("loadSong") << query << ", " << songId;
 
-        cppdb::statement statement = sql() << query << songId;
+        cppdb::statement statement = connection() << query << songId;
         cppdb::result result = statement.row();
 
         if (! result.empty()) {
@@ -53,7 +53,7 @@ namespace data {
 
         BOOSTER_DEBUG("loadUserProposedSongs") << query << ", " << dest.id;
 
-        cppdb::result result = sql() << query << dest.id;
+        cppdb::result result = connection() << query << dest.id;
 
         while (result.next()) {
             User::ProposedSong song;
@@ -83,7 +83,7 @@ namespace data {
 
         BOOSTER_DEBUG("loadProposedPlaylist") << query;
 
-        cppdb::result result = sql() << query;
+        cppdb::result result = connection() << query;
 
         while (result.next()) {
             data::Song song;
@@ -104,7 +104,7 @@ namespace data {
         BOOSTER_DEBUG("insert") << query << ", " << song.title <<  ", "
             << artistId <<  ", " << song.url <<  ", " << user.id;
 
-        cppdb::statement st = sql() << query << song.title << artistId << song.url << user.id << cppdb::exec;
+        cppdb::statement st = connection() << query << song.title << artistId << song.url << user.id << cppdb::exec;
 
         return st.affected() >= 1;
     }
@@ -118,7 +118,7 @@ namespace data {
             <<  ", " << song.file << ", " << song.url <<  ", " << song.showVideo
             << ", " << song.position << ", " << song.id;
 
-        cppdb::statement st = sql() << query << song.title << artistId << song.file
+        cppdb::statement st = connection() << query << song.title << artistId << song.file
             << song.url << song.showVideo << song.position << song.id << cppdb::exec;
 
         return st.affected() >= 1;
@@ -130,7 +130,7 @@ namespace data {
         BOOSTER_DEBUG("setSongPlaylist") << query << ", " << playlistId <<  ", "
             << songId;
 
-        cppdb::statement st = sql() << query << playlistId << songId << cppdb::exec;
+        cppdb::statement st = connection() << query << playlistId << songId << cppdb::exec;
 
         return st.affected() >= 1;
     }

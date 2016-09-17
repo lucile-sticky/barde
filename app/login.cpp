@@ -7,7 +7,7 @@
 
 namespace app {
     Login::Login(cppcms::service& s) :
-        app::Master(s), dbMapper_(new data::LoginMapper(connectionString_))
+        app::Master(s)
     {
         dispatcher().assign(".*", &Login::display, this);
         mapper().assign("");
@@ -29,7 +29,9 @@ namespace app {
                 std::string username = login_.input.username.value();
                 std::string password = login_.input.password.value();
 
-                if(! dbMapper_->checkAuthentification(username, password, login_)) {
+                data::LoginMapper loginMapper(connectionString_);
+
+                if(! loginMapper.checkAuthentification(username, password, login_)) {
                     login_.alerts.errors.push_back("Wrong authentification!");
                 } else {
                     session().clear();
@@ -45,8 +47,6 @@ namespace app {
 
         login_.resetFrom(page_);
         login_.pageTitle = "Authentification";
-
-        dbMapper_->clear();
 
         render("login", login_);
     }

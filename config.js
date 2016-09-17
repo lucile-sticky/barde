@@ -15,7 +15,7 @@
         "locales" : [ "fr_FR.UTF-8" ]
     },
     "database" : {
-        "connection_string" : "mysql:database=playlists;user=root;password=root;set_charset_name=utf8;@ol_size=10;@use_prepared=on"
+        "connection_string" : "mysql:database=playlists;user=root;password=root;set_charset_name=utf8;@pool_size=1;@use_prepared=on"
     },
     "session" : {
         "expire": "browser",

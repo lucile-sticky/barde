@@ -10,9 +10,6 @@
 
 namespace app {
     class Song : public Master {
-        std::unique_ptr<data::SongMapper> dbSongMapper_;
-        std::unique_ptr<data::ArtistMapper> dbArtistMapper_;
-        std::unique_ptr<data::PlaylistMapper> dbPlaylistMapper_;
 
     public:
         Song(cppcms::service& s);

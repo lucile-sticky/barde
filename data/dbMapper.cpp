@@ -7,23 +7,22 @@ namespace data {
     DbMapper::DbMapper(const std::string& connectionString)
         :connectionString_(connectionString)
     {
-        sql_.reset(new cppdb::session());
+        connection_.reset(new cppdb::session());
     }
 
     DbMapper::~DbMapper() {
-        clear();
+        disconnect();
     }
 
-    void DbMapper::clear() {
-        sql_->close();
+    void DbMapper::disconnect() {
+        connection_->close();
     }
 
-    cppdb::session& DbMapper::sql() {
-        sql_->close();
-        if(! sql_->is_open()) {
-            sql_->open(connectionString_);
+    cppdb::session& DbMapper::connection() {
+        if (!connection_->is_open()) {
+            connection_->open(connectionString_);
         }
-        return *sql_;
+        return *connection_;
     }
 
 }   // namespace data

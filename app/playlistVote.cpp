@@ -12,7 +12,7 @@ using namespace cppcms::http;
 
 namespace app {
     PlaylistVote::PlaylistVote(cppcms::service& s) :
-        app::Master(s), dbMapper_(new data::PlaylistVoteMapper(connectionString_))
+        app::Master(s)
     {
         dispatcher().assign("/ajax-vote/(\\d+)/(.+)", &PlaylistVote::ajaxVote, this, 1, 2);
         mapper().assign("/{1}/{2}");
@@ -26,12 +26,13 @@ namespace app {
             return;
         }
 
-        bool result = dbMapper_->saveVote(
+        data::PlaylistVoteMapper playlistVoteMapper(connectionString_);
+
+        bool result = playlistVoteMapper.saveVote(
             page_.user.id,
             playlistId,
             data::PlaylistVote::stringToVote(vote)
         );
-        dbMapper_->clear();
 
         std::string key = Playlist::getCacheKey(playlistId, page_.user);
         cache().rise(key);

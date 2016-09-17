@@ -26,9 +26,7 @@ namespace app {
     const std::string Playlist::PROPOSED_LIST_NAME = "Proposed songs";
 
     Playlist::Playlist(cppcms::service& s) :
-        app::Master(s),
-        dbPlaylistMapper_(new data::PlaylistMapper(connectionString_)),
-        dbSongMapper_(new data::SongMapper(connectionString_))
+        app::Master(s)
     {
         dispatcher().assign("", &Playlist::displayCurrent, this);
         mapper().assign("");
@@ -58,8 +56,8 @@ namespace app {
     void Playlist::displayCurrent() {
         BOOSTER_DEBUG("displayCurrent");
 
-        std::string playlistId = dbPlaylistMapper_->findCurrentPlaylistId();
-        dbPlaylistMapper_->clear();
+        data::PlaylistMapper playlistMapper(connectionString_);
+        std::string playlistId = playlistMapper.findCurrentPlaylistId();
 
         if (playlistId.empty()) {
             playlistId = TOP_LIST_ID;
@@ -87,11 +85,11 @@ namespace app {
 
         playlist_.votesEnabled = true;
 
-        dbPlaylistMapper_->loadPlaylist(playlist_, playlistId, page_.user);
-        dbPlaylistMapper_->clear();
+        data::PlaylistMapper playlistMapper(connectionString_);
+        data::SongMapper songMapper(connectionString_);
 
-        dbSongMapper_->loadUserProposedSongs(page_.user);
-        dbSongMapper_->clear();
+        playlistMapper.loadPlaylist(playlist_, playlistId, page_.user);
+        songMapper.loadUserProposedSongs(page_.user);
 
         doDisplay();
 
@@ -118,8 +116,8 @@ namespace app {
         data::AllPlaylists allPlaylists;
         allPlaylists.resetFrom(page_);
 
-        dbPlaylistMapper_->loadAllPlaylists(allPlaylists);
-        dbPlaylistMapper_->clear();
+        data::PlaylistMapper playlistMapper(connectionString_);
+        playlistMapper.loadAllPlaylists(allPlaylists);
 
         render("allPlaylists", allPlaylists);
 
@@ -148,8 +146,8 @@ namespace app {
             return;
         }
 
-        dbPlaylistMapper_->loadTopPlaylist(playlist_, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::DESC);
-        dbPlaylistMapper_->clear();
+        data::PlaylistMapper playlistMapper(connectionString_);
+        playlistMapper.loadTopPlaylist(playlist_, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::DESC);
 
         doDisplay();
 
@@ -178,8 +176,8 @@ namespace app {
             return;
         }
 
-        dbPlaylistMapper_->loadTopPlaylist(playlist_, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::ASC);
-        dbPlaylistMapper_->clear();
+        data::PlaylistMapper playlistMapper(connectionString_);
+        playlistMapper.loadTopPlaylist(playlist_, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::ASC);
 
         doDisplay();
 
@@ -208,8 +206,8 @@ namespace app {
             return;
         }
 
-        dbPlaylistMapper_->loadTopPlaylist(playlist_, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::RAND);
-        dbPlaylistMapper_->clear();
+        data::PlaylistMapper playlistMapper(connectionString_);
+        playlistMapper.loadTopPlaylist(playlist_, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::RAND);
 
         doDisplay();
 
@@ -227,8 +225,8 @@ namespace app {
                 return;
         }
 
-        dbPlaylistMapper_->loadProposedPlaylist(playlist_);
-        dbPlaylistMapper_->clear();
+        data::PlaylistMapper playlistMapper(connectionString_);
+        playlistMapper.loadProposedPlaylist(playlist_);
 
         playlist_.name = PROPOSED_LIST_NAME;
         playlist_.votesEnabled = false;
@@ -261,12 +259,13 @@ namespace app {
                 playlist.image = composeImagePlaylistPath(imageFile);
                 playlist.description = pagePlaylist.input.description.value();
 
+                data::PlaylistMapper playlistMapper(connectionString_);
                 std::ostringstream msg;
                 try {
                     imageFile->save_to(uploadFileName);
                     BOOSTER_INFO("displayNew") << "Uploaded file " << uploadFileName;
 
-                    if (! dbPlaylistMapper_->insert(playlist)) {
+                    if (! playlistMapper.insert(playlist)) {
                         msg << "Could not create playlist " << playlist_.name;
                         pagePlaylist.alerts.errors.push_back(msg.str());
                         BOOSTER_ERROR("displayNew") << msg.str();

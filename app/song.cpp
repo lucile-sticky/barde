@@ -15,10 +15,7 @@ using namespace cppcms::http;
 
 namespace app {
     Song::Song(cppcms::service& s) :
-        app::Master(s),
-        dbSongMapper_(new data::SongMapper(connectionString_)),
-        dbArtistMapper_(new data::ArtistMapper(connectionString_)),
-        dbPlaylistMapper_(new data::PlaylistMapper(connectionString_))
+        app::Master(s)
     {
         dispatcher().assign("/edit/(\\d+)", &Song::displayEdit, this, 1);
         mapper().assign("/{1}");
@@ -47,11 +44,11 @@ namespace app {
         pageSong.resetFrom(page_);
         pageSong.pageTitle = "Proposed songs";
 
-        dbSongMapper_->loadPendingSongs(pageSong);
-        dbPlaylistMapper_->loadComingPlaylists(pageSong);
+        data::SongMapper songMapper(connectionString_);
+        data::PlaylistMapper playlistMapper(connectionString_);
 
-        dbPlaylistMapper_->clear();
-        dbSongMapper_->clear();
+        songMapper.loadPendingSongs(pageSong);
+        playlistMapper.loadComingPlaylists(pageSong);
 
         render("proposedSongs", pageSong);
     }
@@ -67,8 +64,9 @@ namespace app {
         }
 
         data::Song song;
-
         data::PageEditSong pageSong;
+        data::SongMapper songMapper(connectionString_);
+
         if (request().request_method() == "POST") {
             pageSong.input.load(context());
             if(! pageSong.input.validate()) {
@@ -90,7 +88,7 @@ namespace app {
                     BOOSTER_INFO("displayEdit") << message.str();
                 }
             }
-        } else if (!songId.empty() && dbSongMapper_->loadSong(song, songId)) {
+        } else if (!songId.empty() && songMapper.loadSong(song, songId)) {
             BOOSTER_DEBUG("displayEdit") << "Loading fields for song " << songId;
             pageSong.input.artist.value(song.artist);
             pageSong.input.title.value(song.title);
@@ -104,8 +102,7 @@ namespace app {
         pageSong.resetFrom(page_);
         pageSong.pageTitle = "Modify a song";
 
-        dbSongMapper_->loadUserProposedSongs(page_.user);
-        dbSongMapper_->clear();
+        songMapper.loadUserProposedSongs(page_.user);
 
         render("editSong", pageSong);
     }
@@ -162,11 +159,12 @@ namespace app {
 
         BOOSTER_DEBUG("ajaxSetPlaylist");
 
-        bool result = dbSongMapper_->setSongPlaylist(
+        data::SongMapper songMapper(connectionString_);
+
+        bool result = songMapper.setSongPlaylist(
             std::stoi(songId),
             std::stoi(playlistId)
         );
-        dbSongMapper_->clear();
 
         std::string key = Playlist::getCacheKey(playlistId, page_.user);
         cache().rise(key);
@@ -180,38 +178,40 @@ namespace app {
     bool Song::insert(const data::Song& song) {
         bool success = false;
 
-        unsigned int artistId = dbArtistMapper_->getByName(song.artist);
+        data::ArtistMapper artistMapper(connectionString_);
+        data::SongMapper songMapper(connectionString_);
+
+        unsigned int artistId = artistMapper.getByName(song.artist);
         if (artistId == 0) {
-            artistId = dbArtistMapper_->insert(song.artist);
+            artistId = artistMapper.insert(song.artist);
         }
 
         if (artistId == 0) {
             BOOSTER_DEBUG("addNew") << "Could not create artist " << song.artist;
         } else {
-            success = dbSongMapper_->insert(page_.user, artistId, song);
+            success = songMapper.insert(page_.user, artistId, song);
         }
 
-        dbArtistMapper_->clear();
-        dbSongMapper_->clear();
         return success;
     }
 
     bool Song::update(const data::Song& song) {
         bool success = false;
 
-        unsigned int artistId = dbArtistMapper_->getByName(song.artist);
+        data::ArtistMapper artistMapper(connectionString_);
+        data::SongMapper songMapper(connectionString_);
+
+        unsigned int artistId = artistMapper.getByName(song.artist);
         if (artistId == 0) {
-            artistId = dbArtistMapper_->insert(song.artist);
+            artistId = artistMapper.insert(song.artist);
         }
 
         if (artistId == 0) {
             BOOSTER_DEBUG("update") << "Could not create artist " << song.artist;
         } else {
-            success = dbSongMapper_->update(artistId, song);
+            success = songMapper.update(artistId, song);
         }
 
-        dbArtistMapper_->clear();
-        dbSongMapper_->clear();
         return success;
     }
 

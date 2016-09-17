@@ -12,15 +12,20 @@ namespace data {
     class DbMapper {
 
         std::string connectionString_;
-        std::unique_ptr<cppdb::session> sql_;
+        std::unique_ptr<cppdb::session> connection_;
 
     public:
         DbMapper(const std::string& connectionString);
         ~DbMapper();
-        void clear();
+
+        /*
+         * Called by desctructor.
+         */
+        void disconnect();
 
     protected:
-        cppdb::session& sql();
+        cppdb::session& connection();
+
     };
 
 }   // namespace data

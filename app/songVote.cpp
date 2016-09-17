@@ -12,7 +12,7 @@ using namespace cppcms::http;
 
 namespace app {
     SongVote::SongVote(cppcms::service& s) :
-        app::Master(s), dbManager_(new data::SongVoteMapper(connectionString_))
+        app::Master(s)
     {
         dispatcher().assign("/ajax-vote/([0-9a-z]+)/(\\d+)/(.+)", &SongVote::ajaxVote, this, 1, 2, 3);
         mapper().assign("/{1}/{2}/{3}");
@@ -26,12 +26,12 @@ namespace app {
             return;
         }
 
-        bool result = dbManager_->saveVote(
+        data::SongVoteMapper songVoteMapper(connectionString_);
+        bool result = songVoteMapper.saveVote(
             page_.user.id,
             songId,
             data::SongVote::stringToVote(vote)
         );
-        dbManager_->clear();
 
         std::string key = Playlist::getCacheKey(playlistId, page_.user);
         cache().rise(key);

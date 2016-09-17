@@ -14,7 +14,7 @@ namespace data {
 
         BOOSTER_DEBUG("insert") << query << ", " << name;
 
-        cppdb::statement statement = sql() << query << name << cppdb::exec;
+        cppdb::statement statement = connection() << query << name << cppdb::exec;
 
         if(statement.affected() >= 1) {
             return statement.last_insert_id();
@@ -30,7 +30,7 @@ namespace data {
 
         BOOSTER_DEBUG("getByName") << query << ", " << name;
 
-        cppdb::statement statement = sql() << query << name;
+        cppdb::statement statement = connection() << query << name;
         cppdb::result result = statement.row();
 
         if(! result.empty()) {

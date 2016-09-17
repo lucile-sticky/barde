@@ -9,7 +9,6 @@ namespace app {
     class Login : public Master {
 
         data::PageLogin login_;
-        std::unique_ptr<data::LoginMapper> dbMapper_;
 
     public:
         Login(cppcms::service& s);

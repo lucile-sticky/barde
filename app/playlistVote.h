@@ -9,8 +9,6 @@
 namespace app {
     class PlaylistVote : public Master {
 
-        std::unique_ptr<data::PlaylistVoteMapper> dbMapper_;
-
     public:
         PlaylistVote(cppcms::service& s);
         void ajaxVote(std::string playlistId, std::string vote);

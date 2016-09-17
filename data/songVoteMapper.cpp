@@ -18,7 +18,7 @@ namespace data {
         BOOSTER_DEBUG("saveVote") << query << ", " << songId << ", "
             << userId << ", " << vote << ", " << vote << ", " << cppdb::exec;
 
-        cppdb::statement st = sql() << query << songId << userId << vote << vote << cppdb::exec;
+        cppdb::statement st = connection() << query << songId << userId << vote << vote << cppdb::exec;
 
         return st.affected() >= 1;
     }

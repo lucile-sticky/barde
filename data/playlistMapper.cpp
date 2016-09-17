@@ -23,7 +23,7 @@ namespace data {
 
         BOOSTER_DEBUG("findCurrentplaylistId") << query;
 
-        cppdb::result result = sql() << query;
+        cppdb::result result = connection() << query;
 
         if (result.next()) {
             result >> playlistId;
@@ -57,7 +57,7 @@ namespace data {
         BOOSTER_DEBUG("loadPlaylist") << query << ", " << user.id <<
             ", " << user.id << ", " << playlistId;
 
-        cppdb::result result = sql() << query << user.id << user.id << playlistId;
+        cppdb::result result = connection() << query << user.id << user.id << playlistId;
 
         while (result.next()) {
             data::Song song;
@@ -113,7 +113,7 @@ namespace data {
 
         BOOSTER_DEBUG("loadTopPlaylist") << query << nbSongs;
 
-        cppdb::result result = sql() << query << nbSongs;
+        cppdb::result result = connection() << query << nbSongs;
 
         while (result.next()) {
             data::Song song;
@@ -140,7 +140,7 @@ namespace data {
 
         BOOSTER_DEBUG("loadProposedPlaylist") << query;
 
-        cppdb::result result = sql() << query;
+        cppdb::result result = connection() << query;
 
         while (result.next()) {
             data::Song song;
@@ -171,7 +171,7 @@ namespace data {
 
             BOOSTER_DEBUG("loadAllPlaylists") << query;
 
-            cppdb::result result = sql() << query;
+            cppdb::result result = connection() << query;
 
             while (result.next()) {
                 data::PlaylistItem item;
@@ -202,7 +202,7 @@ namespace data {
 
         BOOSTER_DEBUG("loadComingPlaylists") << query;
 
-        cppdb::result result = sql() << query;
+        cppdb::result result = connection() << query;
 
         while (result.next()) {
             HtmlPage::ComingPlaylist playlist;
@@ -223,7 +223,7 @@ namespace data {
         BOOSTER_DEBUG("insert") << query << ", " << playlist.name << ", " << playlist.image
             << ", " << playlist.description;
 
-        cppdb::statement st = sql() << query <<  playlist.name << playlist.image
+        cppdb::statement st = connection() << query <<  playlist.name << playlist.image
             << playlist.description
             << cppdb::exec;
 

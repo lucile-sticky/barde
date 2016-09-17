@@ -24,7 +24,7 @@ namespace data {
 
         BOOSTER_DEBUG("checkAuthentification") << query;
 
-        cppdb::statement statement = sql() << query << username;
+        cppdb::statement statement = connection() << query << username;
         cppdb::result result = statement.row();
 
         if(! result.empty()) {
