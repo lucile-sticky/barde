@@ -12,7 +12,6 @@ namespace data {
         ArtistMapper(const std::string& connectionString);
         unsigned int insert(const std::string& name);
         unsigned int getByName(const std::string& name);
-        unsigned int getBySimilarName(const std::string& name);
     };
 
 

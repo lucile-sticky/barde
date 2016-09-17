@@ -180,7 +180,7 @@ namespace app {
     bool Song::insert(const data::Song& song) {
         bool success = false;
 
-        unsigned int artistId = dbArtistMapper_->getBySimilarName(song.artist);
+        unsigned int artistId = dbArtistMapper_->getByName(song.artist);
         if (artistId == 0) {
             artistId = dbArtistMapper_->insert(song.artist);
         }
