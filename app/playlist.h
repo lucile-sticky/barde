@@ -2,7 +2,7 @@
 #define APP_PLAYLIST_H
 
 #include <app/master.h>
-#include <data/playlist.h>
+#include <data/pages/playlist.h>
 #include <data/playlistMapper.h>
 #include <data/songMapper.h>
 
@@ -28,7 +28,7 @@ namespace app {
 
         static const std::string PROPOSED_LIST_NAME;
 
-        data::Playlist playlist_;
+        data::PlaylistPage playlist_;
 
     public:
         Playlist(cppcms::service& s);

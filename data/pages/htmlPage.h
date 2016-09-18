@@ -25,6 +25,9 @@ namespace data {
         }
     };
 
+    /*
+     * Base class for the HTML pages
+     */
     struct HtmlPage : public cppcms::base_content {
         struct ComingPlaylist {
             unsigned int id;

@@ -31,7 +31,7 @@ namespace data {
         return playlistId;
     }
 
-    bool PlaylistMapper::loadPlaylist(Playlist& dest, const std::string& playlistId, const User& user) {
+    bool PlaylistMapper::loadPlaylist(PlaylistPage& dest, const std::string& playlistId, const User& user) {
         bool success = false;
 
         dest.songs.clear();
@@ -73,7 +73,7 @@ namespace data {
         return success;
     }
 
-    bool PlaylistMapper::loadTopPlaylist(Playlist& dest, unsigned short nbSongs, OrderBy orderBy) {
+    bool PlaylistMapper::loadTopPlaylist(PlaylistPage& dest, unsigned short nbSongs, OrderBy orderBy) {
         bool success = false;
 
         dest.songs.clear();
@@ -126,7 +126,7 @@ namespace data {
         return success;
     }
 
-    bool PlaylistMapper::loadUserTopPlaylist(Playlist& dest, const User& user,  unsigned short nbSongs, OrderBy orderBy) {
+    bool PlaylistMapper::loadUserTopPlaylist(PlaylistPage& dest, const User& user,  unsigned short nbSongs, OrderBy orderBy) {
         bool success = false;
 
         dest.songs.clear();
@@ -182,7 +182,7 @@ namespace data {
         return success;
     }
 
-    bool PlaylistMapper::loadProposedPlaylist(Playlist& dest) {
+    bool PlaylistMapper::loadProposedPlaylist(PlaylistPage& dest) {
         bool success = false;
 
         dest.songs.clear();
@@ -208,7 +208,7 @@ namespace data {
         return success;
     }
 
-    bool PlaylistMapper::loadAllPlaylists(AllPlaylists& dest) {
+    bool PlaylistMapper::loadAllPlaylists(AllPlaylistsPage& dest) {
         bool success = false;
 
         duration<double> elapsed_seconds = system_clock::now() - cachedPlaylistItemsLastUpdated_;
@@ -271,7 +271,7 @@ namespace data {
         return success;
     }
 
-    bool PlaylistMapper::insert(const Playlist& playlist) {
+    bool PlaylistMapper::insert(const PlaylistItem& playlist) {
         std::string query = "INSERT INTO playlist "
             "(name, image, description, enabled) "
             "VALUES (?, ?, ?, 0) ";

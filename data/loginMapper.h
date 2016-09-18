@@ -3,7 +3,7 @@
 
 
 #include "dbMapper.h"
-#include "login.h"
+#include <data/pages/login.h>
 
 
 namespace data {
@@ -14,7 +14,7 @@ namespace data {
         bool checkAuthentification(
                 const std::string& username,
                 const std::string password,
-                PageLogin& login);
+                LoginPage& login);
     };
 
 

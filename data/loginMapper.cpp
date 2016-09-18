@@ -13,7 +13,7 @@ namespace data {
     bool LoginMapper::checkAuthentification(
             const std::string& username,
             const std::string password,
-            PageLogin& login
+            LoginPage& login
     ) {
         login.user.isAuthenticated = false;
         login.input.clear();

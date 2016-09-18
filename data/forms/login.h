@@ -1,10 +1,10 @@
-#ifndef FORM_LOGIN_H
-#define FORM_LOGIN_H
+#ifndef DATA_FORM_LOGIN_H
+#define DATA_FORM_LOGIN_H
 
 #include <cppcms/form.h>
 
 
-namespace form {
+namespace data {
     struct LoginForm: public cppcms::form {
         cppcms::widgets::text username;
         cppcms::widgets::password password;
@@ -35,5 +35,5 @@ namespace form {
         }
     };
 
-}   // namespace form
-#endif  // FORM_LOGIN_H
+}   // namespace data
+#endif  // DATA_FORM_LOGIN_H

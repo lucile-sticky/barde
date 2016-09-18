@@ -1,10 +1,10 @@
-#ifndef FORM_SONG_H
-#define FORM_SONG_H
+#ifndef DATA_FORM_SONG_H
+#define DATA_FORM_SONG_H
 
 #include <cppcms/form.h>
 
 
-namespace form {
+namespace data {
 
 	struct SongForm:public cppcms::form {
 		cppcms::widgets::text artist;
@@ -75,5 +75,5 @@ namespace form {
         }
     };
 
-}   // namespace form
-#endif  // FORM_SONG_H
+}   // namespace data
+#endif  // DATA_FORM_SONG_H

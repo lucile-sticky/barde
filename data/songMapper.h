@@ -4,6 +4,7 @@
 
 #include "dbMapper.h"
 #include "song.h"
+#include <data/pages/song.h>
 
 
 namespace data {
@@ -14,7 +15,7 @@ namespace data {
 
         bool loadSong(Song& dest, const std::string& songId);
         bool loadUserProposedSongs(User& dest);
-        bool loadPendingSongs(AdminPageSong& dest);
+        bool loadPendingSongs(SongAdminPage& dest);
 
         bool insert(const User& user, unsigned int artistId, const Song& song);
         bool update(unsigned int artistId, const Song& song);

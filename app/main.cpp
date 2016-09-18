@@ -6,7 +6,7 @@
 #include <cppdb/frontend.h>
 #include <booster/log.h>
 
-#include <data/htmlPage.h>
+#include <data/pages/htmlPage.h>
 #include <app/login.h>
 #include <app/playlist.h>
 #include <app/song.h>

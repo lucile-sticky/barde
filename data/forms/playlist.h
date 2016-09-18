@@ -1,10 +1,10 @@
-#ifndef FORM_PLAYLIST_H
-#define FORM_PLAYLIST_H
+#ifndef DATA_FORM_PLAYLIST_H
+#define DATA_FORM_PLAYLIST_H
 
 #include <cppcms/form.h>
 
 
-namespace form {
+namespace data {
 
 	struct PlaylistForm:public cppcms::form {
 		cppcms::widgets::text name;
@@ -43,5 +43,5 @@ namespace form {
 			add(buttons);
 	}};
 
-}   // namespace form
-#endif  // FORM_PLAYLIST_H
+}   // namespace data
+#endif  // DATA_FORM_PLAYLIST_H

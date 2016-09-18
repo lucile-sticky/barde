@@ -40,7 +40,7 @@ namespace app {
             return;
         }
 
-        data::AdminPageSong pageSong;
+        data::SongAdminPage pageSong;
         pageSong.resetFrom(page_);
         pageSong.pageTitle = "Proposed songs";
 
@@ -64,7 +64,7 @@ namespace app {
         }
 
         data::Song song;
-        data::PageEditSong pageSong;
+        data::EditSongPage pageSong;
         data::SongMapper songMapper(connectionString_);
 
         if (request().request_method() == "POST") {

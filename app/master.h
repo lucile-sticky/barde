@@ -6,7 +6,7 @@
 #include <cppcms/service.h>
 #include <cppdb/frontend.h>
 
-#include <data/htmlPage.h>
+#include <data/pages/htmlPage.h>
 #include <data/user.h>
 
 #include <string>

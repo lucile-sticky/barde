@@ -68,7 +68,7 @@ namespace data {
         return success;
     }
 
-    bool SongMapper::loadPendingSongs(AdminPageSong& dest) {
+    bool SongMapper::loadPendingSongs(SongAdminPage& dest) {
         bool success = false;
 
         dest.pendingSongs.clear();

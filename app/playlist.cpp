@@ -113,7 +113,7 @@ namespace app {
             return;
         }
 
-        data::AllPlaylists allPlaylists;
+        data::AllPlaylistsPage allPlaylists;
         allPlaylists.resetFrom(page_);
 
         data::PlaylistMapper playlistMapper(connectionString_);
@@ -147,7 +147,10 @@ namespace app {
         }
 
         data::PlaylistMapper playlistMapper(connectionString_);
+        data::SongMapper songMapper(connectionString_);
+
         playlistMapper.loadTopPlaylist(playlist_, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::DESC);
+        songMapper.loadUserProposedSongs(page_.user);
 
         doDisplay();
 
@@ -207,7 +210,10 @@ namespace app {
         }
 
         data::PlaylistMapper playlistMapper(connectionString_);
+        data::SongMapper songMapper(connectionString_);
+
         playlistMapper.loadUserTopPlaylist(playlist_, page_.user, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::RAND);
+        songMapper.loadUserProposedSongs(page_.user);
 
         doDisplay();
 
@@ -244,13 +250,13 @@ namespace app {
                 return;
         }
 
-        data::PagePlaylist pagePlaylist;
+        data::NewPlaylistPage pagePlaylist;
         if (request().request_method() == "POST") {
             pagePlaylist.input.load(context());
             if(! pagePlaylist.input.validate()) {
                 pagePlaylist.alerts.errors.push_back("Invalid or missing fields!");
             } else {
-                data::Playlist playlist;
+                data::PlaylistItem playlist;
                 playlist.name = pagePlaylist.input.name.value();
 
                 file* imageFile = pagePlaylist.input.image.value().get();

@@ -1,12 +1,7 @@
 #ifndef DATA_SONG_H
 #define DATA_SONG_H
 
-#include <data/htmlPage.h>
 #include <data/songVote.h>
-
-#include <forms/song.h>
-
-#include <booster/regex.h>
 
 namespace data {
 
@@ -31,20 +26,6 @@ namespace data {
         SongVote vote;
 
         Song() : showVideo(false), proposer(""), position(0)  {}
-
-	};
-
-	struct PageSong : public HtmlPage {
-        int id;
-    };
-    struct AdminPageSong : public PageSong {
-        std::vector<Song> pendingSongs;
-    };
-	struct PageNewSong : public PageSong {
-        form::NewSongForm input;
-	};
-	struct PageEditSong : public PageSong {
-        form::EditSongForm input;
 	};
 
 }   // namespace data
