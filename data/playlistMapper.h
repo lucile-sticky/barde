@@ -5,6 +5,7 @@
 #include "dbMapper.h"
 #include "htmlPage.h"
 #include "playlist.h"
+#include "user.h"
 
 #include <chrono>
 #include <vector>
@@ -25,6 +26,7 @@ namespace data {
         std::string findCurrentPlaylistId();
         bool loadPlaylist(Playlist& dest, const std::string& playlistId, const User& user);
         bool loadTopPlaylist(Playlist& dest, unsigned short nbSongs, OrderBy orderBy);
+        bool loadUserTopPlaylist(Playlist& dest, const User& user, unsigned short nbSongs, OrderBy orderBy);
         bool loadProposedPlaylist(Playlist& dest);
         bool loadAllPlaylists(AllPlaylists& dest);  // Result is cached
         bool loadComingPlaylists(data::HtmlPage& dest);

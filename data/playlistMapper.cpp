@@ -81,21 +81,20 @@ namespace data {
         std::string query="SELECT song_id, SUM(vote) AS total_votes, "
             "s.title AS song_title, a.name AS artist_name, s.file, s.url "
             "FROM ( "
-                "SELECT vs.song_id, s.playlist_id, SUM(vs.vote) AS vote "
-                "FROM song_vote vs "
-                "LEFT JOIN song s ON s.id = vs.song_id "
-                "GROUP BY vs.song_id, s.playlist_id "
+                "SELECT sv.song_id, s.playlist_id, SUM(sv.vote) AS vote "
+                "FROM song_vote sv "
+                "LEFT JOIN song s ON s.id = sv.song_id "
+                "GROUP BY sv.song_id, s.playlist_id "
             "UNION "
-                "SELECT s.id, vp.playlist_id, SUM(vp.vote) / 2 "
-                "FROM playlist_vote vp "
-                "LEFT JOIN song s ON s.playlist_id = vp.playlist_id "
+                "SELECT s.id, pv.playlist_id, SUM(pv.vote) / 2 "
+                "FROM playlist_vote pv "
+                "LEFT JOIN song s ON s.playlist_id = pv.playlist_id "
                 "GROUP BY s.id, playlist_id "
-            ") VOTES "
-            "LEFT JOIN song s ON s.id = song_id "
-            "LEFT JOIN artist a ON a.id = s.artist_id "
+            ") votes "
+            "INNER JOIN song s ON s.id = song_id "
+            "INNER JOIN artist a ON a.id = s.artist_id "
             "WHERE s.file IS NOT NULL "
-            "GROUP BY song_id "
-            "HAVING total_votes > 0 ";
+            "GROUP BY song_id ";
 
         switch(orderBy) {
             case OrderBy::DESC:
@@ -105,15 +104,72 @@ namespace data {
                 query += "ORDER BY total_votes ASC, song_id ASC ";
                 break;
             default:
+                query += "HAVING total_votes > 0 "; // Increase random playlist quality
                 query += "ORDER BY RAND() ";
                 break;
         }
 
         query += "LIMIT ? ";
 
-        BOOSTER_DEBUG("loadTopPlaylist") << query << nbSongs;
+        BOOSTER_DEBUG("loadTopPlaylist") << query << ", " << nbSongs;
 
         cppdb::result result = connection() << query << nbSongs;
+
+        while (result.next()) {
+            data::Song song;
+            result >> song.id >> song.vote.totalValues >> song.title >> song.artist
+                >> song.file >> song.url;
+            dest.songs.push_back(song);
+
+            success = true;
+        }
+        return success;
+    }
+
+    bool PlaylistMapper::loadUserTopPlaylist(Playlist& dest, const User& user,  unsigned short nbSongs, OrderBy orderBy) {
+        bool success = false;
+
+        dest.songs.clear();
+
+        std::string query="SELECT votes.song_id, SUM(votes.vote) AS total_votes, "
+            "s.title AS song_title, a.name AS artist_name, s.file, s.url, "
+            "sv.vote AS user_vote "
+            "FROM ( "
+                "SELECT sv.song_id, s.playlist_id, SUM(sv.vote) AS vote "
+                "FROM song_vote sv "
+                "LEFT JOIN song s ON s.id = sv.song_id "
+                "GROUP BY sv.song_id, s.playlist_id "
+            "UNION "
+                "SELECT s.id, pv.playlist_id, SUM(pv.vote) / 2 "
+                "FROM playlist_vote pv "
+                "LEFT JOIN song s ON s.playlist_id = pv.playlist_id "
+                "GROUP BY s.id, playlist_id "
+            ") votes "
+            "INNER JOIN song s ON s.id = song_id "
+            "INNER JOIN artist a ON a.id = s.artist_id "
+            "LEFT JOIN song_vote sv ON sv.song_id = s.id AND sv.user_id = ? "
+            "WHERE s.file IS NOT NULL "
+            "AND (sv.vote IS NULL OR sv.vote >= 0) "
+            "GROUP BY song_id ";
+
+        switch(orderBy) {
+            case OrderBy::DESC:
+                query += "ORDER BY user_vote DESC, total_votes DESC, song_id DESC ";
+                break;
+            case OrderBy::ASC:
+                query += "ORDER BY user_vote, total_votes ASC, song_id ASC ";
+                break;
+            default:
+                query += "HAVING total_votes > 0 "; // Increase random playlist quality
+                query += "ORDER BY user_vote DESC, RAND() ";
+                break;
+        }
+
+        query += "LIMIT ? ";
+
+        BOOSTER_DEBUG("loadUserTopPlaylist") << query << ", " << user.id << ", " << nbSongs;
+
+        cppdb::result result = connection() << query << user.id << nbSongs;
 
         while (result.next()) {
             data::Song song;

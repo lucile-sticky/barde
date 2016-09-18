@@ -207,7 +207,7 @@ namespace app {
         }
 
         data::PlaylistMapper playlistMapper(connectionString_);
-        playlistMapper.loadTopPlaylist(playlist_, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::RAND);
+        playlistMapper.loadUserTopPlaylist(playlist_, page_.user, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::RAND);
 
         doDisplay();
 
