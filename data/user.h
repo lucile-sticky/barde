@@ -3,27 +3,14 @@
 
 #include <cppcms/view.h>
 
+#include <data/song.h>
+
 #include <string>
 #include <vector>
 
 namespace data {
 
     struct User : public cppcms::base_content {
-        struct ProposedSong {
-            struct Playlist {
-                std::string id;
-                std::string name;
-                bool enabled;
-            };
-
-            unsigned int id;
-            std::string title;
-            std::string artist;
-            std::string url;
-
-            Playlist playlist;
-        };
-
         enum Level {
             ANONYMOUS = 0,  // No authentification
             GUEST = 1,
@@ -39,7 +26,7 @@ namespace data {
         bool isAllowed;
 
         // Songs the user proposed
-        std::vector<ProposedSong> proposedSongs;
+        std::vector<Song> proposedSongs;
 
 
         User() {

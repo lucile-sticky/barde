@@ -1,10 +1,7 @@
 #ifndef DATA_PLAYLIST_H
 #define DATA_PLAYLIST_H
 
-#include <data/pages/htmlPage.h>
-#include <data/song.h>
-#include <data/playlistVote.h>
-#include <data/forms/playlist.h>
+#include <cppcms/view.h>
 
 namespace data {
 
@@ -15,6 +12,9 @@ namespace data {
         std::string description;
         time_t publication;
         size_t nbSongs;
+        bool enabled;
+
+        PlaylistItem() : enabled(0) {}
     };
 
 }   // namespace data

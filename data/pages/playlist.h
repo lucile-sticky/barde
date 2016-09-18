@@ -2,6 +2,7 @@
 #define DATA_PAGE_PLAYLIST_H
 
 #include <data/playlist.h>
+#include <data/playlistVote.h>
 #include <data/song.h>
 #include <data/forms/playlist.h>
 #include <data/pages/htmlPage.h>

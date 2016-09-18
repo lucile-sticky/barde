@@ -56,7 +56,7 @@ namespace data {
         cppdb::result result = connection() << query << dest.id;
 
         while (result.next()) {
-            User::ProposedSong song;
+            Song song;
             unsigned short plEnabled;
             result >> song.id >> song.title >> song.artist >> song.url
                 >> song.playlist.id >> song.playlist.name >> plEnabled;
@@ -86,7 +86,7 @@ namespace data {
         cppdb::result result = connection() << query;
 
         while (result.next()) {
-            data::Song song;
+            Song song;
             result >> song.id >> song.title >> song.artist >> song.file >> song.url
                 >> song.proposer;
             dest.pendingSongs.push_back(song);
