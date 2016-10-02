@@ -72,7 +72,7 @@
                     <% foreach song in songs %>
                     <tbody>
                         <% item %>
-                        <tr>
+                        <tr data-id='<%= song.id %>'>
                             <td class='selectable secondary-information'><span class='num-song'></span></td>
                             <td class='selectable play'><span /></td>
                             <td class='selectable'>
@@ -81,7 +81,7 @@
                                 </a>
                             </td>
                             <td class='selectable'><%= song.artist %></td>
-                            <td class='selectable secondary-information duration'>--:--</td>
+                            <td class='selectable secondary-information duration'><%= song.duration | strftime("%M:%S") %></td>
                             <td class='selectable secondary-information'>Anonymous</td>
                             <% if ( content.user.level >= content.user.ADMINISTRATOR ) %>
                             <td class='secondary-information'>
@@ -108,11 +108,11 @@
                                 </span>
                             </td>
                             <% elif ( content.user.level >= content.user.CITIZEN ) %>
-                            <td class='secondary-information' data-id='<%= song.id %>'>
+                            <td class='secondary-information'>
                                 <span class='flaticon-square js-song-like <% if song.vote.isLike() %>selected<% end %>'
                                         title='<% gt "I like {1}" using song.title %>'></span>
                             </td>
-                            <td class='secondary-information' data-id='<%= song.id %>'>
+                            <td class='secondary-information'>
                                 <span class='flaticon-sad-face-in-rounded-square js-song-dislike <% if song.vote.isDislike() %>selected<% end %>'
                                         title="<% gt "I don't like {1}" using song.title %>"></span>
                             </td>

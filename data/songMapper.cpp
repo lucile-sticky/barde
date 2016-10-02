@@ -13,7 +13,8 @@ namespace data {
         bool success = false;
 
         std::string query = "SELECT s.id, s.title, "
-            "a.name AS artist, s.file, s.url, s.show_video, s.position "
+            "a.name AS artist, s.file, s.url, s.duration, "
+            "s.show_video, s.position "
             "FROM song s "
             "INNER JOIN artist a ON a.id = s.artist_id "
             "WHERE s.id = ? ";
@@ -29,6 +30,7 @@ namespace data {
             dest.artist = result.get<std::string>("artist");
             dest.file = result.get<std::string>("file", "");
             dest.url = result.get<std::string>("url", "");
+            dest.duration = result.get<unsigned int>("duration", 0);
             dest.showVideo = result.get<unsigned short>("show_video", 0);
             dest.position = result.get<unsigned short>("position");
 
@@ -124,15 +126,27 @@ namespace data {
         return st.affected() >= 1;
     }
 
-    bool SongMapper::setSongPlaylist(unsigned int songId, unsigned int playlistId) {
+    bool SongMapper::updatePlaylistId(unsigned int songId, unsigned int playlistId) {
         std::string query = "UPDATE song SET playlist_id = ? WHERE id = ? ";
 
-        BOOSTER_DEBUG("setSongPlaylist") << query << ", " << playlistId <<  ", "
+        BOOSTER_DEBUG("updatePlaylistId") << query << ", " << playlistId <<  ", "
             << songId;
 
         cppdb::statement st = connection() << query << playlistId << songId << cppdb::exec;
 
         return st.affected() >= 1;
     }
+
+    bool SongMapper::updateDuration(unsigned int songId, unsigned int duration) {
+        std::string query = "UPDATE song SET duration = ? WHERE id = ? ";
+
+        BOOSTER_DEBUG("updateDuration") << query << ", " << duration << ", "
+            << songId;
+
+        cppdb::statement st = connection() << query << duration << songId << cppdb::exec;
+
+        return st.affected() >= 1;
+    }
+
 
 }   // namespace data

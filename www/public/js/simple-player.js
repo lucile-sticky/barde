@@ -62,10 +62,27 @@ $(function() {
             }
         },
         setCurrentDuration: function() {
-            var duration = moment.duration(this.audio[0].duration, 'seconds');
-            var time = moment({minute: duration.minutes(), second: duration.seconds()});
-            this.songs.find('.selected .duration').text(time.format('mm:ss'));
+            var selectedFormattedDuration = this.songs.find('tr.selected .duration').text();
+            var measuredDuration = Math.round(this.audio[0].duration);
+            var measuredFormattedDuration = this.formatDuration(measuredDuration);
 
+            if (selectedFormattedDuration != measuredFormattedDuration) {
+                this.updateSongDuration(measuredDuration);
+                this.songs.find('.selected .duration').text(measuredFormattedDuration);
+            }
+        },
+        formatDuration: function(measuredDuration) {
+            var duration = moment.duration(measuredDuration, 'seconds');
+            return moment({
+                    minute: duration.minutes(),
+                    second: duration.seconds()
+                }).format('mm:ss');
+        },
+        updateSongDuration: function(duration) {
+            var songId = this.songs.find('tr.selected').data('id');
+            var url = '/playlists/song/ajax-set-duration/' + songId + '/' + duration;
+
+            $.ajax(url);
         },
     };
 

@@ -36,11 +36,11 @@ namespace data {
 
         dest.songs.clear();
 
-        std::string query = "SELECT p.id, p.name AS playlist_name, p.image, "
-            "p.description, UNIX_TIMESTAMP(p.publication), "
-            "IFNULL(vp.vote, 0) AS vote, "
+        std::string query = "SELECT p.id, p.name, p.image, "
+            "p.description, UNIX_TIMESTAMP(p.publication) AS publication, "
+            "vp.vote AS vote, "
             "s.id AS song_id, s.title AS song_title, a.name AS artist_name, s.file, s.url, "
-            "s.show_video, IFNULL(vs.vote, 0) AS song_vote "
+            "s.duration, s.show_video, vs.vote AS song_vote "
             "FROM playlist p "
             "LEFT JOIN song s ON s.playlist_id = p.id "
             "INNER JOIN artist a ON a.id = s.artist_id "
@@ -60,14 +60,28 @@ namespace data {
         cppdb::result result = connection() << query << user.id << user.id << playlistId;
 
         while (result.next()) {
-            data::Song song;
-            unsigned short showVideo;
-            result >> dest.id >> dest.name >> dest.image >>
-                dest.description >> dest.publication >> dest.vote.value >>
-                song.id >> song.title >> song.artist >> song.file >> song.url >> showVideo >> song.vote.value;
-            song.showVideo = showVideo;
-            dest.songs.push_back(song);
+            dest.id = result.get<std::string>("id");
+            dest.name = result.get<std::string>("name");
+            dest.image = result.get<std::string>("image");
+            dest.description = result.get<std::string>("description");
+            dest.publication = result.get<time_t>("publication");
+            dest.vote.value = result.get<short>("vote", 0);
 
+            unsigned int songId = result.get<unsigned int>("song_id", 0);
+            if (songId != 0) {
+                data::Song song;
+
+                song.id = songId;
+                song.title = result.get<std::string>("song_title");
+                song.artist = result.get<std::string>("artist_name");
+                song.file = result.get<std::string>("file", "");
+                song.url = result.get<std::string>("url", "");
+                song.duration = result.get<unsigned int>("duration", 0);
+                song.showVideo = result.get<unsigned short>("show_video", 0);
+                song.vote.value = result.get<short>("song_vote", 0);
+
+                dest.songs.push_back(song);
+            }
             success = true;
         }
         return success;
@@ -79,7 +93,8 @@ namespace data {
         dest.songs.clear();
 
         std::string query="SELECT song_id, SUM(vote) AS total_votes, "
-            "s.title AS song_title, a.name AS artist_name, s.file, s.url "
+            "s.title AS song_title, a.name AS artist_name, s.file, s.url, "
+            "IFNULL(s.duration, 0) "
             "FROM ( "
                 "SELECT sv.song_id, s.playlist_id, SUM(sv.vote) AS vote "
                 "FROM song_vote sv "
@@ -118,7 +133,7 @@ namespace data {
         while (result.next()) {
             data::Song song;
             result >> song.id >> song.vote.totalValues >> song.title >> song.artist
-                >> song.file >> song.url;
+                >> song.file >> song.url >> song.duration;
             dest.songs.push_back(song);
 
             success = true;
@@ -133,6 +148,7 @@ namespace data {
 
         std::string query="SELECT votes.song_id, SUM(votes.vote) AS total_votes, "
             "s.title AS song_title, a.name AS artist_name, s.file, s.url, "
+            "IFNULL(s.duration, 0), "
             "sv.vote AS user_vote "
             "FROM ( "
                 "SELECT sv.song_id, s.playlist_id, SUM(sv.vote) AS vote "
@@ -174,7 +190,7 @@ namespace data {
         while (result.next()) {
             data::Song song;
             result >> song.id >> song.vote.totalValues >> song.title >> song.artist
-                >> song.file >> song.url;
+                >> song.file >> song.url >> song.duration;
             dest.songs.push_back(song);
 
             success = true;

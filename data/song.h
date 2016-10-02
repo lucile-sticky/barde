@@ -14,6 +14,7 @@ namespace data {
 		std::string artist;
 		std::string file;
 		std::string url;
+        unsigned int duration;
         unsigned short position;
         bool showVideo;
 		std::string proposer;

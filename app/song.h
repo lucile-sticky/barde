@@ -18,6 +18,7 @@ namespace app {
 
         void ajaxNew();
         void ajaxSetPlaylist(std::string songId, std::string playlistId);
+        void ajaxSetDuration(std::string songId, std::string duration);
 
     private:
         bool insert(const data::Song& song);

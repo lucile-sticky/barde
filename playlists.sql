@@ -100,6 +100,7 @@ CREATE TABLE `song` (
   `artist_id` int(9) unsigned NOT NULL,
   `file` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
   `url` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
+  `duration` smallint(4) unsigned DEFAULT NULL,
   `playlist_id` varchar(45) CHARACTER SET latin1 NOT NULL,
   `position` smallint(4) unsigned NOT NULL,
   `proposer_id` int(9) unsigned NOT NULL,
@@ -159,4 +160,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-13 22:24:46
+-- Dump completed on 2016-09-18 18:41:53

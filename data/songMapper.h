@@ -19,7 +19,8 @@ namespace data {
 
         bool insert(const User& user, unsigned int artistId, const Song& song);
         bool update(unsigned int artistId, const Song& song);
-        bool setSongPlaylist(unsigned int songId, unsigned int playlistId);
+        bool updatePlaylistId(unsigned int songId, unsigned int playlistId);
+        bool updateDuration(unsigned int songId, unsigned int duration);
     };
 
 

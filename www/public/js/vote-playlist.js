@@ -18,14 +18,14 @@ $(function() {
 
             $('.js-song-like').click(function(e) {
                 var playlistId = that.player.data('id');
-                var songId = $(this).parent().data('id');
+                var songId = $(this).parent().parent().data('id');
                 var url = '/playlists/vote-song/ajax-vote/' + playlistId + '/' + songId;
                 that.toggleLikeDislike($(this), url, 'like');
             });
 
             $('.js-song-dislike').click(function(e) {
                 var playlistId = that.player.data('id');
-                var songId = $(this).parent().data('id');
+                var songId = $(this).parent().parent().data('id');
                 var url = '/playlists/vote-song/ajax-vote/' + playlistId + '/' + songId;
                 that.toggleLikeDislike($(this), url, 'dislike');
             });

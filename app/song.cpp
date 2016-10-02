@@ -28,6 +28,9 @@ namespace app {
 
         dispatcher().assign("/ajax-set-playlist/(\\d+)/(\\d+)", &Song::ajaxSetPlaylist, this, 1, 2);
         mapper().assign("/{1}/{2}");
+
+        dispatcher().assign("/ajax-set-duration/(\\d+)/(\\d+)", &Song::ajaxSetDuration, this, 1, 2);
+        mapper().assign("/{1}/{2}");
     }
 
     void Song::displayProposed() {
@@ -161,7 +164,7 @@ namespace app {
 
         data::SongMapper songMapper(connectionString_);
 
-        bool result = songMapper.setSongPlaylist(
+        bool result = songMapper.updatePlaylistId(
             std::stoi(songId),
             std::stoi(playlistId)
         );
@@ -169,6 +172,28 @@ namespace app {
         std::string key = Playlist::getCacheKey(playlistId, page_.user);
         cache().rise(key);
         BOOSTER_DEBUG("ajaxSetPlaylist") << "Clean cache for key=" << key;
+
+        cppcms::json::value jsonOutput;
+        jsonOutput["success"] = result;
+        response().out() << jsonOutput;
+    }
+
+    void Song::ajaxSetDuration(std::string songId, std::string duration) {
+        if (! checkAuth(data::User::GUEST)) {
+            response().make_error_response(response::forbidden);
+            BOOSTER_WARNING("ajaxSetPlaylist") << "Forbid user "
+                << page_.user.alias << " to set song playlist";
+            return;
+        }
+
+        BOOSTER_DEBUG("ajaxSetDuration");
+
+        data::SongMapper songMapper(connectionString_);
+
+        bool result = songMapper.updateDuration(
+            std::stoi(songId),
+            std::stoi(duration)
+        );
 
         cppcms::json::value jsonOutput;
         jsonOutput["success"] = result;
