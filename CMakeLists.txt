@@ -24,6 +24,7 @@ set(PLAYLISTS_SRC
     app/login.cpp
     app/playlist.cpp
     app/playlistVote.cpp
+    app/playlistComment.cpp
     app/song.cpp
     app/songVote.cpp
     app/util/stringMethods.cpp
@@ -33,6 +34,7 @@ set(PLAYLISTS_SRC
     data/loginMapper.cpp
     data/playlistMapper.cpp
     data/playlistVoteMapper.cpp
+    data/playlistCommentMapper.cpp
     data/songMapper.cpp
     data/songVoteMapper.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/${SKIN_NAME}.cpp

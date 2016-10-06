@@ -22,7 +22,7 @@ namespace app {
         if (! checkAuth(data::User::CITIZEN)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("ajaxVote") << "Forbid user "
-                << page_.user.alias << " to vote for playlist";
+                << page_.user.alias << " to vote for playlist " << playlistId;
             return;
         }
 

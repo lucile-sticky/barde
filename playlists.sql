@@ -42,6 +42,7 @@ CREATE TABLE `playlist` (
   `image` varchar(100) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
   `publication` date DEFAULT NULL,
+  `player` enum('simple','jwplayer') NOT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -59,12 +60,16 @@ CREATE TABLE `playlist_comment` (
   `playlist_id` int(10) unsigned NOT NULL,
   `parent_id` int(10) unsigned DEFAULT NULL,
   `comment` text NOT NULL,
+  `author_id` int(9) unsigned DEFAULT NULL,
+  `status` enum('published','signaled','blocked','approved') NOT NULL,
   `creation` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `playlist_id` (`playlist_id`),
   KEY `parent_id` (`parent_id`),
+  KEY `author_id` (`author_id`),
   CONSTRAINT `playlist_comment_ibfk_1` FOREIGN KEY (`playlist_id`) REFERENCES `playlist` (`id`),
-  CONSTRAINT `playlist_comment_ibfk_2` FOREIGN KEY (`parent_id`) REFERENCES `playlist_comment` (`id`)
+  CONSTRAINT `playlist_comment_ibfk_2` FOREIGN KEY (`parent_id`) REFERENCES `playlist_comment` (`id`),
+  CONSTRAINT `playlist_comment_ibfk_3` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -160,4 +165,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-18 18:41:53
+-- Dump completed on 2016-10-04 20:33:45

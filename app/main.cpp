@@ -11,6 +11,7 @@
 #include <app/playlist.h>
 #include <app/song.h>
 #include <app/playlistVote.h>
+#include <app/playlistComment.h>
 #include <app/songVote.h>
 
 class WepApp  : public cppcms::application {
@@ -29,9 +30,12 @@ public:
         attach(new app::Song(s), "song", "/song{1}",
             "/song(.*)", 1);
 
-        // Votes
+        // Votes and comments
         attach(new app::PlaylistVote(s), "vote-playlist", "/vote-playlist{1}",
             "/vote-playlist(.*)", 1);
+
+        attach(new app::PlaylistComment(s), "comment-playlist", "/comment-playlist{1}",
+            "/comment-playlist(.*)", 1);
 
         attach(new app::SongVote(s), "vote-song", "/vote-song{1}",
             "/vote-song(.*)", 1);
