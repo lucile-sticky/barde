@@ -62,8 +62,8 @@ namespace data {
         while (result.next()) {
             dest.id = result.get<std::string>("id");
             dest.name = result.get<std::string>("name");
-            dest.image = result.get<std::string>("image");
-            dest.description = result.get<std::string>("description");
+            dest.image = result.get<std::string>("image", "");
+            dest.description = result.get<std::string>("description", "");
             dest.publication = result.get<time_t>("publication");
             dest.vote.value = result.get<short>("vote", 0);
 
@@ -72,8 +72,8 @@ namespace data {
                 data::Song song;
 
                 song.id = songId;
-                song.title = result.get<std::string>("song_title");
-                song.artist = result.get<std::string>("artist_name");
+                song.title = result.get<std::string>("song_title", "");
+                song.artist = result.get<std::string>("artist_name", "");
                 song.file = result.get<std::string>("file", "");
                 song.url = result.get<std::string>("url", "");
                 song.duration = result.get<unsigned int>("duration", 0);
