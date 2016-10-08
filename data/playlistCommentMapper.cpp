@@ -35,9 +35,25 @@ namespace data {
             comment.comment = result.get<std::string>("comment");
             comment.author = result.get<std::string>("author");
             comment.creation = result.get<time_t>("creation");
-            dest.comments.push_back(comment);
 
-            success = true;
+            if (comment.parentId == 0) {
+                dest.comments.push_back(comment);
+                success = true;
+                continue;
+            }
+
+            if (dest.comments.empty()) {
+                BOOSTER_ERROR("loadComments") << "No comment to add reply " << comment.id;
+                continue;
+            }
+
+            if (dest.comments.back().id != comment.parentId) {
+                BOOSTER_ERROR("loadComments") << "Missing lastest comment " << comment.parentId <<
+                    " to add reply " << comment.id;
+                continue;
+            }
+
+            dest.comments.back().replies.push_back(comment);
         }
         return success;
     }

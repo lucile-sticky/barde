@@ -3,6 +3,7 @@
 
 #include <cppcms/view.h>
 
+#include <vector>
 
 namespace data {
 
@@ -13,9 +14,7 @@ namespace data {
         std::string author;
         time_t creation;
 
-        bool isParent() const {
-            return parentId == 0;
-        }
+        std::vector<PlaylistComment> replies;
 	};
 
 }   // namespace data

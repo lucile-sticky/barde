@@ -14,6 +14,60 @@
     </audio>
 <% end %>
 
+<% template comments() %>
+    <div class='comments-wrapper'>
+        <h2><% gt "Comments" %></h2>
+        <div class='add-comment'>
+            <textarea placeholder='<% gt "Go, you know you want to say it !" %>' maxlength='300'></textarea>
+            <button type='button'><span class='flaticon-send-symbol'></span></button>
+        </div>
+
+        <% foreach comment in comments %>
+        <div class='all-comments'>
+            <% item %>
+            <div class='one-comment'>
+                <div>
+                    <img src='<%= mediaRootUrl %>/images/default-user.jpg' alt='avatar'>
+                </div>
+                <div>
+                    <div class='information'>
+                        <%= comment.author %>
+                        <small><%= comment.creation | strftime("%F %T") %></small>
+                    </div>
+                    <div class='content'><%= comment.comment %></div>
+
+                    <% foreach reply in comment.replies %>
+                    <div class='sub-comments'>
+                        <% item %>
+                        <div class='one-comment'>
+                            <div>
+                                <img src='<%= mediaRootUrl %>/images/default-user.jpg' alt='avatar'>
+                            </div>
+                            <div>
+                                <div class='information'>
+                                    <%= reply.author %>
+                                    <small><%= reply.creation | strftime("%F %T") %></small>
+                                </div>
+                                <div class='content'><%= reply.comment %></div>
+                            </div>
+                        </div>
+                        <% end %>
+                    </div>
+                    <% end foreach %>
+
+                    <div class='reply'>
+                        <textarea placeholder='<% gt "Add your 2 cents, respectfully" %>' maxlength='150'></textarea>
+                        <button type='button'><span class='flaticon-send-symbol'></span></button>
+                    </div>
+
+                </div>
+            </div>
+            <% end %>
+        </div>
+        <% end foreach %>
+    </div>
+<% end %>
+
 <% template pageContent() %>
     <div class="content-wrap">
         <section id="section-linebox-1" class="content-current">
@@ -124,6 +178,9 @@
                 </table>
 
             </div>
+
+            <% include comments() %>
+
         </section>
     </div>
     <% include player() %>
