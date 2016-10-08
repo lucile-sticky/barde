@@ -2,7 +2,6 @@
 #define APP_LOGIN_H
 
 #include <app/master.h>
-#include <data/loginMapper.h>
 #include <data/pages/login.h>
 
 namespace app {

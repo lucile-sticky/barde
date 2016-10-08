@@ -3,6 +3,7 @@
 
 #include <data/playlist.h>
 #include <data/playlistVote.h>
+#include <data/playlistComment.h>
 #include <data/song.h>
 #include <data/forms/playlist.h>
 #include <data/pages/htmlPage.h>
@@ -16,8 +17,11 @@ namespace data {
         std::string description;
         time_t publication;
         bool votesEnabled;
+
         std::vector<Song> songs;
+
         PlaylistVote vote;
+        std::vector<data::PlaylistComment> comments;
 
         PlaylistPage() :id(""), votesEnabled(true) {}
     };

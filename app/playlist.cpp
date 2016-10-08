@@ -6,6 +6,10 @@
 
 #include <app/util/stringMethods.h>
 
+#include <data/playlistMapper.h>
+#include <data/playlistCommentMapper.h>
+#include <data/songMapper.h>
+
 #include <sstream>
 
 using namespace cppcms::http;
@@ -86,9 +90,11 @@ namespace app {
         playlist_.votesEnabled = true;
 
         data::PlaylistMapper playlistMapper(connectionString_);
+        data::PlaylistCommentMapper playlistCommentMapper(connectionString_);
         data::SongMapper songMapper(connectionString_);
 
         playlistMapper.loadPlaylist(playlist_, playlistId, page_.user);
+        playlistCommentMapper.loadComments(playlist_, playlistId);
         songMapper.loadUserProposedSongs(page_.user);
 
         doDisplay();

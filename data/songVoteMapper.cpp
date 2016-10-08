@@ -10,12 +10,12 @@ namespace data {
     {}
 
 
-    bool SongVoteMapper::saveVote(unsigned int userId, const std::string& songId, short vote) {
+    bool SongVoteMapper::insert(unsigned int userId, const std::string& songId, short vote) {
         std::string query = "INSERT INTO song_vote "
-            "(song_id, user_id, vote) VALUES (?, ?, ?) "
+            "(song_id, user_id, vote, creation) VALUES (?, ?, ?, NOW()) "
             "ON DUPLICATE KEY UPDATE vote = ?";
 
-        BOOSTER_DEBUG("saveVote") << query << ", " << songId << ", "
+        BOOSTER_DEBUG("insert") << query << ", " << songId << ", "
             << userId << ", " << vote << ", " << vote << ", " << cppdb::exec;
 
         cppdb::statement st = connection() << query << songId << userId << vote << vote << cppdb::exec;

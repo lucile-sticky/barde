@@ -4,9 +4,12 @@
 #include <cppcms/json.h>
 #include <booster/log.h>
 
-#include <data/song.h>
 #include <app/playlist.h>
 #include <app/validators/songValidator.h>
+
+#include <data/artistMapper.h>
+#include <data/playlistMapper.h>
+#include <data/songMapper.h>
 
 #include <sstream>
 

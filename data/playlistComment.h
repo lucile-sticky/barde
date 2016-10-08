@@ -7,10 +7,15 @@
 namespace data {
 
 	struct PlaylistComment : public cppcms::base_content {
+        unsigned int id;
         unsigned int parentId;
 		std::string comment;
         std::string author;
         time_t creation;
+
+        bool isParent() const {
+            return parentId == 0;
+        }
 	};
 
 }   // namespace data

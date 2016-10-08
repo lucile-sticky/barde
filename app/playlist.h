@@ -3,8 +3,6 @@
 
 #include <app/master.h>
 #include <data/pages/playlist.h>
-#include <data/playlistMapper.h>
-#include <data/songMapper.h>
 
 
 namespace app {

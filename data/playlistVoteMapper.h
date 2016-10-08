@@ -11,7 +11,7 @@ namespace data {
     class PlaylistVoteMapper : public DbMapper {
     public:
         PlaylistVoteMapper(const std::string& connectionString);
-        bool saveVote(unsigned int userId, const std::string& playlistId, short vote);
+        bool insert(unsigned int userId, const std::string& playlistId, short vote);
     };
 
 

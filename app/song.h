@@ -2,10 +2,7 @@
 #define APP_SONG_H
 
 #include <app/master.h>
-#include <data/artistMapper.h>
-#include <data/playlistMapper.h>
 #include <data/song.h>
-#include <data/songMapper.h>
 
 
 namespace app {

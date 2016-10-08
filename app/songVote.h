@@ -14,7 +14,7 @@ namespace app {
         void ajaxVote(std::string playlistId, std::string songId, std::string vote);
 
     private:
-        bool saveVote(unsigned int userId, unsigned int songId, short vote);
+        bool insert(unsigned int userId, unsigned int songId, short vote);
     };
 }   // namespace app
 

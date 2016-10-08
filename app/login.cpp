@@ -4,6 +4,7 @@
 #include <cppcms/url_dispatcher.h>
 #include <booster/log.h>
 
+#include <data/loginMapper.h>
 
 namespace app {
     Login::Login(cppcms::service& s) :

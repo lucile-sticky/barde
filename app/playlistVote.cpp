@@ -28,7 +28,7 @@ namespace app {
 
         data::PlaylistVoteMapper playlistVoteMapper(connectionString_);
 
-        bool result = playlistVoteMapper.saveVote(
+        bool result = playlistVoteMapper.insert(
             page_.user.id,
             playlistId,
             data::PlaylistVote::stringToVote(vote)

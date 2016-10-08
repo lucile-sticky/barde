@@ -31,7 +31,7 @@ namespace app {
         playlistComment.comment = cppcms::util::escape(request().post("comment"));
 
         data::PlaylistCommentMapper playlistCommentMapper(connectionString_);
-        bool success = playlistCommentMapper.saveComment(
+        bool success = playlistCommentMapper.insert(
                 page_.user.id,
                 playlistId,
                 playlistComment);

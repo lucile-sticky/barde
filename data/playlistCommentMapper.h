@@ -5,6 +5,7 @@
 #include <data/dbMapper.h>
 
 #include <data/playlistComment.h>
+#include <data/pages/playlist.h>
 
 
 namespace data {
@@ -13,7 +14,8 @@ namespace data {
     public:
         PlaylistCommentMapper(const std::string& connectionString);
 
-        bool saveComment(unsigned int authorId, const std::string& playlistId, const PlaylistComment& comment);
+        bool loadComments(PlaylistPage& dest, const std::string& playlistId);
+        bool insert(unsigned int authorId, const std::string& playlistId, const PlaylistComment& comment);
     };
 
 
