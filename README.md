@@ -1,7 +1,7 @@
 # barde
 
 [CppCms](http://cppcms.com) web-based application.
-You can compile as a standalone server or fast-CGI to execute on web-server.
+Depending on your configuration file (default is config.js) once compiled you can execute as a standalone server or fast-CGI to execute using web-server (may be Nginx, Apache ...).
 Statics files (in www directory) must be served on a real web-server.
 
 ## Install
@@ -12,10 +12,11 @@ mysql
 
 #### Libraries
 
-* linux-vdso.so.1
 * libbooster.so.0
 * libcppcms.so.1
 * libcppdb.so.0
+
+* linux-vdso.so.1
 * libm.so.6
 * libpthread.so.0
 * libpcre.so.3
