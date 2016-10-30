@@ -21,7 +21,7 @@ namespace data {
             "FROM playlist_comment pc "
             "INNER JOIN user u ON u.id = pc.author_id "
             "WHERE pc.playlist_id = ? "
-            "ORDER BY position_id, pc.id";
+            "ORDER BY position_id DESC, pc.id ASC";
 
 
         BOOSTER_DEBUG("loadComments") << query << ", " << playlistId;

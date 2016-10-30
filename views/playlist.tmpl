@@ -6,6 +6,7 @@
 <% include master::pageJs() %>
     <script type="text/javascript" src="<%= mediaRootUrl %>/js/simple-player.js"></script>
     <script type="text/javascript" src="<%= mediaRootUrl %>/js/vote-playlist.js"></script>
+    <script type="text/javascript" src="<%= mediaRootUrl %>/js/comment-playlist.js"></script>
 <% end %>
 
 <% template player() %>
@@ -15,7 +16,7 @@
 <% end %>
 
 <% template comments() %>
-    <div class='comments-wrapper'>
+    <div class='comments-wrapper' data-id='<%= id %>'>
         <h2><% gt "Comments" %></h2>
         <div class='add-comment'>
             <textarea placeholder='<% gt "Go, you know you want to say it !" %>' maxlength='300'></textarea>
@@ -55,7 +56,7 @@
                     </div>
                     <% end foreach %>
 
-                    <div class='reply'>
+                    <div class='reply' data-parent='<%= comment.id %>'>
                         <textarea placeholder='<% gt "Add your 2 cents, respectfully" %>' maxlength='150'></textarea>
                         <button type='button'><span class='flaticon-send-symbol'></span></button>
                     </div>
