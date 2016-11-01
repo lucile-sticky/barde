@@ -18,6 +18,10 @@
 <% template comments() %>
     <div class='comments-wrapper' data-id='<%= id %>'>
         <h2><% gt "Comments" %></h2>
+
+        <div class='alert-danger' style='display: none'>Service unavailable, please retry later.</div>
+        <div class='alert-success' style='display: none'>Thanks for submitting your comment, it should appear soon.</div>
+
         <div class='add-comment'>
             <textarea placeholder='<% gt "Go, you know you want to say it !" %>' maxlength='300'></textarea>
             <button type='button'><span class='flaticon-send-symbol'></span></button>
@@ -33,7 +37,7 @@
                 <div>
                     <div class='information'>
                         <%= comment.author %>
-                        <small><%= comment.creation | strftime("%F %T") %></small>
+                        <small><%= comment.creation | strftime("%F") %></small>
                     </div>
                     <div class='content'><%= comment.comment %></div>
 
@@ -47,7 +51,7 @@
                             <div>
                                 <div class='information'>
                                     <%= reply.author %>
-                                    <small><%= reply.creation | strftime("%F %T") %></small>
+                                    <small><%= reply.creation | strftime("%F") %></small>
                                 </div>
                                 <div class='content'><%= reply.comment %></div>
                             </div>

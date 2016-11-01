@@ -6,35 +6,55 @@ $(function() {
 
             this.comments.find('button').click(function(e) {
                 var eltComment = $(this).siblings('textarea')
-                var comment = eltComment.val().trim();
 
-                if (comment.length == 0) {
-                    return;
+                that.sendComment(eltComment);
+            });
+
+            this.comments.find('textarea').keypress(function(e) {
+                if (e.which == 13) {
+                    var eltComment = $(this);
+
+                    that.sendComment(eltComment);
                 }
-
-                var playlistId = that.comments.data('id');
-                var parentId = $(this).parent().data('parent');
-
-                if (!parentId) {
-                    parentId = 0;
-                }
-
-                that.sendComment(playlistId, parentId, comment, eltComment);
             });
         },
-        sendComment: function(playlistId, parentId, comment, eltComment) {
-            var success = false;
+        sendComment: function(eltComment) {
+            var comment = eltComment.val().trim();
+
+            if (comment.length == 0) {
+                return;
+            }
+
+            var playlistId = this.comments.data('id');
+            var parentId = eltComment.parent().data('parent');
+
+            if (!parentId) {
+                parentId = 0;
+            }
 
             var url = '/playlists/comment-playlist/ajax-comment/' + playlistId + '/' + parentId;
 
+            var that = this;
             $.ajax({
                 type: 'POST',
                 url: url,
                 data: { comment: comment },
                 success: function() {
                     eltComment.val('');
+                    that.successMessage();
+                },
+                error: function() {
+                    that.failureMessage();
                 }
             });
+        },
+        successMessage: function() {
+            this.comments.find('.alert-warning').hide();
+            this.comments.find('.alert-success').show();
+        },
+        failureMessage: function() {
+            this.comments.find('.alert-success').hide();
+            this.comments.find('.alert-warning').show();
         },
     };
 

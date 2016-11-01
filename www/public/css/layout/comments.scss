@@ -1,10 +1,13 @@
 
 .comments-wrapper {
+    h2 {
+        margin-bottom: 20px;
+    }
     .add-comment {
         position: relative;
         height: 70px;
-        margin: 20px 0;
         border: 1px solid darken($dark-contrast-color, 10%);
+        margin-bottom: 20px;
 
         @include border-radius(4px);
 
@@ -101,6 +104,12 @@
         .information {
             margin-bottom: 6px;
             color: white;
+
+            small {
+                font-size: 13px;
+                opacity: 0.8;
+                float: right;
+            }
         }
 
         .content {
