@@ -44,7 +44,7 @@
 <% template proposedSong() %>
     <div class='proposed-songs'>
         <div>
-            <h3><% gt "Song submitted" %></h3>
+            <h3><% gt "Songs submitted" %></h3>
             <input placeholder='Search something!' type='text' class='search'/>
         </div>
         <div>
@@ -54,6 +54,7 @@
                     <th width='10%'></th>
                     <th width='22.5%'></th>
                     <th width='22.5%'></th>
+                    <th width='10%'></th>
                     <th width='22.5%'></th>
                 </thead>
                 <tbody>
@@ -62,6 +63,15 @@
                         <td><%= song.id %> </td>
                         <td><span title="<%= song.title %>"><%= song.title %></span></td>
                         <td><span title="<%= song.artist %>"><%= song.artist %></span></td>
+                        <td>
+                        <% if empty song.url %>
+                        <% else %>
+                            <a class='js-show-video' target="_blank" href="<%= song.url %>" alt="<%= song.url %>"
+                                    title="<% gt "Watch {1} video clip" using song.title %>" >
+                                <span class='flaticon-big-play-button'></span>
+                            </a>
+                        <% end %>
+                        </td>
                         <td>
                         <% if song.playlist.enabled %>
                             <a href="<% url "/playlist" using song.playlist.id %>" title="<%= song.playlist.name%>">
