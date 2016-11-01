@@ -134,12 +134,12 @@
                         <tr data-id='<%= song.id %>'>
                             <td class='selectable secondary-information'><span class='num-song'></span></td>
                             <td class='selectable play'><span /></td>
-                            <td class='selectable'>
+                            <td class='selectable' title='<%= song.title %>'>
                                 <a class="js-song" href="<%= mediaRootUrl %><%= song.file %>">
                                     <%= song.title %>
                                 </a>
                             </td>
-                            <td class='selectable'><%= song.artist %></td>
+                            <td class='selectable' title='<%= song.artist %>'><%= song.artist %></td>
                             <td class='selectable secondary-information duration'><%= song.duration | strftime("%M:%S") %></td>
                             <td class='selectable secondary-information'>Anonymous</td>
                             <% if ( content.user.level >= content.user.ADMINISTRATOR ) %>
