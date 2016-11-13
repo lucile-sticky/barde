@@ -115,6 +115,8 @@
         .content {
             color: $light-contrast-color;
             text-align: justify;
+            word-wrap: break-word;
+            max-width: 340px;
         }
 
         .sub-comments {
