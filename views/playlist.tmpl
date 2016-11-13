@@ -184,7 +184,9 @@
 
             </div>
 
-            <% include comments() %>
+            <% if votesEnabled %>
+                <% include comments() %>
+            <% end %>
 
         </section>
     </div>
