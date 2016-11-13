@@ -19,7 +19,7 @@ namespace data {
 
             name.id("name");
 			name.message(translate("Name:"));
-			name.limits(1, 45);
+			name.limits(1, 50);
 
 			image.id("image");
 			image.message(translate("Image:"));

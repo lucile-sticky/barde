@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.44, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.53, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: playlists
 -- ------------------------------------------------------
--- Server version	5.5.44-0+deb8u1
+-- Server version	5.5.53-0+deb8u1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,9 +24,9 @@ DROP TABLE IF EXISTS `artist`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artist` (
   `id` int(9) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `name` varchar(100) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,14 +38,14 @@ DROP TABLE IF EXISTS `playlist`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `playlist` (
   `id` int(9) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
+  `name` varchar(50) NOT NULL,
   `image` varchar(100) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
   `publication` date DEFAULT NULL,
   `player` enum('simple','jwplayer') NOT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,7 +89,7 @@ CREATE TABLE `playlist_vote` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `playlist_vote_ibfk_1` FOREIGN KEY (`playlist_id`) REFERENCES `playlist` (`id`),
   CONSTRAINT `playlist_vote_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +101,7 @@ DROP TABLE IF EXISTS `song`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `song` (
   `id` int(9) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(45) CHARACTER SET latin1 NOT NULL,
+  `title` varchar(100) CHARACTER SET latin1 NOT NULL,
   `artist_id` int(9) unsigned NOT NULL,
   `file` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
   `url` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE `song` (
   KEY `artist_id` (`artist_id`),
   CONSTRAINT `song_ibfk_1` FOREIGN KEY (`proposer_id`) REFERENCES `user` (`id`),
   CONSTRAINT `song_ibfk_2` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,7 +134,7 @@ CREATE TABLE `song_vote` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `song_vote_ibfk_1` FOREIGN KEY (`song_id`) REFERENCES `song` (`id`),
   CONSTRAINT `song_vote_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +153,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `alias` (`alias`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -165,4 +165,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-04 20:33:45
+-- Dump completed on 2016-11-13 17:49:42

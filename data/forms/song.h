@@ -22,11 +22,11 @@ namespace data {
 
             artist.id("artist");
 			artist.message(translate("Artist:"));
-			artist.limits(1, 50);
+			artist.limits(1, 100);
 
 			title.id("title");
 			title.message(translate("Title:"));
-			title.limits(1, 45);
+			title.limits(1, 100);
 
 			file.id("file");
 			file.message(translate("file Address:"));
