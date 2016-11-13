@@ -28,7 +28,7 @@ namespace app {
 
         data::PlaylistComment playlistComment;
         playlistComment.parentId = std::stoi(parentId);
-        playlistComment.comment = cppcms::util::escape(request().post("comment"));
+        playlistComment.comment = request().post("comment");
 
         data::PlaylistCommentMapper playlistCommentMapper(connectionString_);
         bool success = playlistCommentMapper.insert(
