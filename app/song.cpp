@@ -108,8 +108,6 @@ namespace app {
         pageSong.resetFrom(page_);
         pageSong.pageTitle = "Modify a song";
 
-        songMapper.loadUserProposedSongs(page_.user);
-
         render("editSong", pageSong);
     }
 

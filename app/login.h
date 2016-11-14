@@ -7,8 +7,6 @@
 namespace app {
     class Login : public Master {
 
-        data::LoginPage login_;
-
     public:
         Login(cppcms::service& s);
         void display();

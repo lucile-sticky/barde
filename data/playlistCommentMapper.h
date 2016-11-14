@@ -15,6 +15,8 @@ namespace data {
         PlaylistCommentMapper(const std::string& connectionString);
 
         bool loadComments(PlaylistPage& dest, const std::string& playlistId);
+        bool loadUserNbComments(User& dest);
+
         bool insert(unsigned int authorId, const std::string& playlistId, const PlaylistComment& comment);
     };
 

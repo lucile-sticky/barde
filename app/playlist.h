@@ -26,8 +26,6 @@ namespace app {
 
         static const std::string PROPOSED_LIST_NAME;
 
-        data::PlaylistPage playlist_;
-
     public:
         Playlist(cppcms::service& s);
         void displayCurrent();
@@ -42,7 +40,7 @@ namespace app {
         static std::string getCacheKey(const std::string& playlistId, const data::User& user);
 
     private:
-        void doDisplay();
+        void doDisplay(data::PlaylistPage& playlist);
 
 
     };

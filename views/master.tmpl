@@ -104,6 +104,7 @@
             <div>
                 <h2><%= user.alias %></h2>
                 <span class='number'><%= user.proposedSongs.size() %></span><span><% gt "songs submitted" %></span>
+                <span class='number'><%= user.nbComments %></span><span><% gt "comments posted" %></span>
             </div>
             <div class='logout'>
                 <form action="<% url "/login" %>">

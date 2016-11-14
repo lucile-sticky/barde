@@ -28,6 +28,7 @@ namespace data {
         // Songs the user proposed
         std::vector<Song> proposedSongs;
 
+        unsigned int nbComments;
 
         User() {
             clear();
@@ -39,6 +40,8 @@ namespace data {
             level = data::User::ANONYMOUS;
             isAuthenticated = false;
             isAllowed = true;
+
+            nbComments = 0;
         }
     };
 

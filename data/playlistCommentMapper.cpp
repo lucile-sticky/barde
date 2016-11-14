@@ -10,6 +10,24 @@ namespace data {
     {}
 
 
+    bool PlaylistCommentMapper::loadUserNbComments(User& dest) {
+        bool success = false;
+
+        std::string query = "SELECT COUNT(*) FROM playlist_comment "
+            "WHERE author_id = ? ";
+
+        BOOSTER_DEBUG("loadUserNbComments") << query << ", " << dest.id;
+
+        cppdb::result result = connection() << query << dest.id << cppdb::row;
+
+        if (result.empty()) {
+            dest.nbComments = 0;
+        } else {
+            dest.nbComments = result.get<unsigned int>(0);
+        }
+        return success;
+    }
+
     bool PlaylistCommentMapper::loadComments(PlaylistPage& dest, const std::string& playlistId) {
         bool success = false;
 

@@ -87,17 +87,17 @@ namespace app {
             return;
         }
 
-        playlist_.votesEnabled = true;
+        data::PlaylistPage playlist;
+        playlist.votesEnabled = true;
 
         data::PlaylistMapper playlistMapper(connectionString_);
+        playlistMapper.loadPlaylist(playlist, playlistId, page_.user);
+
         data::PlaylistCommentMapper playlistCommentMapper(connectionString_);
-        data::SongMapper songMapper(connectionString_);
+        playlistCommentMapper.loadComments(playlist, playlistId);
+        playlistCommentMapper.loadUserNbComments(page_.user);
 
-        playlistMapper.loadPlaylist(playlist_, playlistId, page_.user);
-        playlistCommentMapper.loadComments(playlist_, playlistId);
-        songMapper.loadUserProposedSongs(page_.user);
-
-        doDisplay();
+        doDisplay(playlist);
 
         cache().store_page(key, CACHE_TTL_MEDIUM);
         BOOSTER_DEBUG("display") << "Store cache for key=" << key;
@@ -125,6 +125,9 @@ namespace app {
         data::PlaylistMapper playlistMapper(connectionString_);
         playlistMapper.loadAllPlaylists(allPlaylists);
 
+        data::SongMapper songMapper(connectionString_);
+        songMapper.loadUserProposedSongs(allPlaylists.user);
+
         render("allPlaylists", allPlaylists);
 
         cache().store_page(key, CACHE_TTL_MEDIUM);
@@ -141,24 +144,22 @@ namespace app {
             return;
         }
 
-        playlist_.id = TOP_LIST_ID;
-        playlist_.name = TOP_LIST_NAME;
-        playlist_.image = TOP_LIST_IMAGE;
-        playlist_.votesEnabled = false;
-
         std::string key = TOP_LIST_ID;
         if (cache().fetch_page(key)) {
             BOOSTER_DEBUG("displayTop") << "Fetch cache for key=" << key;
             return;
         }
 
+        data::PlaylistPage playlist;
+        playlist.id = TOP_LIST_ID;
+        playlist.name = TOP_LIST_NAME;
+        playlist.image = TOP_LIST_IMAGE;
+        playlist.votesEnabled = false;
+
         data::PlaylistMapper playlistMapper(connectionString_);
-        data::SongMapper songMapper(connectionString_);
+        playlistMapper.loadTopPlaylist(playlist, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::DESC);
 
-        playlistMapper.loadTopPlaylist(playlist_, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::DESC);
-        songMapper.loadUserProposedSongs(page_.user);
-
-        doDisplay();
+        doDisplay(playlist);
 
         cache().store_page(key, CACHE_TTL_SHORT);
         BOOSTER_DEBUG("displayTop") << "Store cache for key=" << key;
@@ -174,21 +175,22 @@ namespace app {
             return;
         }
 
-        playlist_.id = WORST_LIST_ID;
-        playlist_.name = WORST_LIST_NAME;
-        playlist_.image = WORST_LIST_IMAGE;
-        playlist_.votesEnabled = false;
-
         std::string key = WORST_LIST_ID;
         if (cache().fetch_page(key)) {
             BOOSTER_DEBUG("displayWorst") << "Fetch cache for key=" << key;
             return;
         }
 
-        data::PlaylistMapper playlistMapper(connectionString_);
-        playlistMapper.loadTopPlaylist(playlist_, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::ASC);
+        data::PlaylistPage playlist;
+        playlist.id = WORST_LIST_ID;
+        playlist.name = WORST_LIST_NAME;
+        playlist.image = WORST_LIST_IMAGE;
+        playlist.votesEnabled = false;
 
-        doDisplay();
+        data::PlaylistMapper playlistMapper(connectionString_);
+        playlistMapper.loadTopPlaylist(playlist, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::ASC);
+
+        doDisplay(playlist);
 
         cache().store_page(key, CACHE_TTL_SHORT);
         BOOSTER_DEBUG("displayWorst") << "Store cache for key=" << key;
@@ -204,24 +206,22 @@ namespace app {
             return;
         }
 
-        playlist_.id = RANDOM_LIST_ID;
-        playlist_.name = RANDOM_LIST_NAME;
-        playlist_.image = RANDOM_LIST_IMAGE;
-        playlist_.votesEnabled = false;
-
-        std::string key = getCacheKey(playlist_.id, page_.user);
+        std::string key = getCacheKey(RANDOM_LIST_ID, page_.user);
         if (cache().fetch_page(key)) {
             BOOSTER_DEBUG("displayRandom") << "Fetch cache for key=" << key;
             return;
         }
 
+        data::PlaylistPage playlist;
+        playlist.id = RANDOM_LIST_ID;
+        playlist.name = RANDOM_LIST_NAME;
+        playlist.image = RANDOM_LIST_IMAGE;
+        playlist.votesEnabled = false;
+
         data::PlaylistMapper playlistMapper(connectionString_);
-        data::SongMapper songMapper(connectionString_);
+        playlistMapper.loadUserTopPlaylist(playlist, page_.user, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::RAND);
 
-        playlistMapper.loadUserTopPlaylist(playlist_, page_.user, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::RAND);
-        songMapper.loadUserProposedSongs(page_.user);
-
-        doDisplay();
+        doDisplay(playlist);
 
         cache().store_page(key, CACHE_TTL_MEDIUM);
         BOOSTER_DEBUG("displayRandom") << "Store cache for key=" << key;
@@ -237,13 +237,14 @@ namespace app {
                 return;
         }
 
+        data::PlaylistPage playlist;
+        playlist.name = PROPOSED_LIST_NAME;
+        playlist.votesEnabled = false;
+
         data::PlaylistMapper playlistMapper(connectionString_);
-        playlistMapper.loadProposedPlaylist(playlist_);
+        playlistMapper.loadProposedPlaylist(playlist);
 
-        playlist_.name = PROPOSED_LIST_NAME;
-        playlist_.votesEnabled = false;
-
-        doDisplay();
+        doDisplay(playlist);
     }
 
     void Playlist::displayNew() {
@@ -278,7 +279,7 @@ namespace app {
                     BOOSTER_INFO("displayNew") << "Uploaded file " << uploadFileName;
 
                     if (! playlistMapper.insert(playlist)) {
-                        msg << "Could not create playlist " << playlist_.name;
+                        msg << "Could not create playlist " << playlist.name;
                         pagePlaylist.alerts.errors.push_back(msg.str());
                         BOOSTER_ERROR("displayNew") << msg.str();
                     } else {
@@ -306,10 +307,14 @@ namespace app {
         return Master::getCacheKey(CACHE_PREFIX, playlistId, user);
     }
 
-    void Playlist::doDisplay() {
-        playlist_.resetFrom(page_);
-        playlist_.pageTitle = playlist_.name;
-        render("playlist", playlist_);
+    void Playlist::doDisplay(data::PlaylistPage& playlist) {
+        playlist.resetFrom(page_);
+        playlist.pageTitle = playlist.name;
+
+        data::SongMapper songMapper(connectionString_);
+        songMapper.loadUserProposedSongs(playlist.user);
+
+        render("playlist", playlist);
     }
 
 }   // namespace app
