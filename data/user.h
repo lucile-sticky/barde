@@ -39,7 +39,7 @@ namespace data {
             alias = "Anonymous";
             level = data::User::ANONYMOUS;
             isAuthenticated = false;
-            isAllowed = true;
+            isAllowed = false;
 
             nbComments = 0;
         }

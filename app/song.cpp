@@ -39,15 +39,15 @@ namespace app {
     void Song::displayProposed() {
         BOOSTER_DEBUG("displayProposed");
 
-        if (! checkAuth(data::User::ADMINISTRATOR)) {
+        data::SongAdminPage pageSong(page_);
+
+        if (! checkAuth(pageSong.user, data::User::ADMINISTRATOR)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("displayProposed") << "Forbid user "
-                << page_.user.alias << " to view proposed songs";
+                << pageSong.user.alias << " to view proposed songs";
             return;
         }
 
-        data::SongAdminPage pageSong;
-        pageSong.resetFrom(page_);
         pageSong.pageTitle = "Proposed songs";
 
         data::SongMapper songMapper(connectionString_);
@@ -62,16 +62,17 @@ namespace app {
     void Song::displayEdit(std::string songId) {
         BOOSTER_DEBUG("displayEdit");
 
-        if (! checkAuth(data::User::ADMINISTRATOR)) {
+        data::EditSongPage pageSong(page_);
+
+        if (! checkAuth(pageSong.user, data::User::ADMINISTRATOR)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("displayEdit") << "Forbid user "
-                << page_.user.alias << " to edit song";
+                << pageSong.user.alias << " to edit song";
             return;
         }
 
-        data::Song song;
-        data::EditSongPage pageSong;
         data::SongMapper songMapper(connectionString_);
+        data::Song song;
 
         if (request().request_method() == "POST") {
             pageSong.input.load(context());
@@ -104,18 +105,18 @@ namespace app {
             pageSong.input.position.value(song.position);
         }
 
-
-        pageSong.resetFrom(page_);
         pageSong.pageTitle = "Modify a song";
 
         render("editSong", pageSong);
     }
 
     void Song::ajaxNew() {
-        if (! checkAuth(data::User::CITIZEN)) {
+        data::User user;
+
+        if (! checkAuth(user, data::User::CITIZEN)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("ajaxNew") << "Forbid user "
-                << page_.user.alias << " to add new song";
+                << user.alias << " to add new song";
             return;
         }
 
@@ -131,7 +132,7 @@ namespace app {
         std::string message = validator.lastMessage();
 
         if (success) {
-            success = insert(song);
+            success = insert(user, song);
             std::ostringstream oss;
             if (success) {
                 oss << "Successfully proposed \"" << song.title << "\". Thanks for your contribution to the playlist ^_^";
@@ -154,10 +155,12 @@ namespace app {
     }
 
     void Song::ajaxSetPlaylist(std::string songId, std::string playlistId) {
-        if (! checkAuth(data::User::ADMINISTRATOR)) {
+        data::User user;
+
+        if (! checkAuth(user, data::User::ADMINISTRATOR)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("ajaxSetPlaylist") << "Forbid user "
-                << page_.user.alias << " to set song playlist";
+                << user.alias << " to set song playlist";
             return;
         }
 
@@ -170,7 +173,7 @@ namespace app {
             std::stoi(playlistId)
         );
 
-        std::string key = Playlist::getCacheKey(playlistId, page_.user);
+        std::string key = Playlist::getCacheKey(playlistId, user);
         cache().rise(key);
         BOOSTER_DEBUG("ajaxSetPlaylist") << "Clean cache for key=" << key;
 
@@ -180,10 +183,12 @@ namespace app {
     }
 
     void Song::ajaxSetDuration(std::string songId, std::string duration) {
-        if (! checkAuth(data::User::GUEST)) {
+        data::User user;
+
+        if (! checkAuth(user, data::User::GUEST)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("ajaxSetPlaylist") << "Forbid user "
-                << page_.user.alias << " to set song playlist";
+                << user.alias << " to set song playlist";
             return;
         }
 
@@ -201,7 +206,7 @@ namespace app {
         response().out() << jsonOutput;
     }
 
-    bool Song::insert(const data::Song& song) {
+    bool Song::insert(const data::User& proposer, const data::Song& song) {
         bool success = false;
 
         data::ArtistMapper artistMapper(connectionString_);
@@ -215,7 +220,7 @@ namespace app {
         if (artistId == 0) {
             BOOSTER_DEBUG("addNew") << "Could not create artist " << song.artist;
         } else {
-            success = songMapper.insert(page_.user, artistId, song);
+            success = songMapper.insert(proposer, artistId, song);
         }
 
         return success;

@@ -50,13 +50,15 @@ namespace data {
         // Coming playlists - used in various pages
         std::vector<ComingPlaylist> comingPlaylists;
 
-        void resetFrom(const HtmlPage& other) {
-            siteTitle = other.siteTitle;
-            pageTitle = other.pageTitle;
-            mediaRootUrl = other.mediaRootUrl;
-            httpScript = other.httpScript;
-            user = other.user;
-        }
+
+        HtmlPage() {}
+
+        HtmlPage(const HtmlPage& other) :
+            siteTitle(other.siteTitle),
+            pageTitle(other.pageTitle),
+            mediaRootUrl(other.mediaRootUrl),
+            httpScript(other.httpScript)
+        {}
     };
 
 }   // namespace data

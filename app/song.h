@@ -18,7 +18,7 @@ namespace app {
         void ajaxSetDuration(std::string songId, std::string duration);
 
     private:
-        bool insert(const data::Song& song);
+        bool insert(const data::User& author, const data::Song& song);
         bool update(const data::Song& song);
     };
 }   // namespace app

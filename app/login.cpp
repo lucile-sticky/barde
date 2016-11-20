@@ -19,7 +19,9 @@ namespace app {
 
         session().clear();
 
-        data::LoginPage login;
+        data::LoginPage login(page_);
+        login.pageTitle = "Authentification";
+        login.user.isAllowed = true;
 
         if(request().request_method() == "POST") {
             login.input.load(context());
@@ -40,15 +42,11 @@ namespace app {
                     session()["alias"] = login.user.alias;
                     session().set<unsigned int>("level", login.user.level);
                     login.alerts.success.push_back("Authenticated");
-                    redirectTo("/playlist");
+                    redirectTo(login.user, "/playlist");
                 }
             }
             login.input.clear();
         }
-
-        login.resetFrom(page_);
-        login.pageTitle = "Authentification";
-
         render("login", login);
     }
 

@@ -30,8 +30,8 @@ namespace app {
         static std::string getCacheKey(const std::string& prefix, const std::string& id, const data::User& user);
 
     protected:
-        bool checkAuth(data::User::Level requiredLevel = data::User::GUEST);
-        void redirectTo(const std::string& internalLocation);
+        bool checkAuth(data::User& user, data::User::Level requiredLevel = data::User::GUEST);
+        void redirectTo(const data::User& user, const std::string& internalLocation);
 
         std::string composeImagePlaylistPath(const cppcms::http::file* mediaFile) const;
         std::string composeUploadDestPath(const cppcms::http::file* mediaFile) const;

@@ -1,14 +1,17 @@
 #include "master.h"
 
 
+#include <cppcms/cache_interface.h>
+#include <cppcms/http_response.h>
 #include <cppcms/json.h>
 #include <cppcms/session_interface.h>
-#include <cppcms/cache_interface.h>
 #include <booster/log.h>
 
 #include <app/util/stringMethods.h>
 
 #include <cstdlib>
+
+using namespace cppcms::http;
 
 namespace app {
 
@@ -30,35 +33,41 @@ namespace app {
         return key.str();
     }
 
-    bool Master::checkAuth(data::User::Level requiredLevel) {
-        page_.user.clear();
-        page_.user.isAllowed = false;
+    bool Master::checkAuth(data::User& user, data::User::Level requiredLevel) {
+        user.clear();     // user should never be used
+
+        user.clear();
 
         // Load user data from session
         if(session().is_set("level")) {
-            page_.user.isAuthenticated = true;
-            page_.user.level = session().get<unsigned int>("level");
+            user.isAuthenticated = true;
+            user.level = session().get<unsigned int>("level");
         }
         if(session().is_set("id")) {
-            page_.user.id = session().get<unsigned int>("id");
+            user.id = session().get<unsigned int>("id");
         }
         if(session().is_set("alias")) {
-            page_.user.alias = session()["alias"];
+            user.alias = session()["alias"];
         }
 
         // Check level
-        if (page_.user.level < static_cast<unsigned int>(requiredLevel)) {
-            BOOSTER_WARNING("checkAuth") << page_.user.alias << " is trying to access unauthorized content";
-        } else {
-            page_.user.isAllowed = true;
+        std::string pathInfo = request().path_info();
+        if (user.level < static_cast<unsigned int>(requiredLevel)) {
+            BOOSTER_WARNING("checkAuth") << user.alias << " is not allowed to access " << pathInfo;
+
+            response().make_error_response(response::forbidden);
+
+        } else {    // Allowed
+            user.isAllowed = true;
+            BOOSTER_INFO("checkAuth") << user.alias << " accesses " << pathInfo;
         }
 
-        return page_.user.isAllowed;
+        return user.isAllowed;
     }
 
-    void Master::redirectTo(const std::string& internalLocation) {
+    void Master::redirectTo(const data::User& user, const std::string& internalLocation) {
         std::string location = page_.httpScript + internalLocation;
-        BOOSTER_INFO("redirectTo") << "Redirect user " << page_.user.alias << " to internal location " << location;
+        BOOSTER_INFO("redirectTo") << "Redirect user " << user.alias << " to internal location " << location;
         response().set_redirect_header(location);
     }
 

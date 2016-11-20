@@ -23,15 +23,27 @@ namespace data {
         PlaylistVote vote;
         std::vector<data::PlaylistComment> comments;
 
-        PlaylistPage() :id(""), votesEnabled(true) {}
+        PlaylistPage(const HtmlPage& other) :
+            HtmlPage(other),
+            id(""),
+            votesEnabled(true)
+       {}
     };
 
     struct AllPlaylistsPage : public HtmlPage {
         std::vector<PlaylistItem> playlists;
+
+        AllPlaylistsPage(const HtmlPage& other) :
+            HtmlPage(other)
+       {}
     };
 
-	struct NewPlaylistPage:public HtmlPage {
+	struct NewPlaylistPage : public HtmlPage {
         PlaylistForm input;
+
+        NewPlaylistPage(const HtmlPage& other) :
+            HtmlPage(other)
+       {}
 	};
 
 }   // namespace data

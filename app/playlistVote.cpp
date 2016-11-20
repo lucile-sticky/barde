@@ -19,22 +19,24 @@ namespace app {
     }
 
     void PlaylistVote::ajaxVote(std::string playlistId, std::string vote) {
-        if (! checkAuth(data::User::CITIZEN)) {
+        data::User user;
+
+        if (! checkAuth(user, data::User::CITIZEN)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("ajaxVote") << "Forbid user "
-                << page_.user.alias << " to vote for playlist " << playlistId;
+                << user.alias << " to vote for playlist " << playlistId;
             return;
         }
 
         data::PlaylistVoteMapper playlistVoteMapper(connectionString_);
 
         bool result = playlistVoteMapper.insert(
-            page_.user.id,
+            user.id,
             playlistId,
             data::PlaylistVote::stringToVote(vote)
         );
 
-        std::string key = Playlist::getCacheKey(playlistId, page_.user);
+        std::string key = Playlist::getCacheKey(playlistId, user);
         cache().rise(key);
         BOOSTER_DEBUG("ajaxVote") << "Clean cache for key=" << key;
 

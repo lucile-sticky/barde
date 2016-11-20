@@ -8,6 +8,8 @@
 namespace data {
     struct LoginPage: public HtmlPage {
         LoginForm input;
+
+        LoginPage(const HtmlPage& other) : HtmlPage(other) {}
     };
 
 }   // namespace data

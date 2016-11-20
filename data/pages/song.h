@@ -8,15 +8,34 @@ namespace data {
 
 	struct SongPage : public HtmlPage {
         int id;
+
+        SongPage(const HtmlPage& other) :
+            HtmlPage(other)
+       {}
     };
+
     struct SongAdminPage : public SongPage {
         std::vector<Song> pendingSongs;
+
+        SongAdminPage(const HtmlPage& other) :
+            SongPage(other)
+       {}
     };
-	struct NewSongPage : public SongPage {
+
+    struct NewSongPage : public SongPage {
         NewSongForm input;
+
+        NewSongPage(const HtmlPage& other) :
+            SongPage(other)
+       {}
 	};
-	struct EditSongPage : public SongPage {
+
+    struct EditSongPage : public SongPage {
         EditSongForm input;
+
+        EditSongPage(const HtmlPage& other) :
+            SongPage(other)
+       {}
 	};
 
 }   // namespace data

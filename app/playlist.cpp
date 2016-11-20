@@ -67,35 +67,30 @@ namespace app {
             playlistId = TOP_LIST_ID;
             BOOSTER_WARNING("displayCurrent") << "No current playlist, falling back on " << playlistId;
         }
-        redirectTo("/playlist/" + playlistId);
+        display(playlistId);
     }
 
     void Playlist::display(std::string playlistId) {
         BOOSTER_DEBUG("display") << "playlist ID: " << playlistId;
 
-        if (! checkAuth()) {
-            response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("display") << "Forbid user "
-                << page_.user.alias << " to access playlist ID: "
-                << playlistId;
+        data::PlaylistPage playlist(page_);
+
+        if (! checkAuth(playlist.user)) {
             return;
         }
 
-        std::string key = getCacheKey(playlistId, page_.user);
+        std::string key = getCacheKey(playlistId, playlist.user);
         if (cache().fetch_page(key)) {
             BOOSTER_DEBUG("display") << "Fetch cache for key=" << key;
             return;
         }
 
-        data::PlaylistPage playlist;
-        playlist.votesEnabled = true;
-
         data::PlaylistMapper playlistMapper(connectionString_);
-        playlistMapper.loadPlaylist(playlist, playlistId, page_.user);
+        playlistMapper.loadPlaylist(playlist, playlistId, playlist.user);
 
         data::PlaylistCommentMapper playlistCommentMapper(connectionString_);
         playlistCommentMapper.loadComments(playlist, playlistId);
-        playlistCommentMapper.loadUserNbComments(page_.user);
+        playlistCommentMapper.loadUserNbComments(playlist.user);
 
         doDisplay(playlist);
 
@@ -106,10 +101,12 @@ namespace app {
     void Playlist::displayAll() {
         BOOSTER_DEBUG("displayAll");
 
-        if (! checkAuth()) {
+        data::AllPlaylistsPage allPlaylists(page_);
+
+        if (! checkAuth(allPlaylists.user)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("displayAll") << "Forbid user "
-                << page_.user.alias << " to access all playlists";
+                << allPlaylists.user.alias << " to access all playlists";
             return;
         }
 
@@ -118,9 +115,6 @@ namespace app {
             BOOSTER_DEBUG("displayAll") << "Fetch cache for key=" << key;
             return;
         }
-
-        data::AllPlaylistsPage allPlaylists;
-        allPlaylists.resetFrom(page_);
 
         data::PlaylistMapper playlistMapper(connectionString_);
         playlistMapper.loadAllPlaylists(allPlaylists);
@@ -137,10 +131,12 @@ namespace app {
     void Playlist::displayTop() {
         BOOSTER_DEBUG("displayTop");
 
-        if (! checkAuth()) {
+        data::PlaylistPage playlist(page_);
+
+        if (! checkAuth(playlist.user)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("displayTop") << "Forbid user "
-                << page_.user.alias << " to access top playlist";
+                << playlist.user.alias << " to access top playlist";
             return;
         }
 
@@ -150,7 +146,6 @@ namespace app {
             return;
         }
 
-        data::PlaylistPage playlist;
         playlist.id = TOP_LIST_ID;
         playlist.name = TOP_LIST_NAME;
         playlist.image = TOP_LIST_IMAGE;
@@ -168,10 +163,12 @@ namespace app {
     void Playlist::displayWorst() {
         BOOSTER_DEBUG("displayWorst");
 
-        if (! checkAuth()) {
+        data::PlaylistPage playlist(page_);
+
+        if (! checkAuth(playlist.user)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("displayWorst") << "Forbid user "
-                << page_.user.alias << " to access worst playlist";
+                << playlist.user.alias << " to access worst playlist";
             return;
         }
 
@@ -181,7 +178,6 @@ namespace app {
             return;
         }
 
-        data::PlaylistPage playlist;
         playlist.id = WORST_LIST_ID;
         playlist.name = WORST_LIST_NAME;
         playlist.image = WORST_LIST_IMAGE;
@@ -199,27 +195,28 @@ namespace app {
     void Playlist::displayRandom() {
         BOOSTER_DEBUG("displayRandom");
 
-        if (! checkAuth()) {
+        data::PlaylistPage playlist(page_);
+
+        if (! checkAuth(playlist.user)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("displayRandom") << "Forbid user "
-                << page_.user.alias << " to access random playlist";
+                << playlist.user.alias << " to access random playlist";
             return;
         }
 
-        std::string key = getCacheKey(RANDOM_LIST_ID, page_.user);
+        std::string key = getCacheKey(RANDOM_LIST_ID, playlist.user);
         if (cache().fetch_page(key)) {
             BOOSTER_DEBUG("displayRandom") << "Fetch cache for key=" << key;
             return;
         }
 
-        data::PlaylistPage playlist;
         playlist.id = RANDOM_LIST_ID;
         playlist.name = RANDOM_LIST_NAME;
         playlist.image = RANDOM_LIST_IMAGE;
         playlist.votesEnabled = false;
 
         data::PlaylistMapper playlistMapper(connectionString_);
-        playlistMapper.loadUserTopPlaylist(playlist, page_.user, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::RAND);
+        playlistMapper.loadUserTopPlaylist(playlist, playlist.user, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::RAND);
 
         doDisplay(playlist);
 
@@ -230,14 +227,15 @@ namespace app {
     void Playlist::displayProposed() {
         BOOSTER_DEBUG("displayProposed");
 
-        if (! checkAuth(data::User::ADMINISTRATOR)) {
+        data::PlaylistPage playlist(page_);
+
+        if (! checkAuth(playlist.user, data::User::ADMINISTRATOR)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("displayProposed") << "Forbid user "
-                << page_.user.alias << " to access next playlist";
+                << playlist.user.alias << " to access next playlist";
                 return;
         }
 
-        data::PlaylistPage playlist;
         playlist.name = PROPOSED_LIST_NAME;
         playlist.votesEnabled = false;
 
@@ -250,27 +248,28 @@ namespace app {
     void Playlist::displayNew() {
         BOOSTER_DEBUG("displayNew");
 
-        if (! checkAuth(data::User::ADMINISTRATOR)) {
+        data::NewPlaylistPage newPlaylist(page_);
+
+        if (! checkAuth(newPlaylist.user, data::User::ADMINISTRATOR)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("displayNew") << "Forbid user "
-                << page_.user.alias << " to access new playlist";
+                << newPlaylist.user.alias << " to access new playlist";
                 return;
         }
 
-        data::NewPlaylistPage pagePlaylist;
         if (request().request_method() == "POST") {
-            pagePlaylist.input.load(context());
-            if(! pagePlaylist.input.validate()) {
-                pagePlaylist.alerts.errors.push_back("Invalid or missing fields!");
+            newPlaylist.input.load(context());
+            if(! newPlaylist.input.validate()) {
+                newPlaylist.alerts.errors.push_back("Invalid or missing fields!");
             } else {
                 data::PlaylistItem playlist;
-                playlist.name = pagePlaylist.input.name.value();
+                playlist.name = newPlaylist.input.name.value();
 
-                file* imageFile = pagePlaylist.input.image.value().get();
+                file* imageFile = newPlaylist.input.image.value().get();
                 std::string uploadFileName = composeUploadDestPath(imageFile);
 
                 playlist.image = composeImagePlaylistPath(imageFile);
-                playlist.description = pagePlaylist.input.description.value();
+                playlist.description = newPlaylist.input.description.value();
 
                 data::PlaylistMapper playlistMapper(connectionString_);
                 std::ostringstream msg;
@@ -280,27 +279,26 @@ namespace app {
 
                     if (! playlistMapper.insert(playlist)) {
                         msg << "Could not create playlist " << playlist.name;
-                        pagePlaylist.alerts.errors.push_back(msg.str());
+                        newPlaylist.alerts.errors.push_back(msg.str());
                         BOOSTER_ERROR("displayNew") << msg.str();
                     } else {
                         msg << "Successfully created playlist " << playlist.name;
-                        pagePlaylist.alerts.success.push_back(msg.str());
+                        newPlaylist.alerts.success.push_back(msg.str());
                         BOOSTER_INFO("displayNew") << msg.str();
 
-                        pagePlaylist.input.clear();
+                        newPlaylist.input.clear();
                     }
                 } catch(const cppcms::cppcms_error& e) {
                     msg << "Could not upload file " << uploadFileName;
-                    pagePlaylist.alerts.errors.push_back(msg.str());
+                    newPlaylist.alerts.errors.push_back(msg.str());
                     BOOSTER_ERROR("displayNew") << msg.str() << " - - " << e.trace();
                 }
             }
         }
 
-        pagePlaylist.resetFrom(page_);
-        pagePlaylist.pageTitle = translate("New Playlist");
+        newPlaylist.pageTitle = translate("New Playlist");
 
-        render("newPlaylist", pagePlaylist);
+        render("newPlaylist", newPlaylist);
     }
 
     std::string Playlist::getCacheKey(const std::string& playlistId, const data::User& user) {
@@ -308,7 +306,6 @@ namespace app {
     }
 
     void Playlist::doDisplay(data::PlaylistPage& playlist) {
-        playlist.resetFrom(page_);
         playlist.pageTitle = playlist.name;
 
         data::SongMapper songMapper(connectionString_);

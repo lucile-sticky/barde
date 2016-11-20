@@ -19,10 +19,12 @@ namespace app {
     }
 
     void PlaylistComment::ajaxComment(std::string playlistId, std::string parentId) {
-        if (! checkAuth(data::User::CITIZEN)) {
+        data::User user;
+
+        if (! checkAuth(user, data::User::CITIZEN)) {
             response().make_error_response(response::forbidden);
             BOOSTER_WARNING("ajaxComment") << "Forbid user "
-                << page_.user.alias << " to comment playlist " << playlistId;
+                << user.alias << " to comment playlist " << playlistId;
             return;
         }
 
@@ -32,11 +34,11 @@ namespace app {
 
         data::PlaylistCommentMapper playlistCommentMapper(connectionString_);
         bool success = playlistCommentMapper.insert(
-                page_.user.id,
+                user.id,
                 playlistId,
                 playlistComment);
 
-        std::string key = Playlist::getCacheKey(playlistId, page_.user);
+        std::string key = Playlist::getCacheKey(playlistId, user);
         cache().rise(key);
         BOOSTER_DEBUG("ajaxComment") << "Clean cache for key=" << key;
 

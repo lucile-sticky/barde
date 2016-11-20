@@ -98,15 +98,15 @@ namespace data {
         return success;
     }
 
-    bool SongMapper::insert(const User& user, unsigned int artistId, const Song& song) {
+    bool SongMapper::insert(const User& proposer, unsigned int artistId, const Song& song) {
         std::string query = "INSERT INTO song "
             "(title, artist_id, url, playlist_id, position, proposer_id) "
             "VALUES (?, ?, ?, 0, 10000, ?) ";
 
         BOOSTER_DEBUG("insert") << query << ", " << song.title <<  ", "
-            << artistId <<  ", " << song.url <<  ", " << user.id;
+            << artistId <<  ", " << song.url <<  ", " << proposer.id;
 
-        cppdb::statement st = connection() << query << song.title << artistId << song.url << user.id << cppdb::exec;
+        cppdb::statement st = connection() << query << song.title << artistId << song.url << proposer.id << cppdb::exec;
 
         return st.affected() >= 1;
     }
