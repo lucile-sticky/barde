@@ -140,6 +140,11 @@ body {
 }
 
 #profile > div:nth-child(2) {
+    color: $medium-contrast-color;
+    font-size: 14px;
+}
+
+#profile > div:nth-child(3) {
     height: calc(100% - 280px);
     margin: 80px 20px;
 

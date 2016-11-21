@@ -11,6 +11,11 @@
 namespace data {
 
     struct User : public cppcms::base_content {
+        static constexpr const char* ANONYMOUS_ALIAS = "Anonymous";
+
+        static constexpr const char* PRIVACY_PRIVATE = "private";
+        static constexpr const char* PRIVACY_PUBLIC = "public";
+
         enum Level {
             ANONYMOUS = 0,  // No authentification
             GUEST = 1,
@@ -24,6 +29,7 @@ namespace data {
         unsigned int level;
         bool isAuthenticated;
         bool isAllowed;
+        std::string privacy;
 
         // Songs the user proposed
         std::vector<Song> proposedSongs;
@@ -34,12 +40,17 @@ namespace data {
             clear();
         }
 
+        bool isPublic() {
+            return privacy == PRIVACY_PUBLIC;
+        }
+
         void clear() {
             id = 0;
-            alias = "Anonymous";
+            alias = ANONYMOUS_ALIAS;
             level = data::User::ANONYMOUS;
             isAuthenticated = false;
             isAllowed = false;
+            privacy = PRIVACY_PRIVATE;
 
             nbComments = 0;
         }

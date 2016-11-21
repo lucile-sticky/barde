@@ -112,6 +112,12 @@
                 </form>
             </div>
         </div>
+        <div class='edit'>
+            <form>
+                <input type='radio' name='privacy' value='private' /> <% gt "I am Legion, I do not forgive, I do not forget... I am anonymous" %><br />
+                <input type='radio' name='privacy' value='public' /> <% gt "Show my name for the songs I've proposed" %>
+            </form>
+        </div>
         <% include proposedSong() %>
     </div>
 <% end %>

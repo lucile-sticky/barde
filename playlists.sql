@@ -150,6 +150,7 @@ CREATE TABLE `user` (
   `username` varchar(30) CHARACTER SET latin1 NOT NULL,
   `password` varchar(100) CHARACTER SET latin1 NOT NULL,
   `level` smallint(3) unsigned NOT NULL DEFAULT '10',
+  `privacy` enum('private','public') NOT NULL DEFAULT 'private',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `alias` (`alias`)
@@ -165,4 +166,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-13 17:49:42
+-- Dump completed on 2016-11-20 23:20:15

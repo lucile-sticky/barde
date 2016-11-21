@@ -4,7 +4,7 @@
 #include <cppcms/url_dispatcher.h>
 #include <booster/log.h>
 
-#include <data/loginMapper.h>
+#include <data/userMapper.h>
 
 namespace app {
     Login::Login(cppcms::service& s) :
@@ -32,9 +32,9 @@ namespace app {
                 std::string username = login.input.username.value();
                 std::string password = login.input.password.value();
 
-                data::LoginMapper loginMapper(connectionString_);
+                data::UserMapper userMapper(connectionString_);
 
-                if(! loginMapper.checkAuthentification(username, password, login)) {
+                if(! userMapper.checkAuthentification(username, password, login)) {
                     login.alerts.errors.push_back("Wrong authentification!");
                 } else {
                     session().clear();

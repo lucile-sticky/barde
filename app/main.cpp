@@ -10,6 +10,7 @@
 #include <app/login.h>
 #include <app/playlist.h>
 #include <app/song.h>
+#include <app/user.h>
 #include <app/playlistVote.h>
 #include <app/playlistComment.h>
 #include <app/songVote.h>
@@ -29,6 +30,9 @@ public:
 
         attach(new app::Song(s), "song", "/song{1}",
             "/song(.*)", 1);
+
+        attach(new app::User(s), "user", "/user{1}",
+            "/user(.*)", 1);
 
         // Votes and comments
         attach(new app::PlaylistVote(s), "vote-playlist", "/vote-playlist{1}",

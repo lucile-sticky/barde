@@ -1,16 +1,16 @@
-#include "loginMapper.h"
+#include "userMapper.h"
 
 #include <booster/log.h>
 
 
 namespace data {
 
-    LoginMapper::LoginMapper(const std::string& connectionString)
+    UserMapper::UserMapper(const std::string& connectionString)
         : DbMapper(connectionString)
     {}
 
 
-    bool LoginMapper::checkAuthentification(
+    bool UserMapper::checkAuthentification(
             const std::string& username,
             const std::string password,
             LoginPage& login
@@ -18,7 +18,7 @@ namespace data {
         login.user.isAuthenticated = false;
         login.input.clear();
 
-        std::string query = "SELECT password, id, alias, level "
+        std::string query = "SELECT password, id, alias, level, privacy "
             "FROM user "
             "WHERE username = ?";
 
@@ -33,11 +33,11 @@ namespace data {
                 login.user.id = result.get<unsigned int>(1);
                 login.user.alias = result.get<std::string>(2);
                 login.user.level = result.get<unsigned int>(3);
+                login.user.privacy = result.get<std::string>(4);
                 login.user.isAuthenticated = true;
 
                 BOOSTER_INFO("checkAuthentification") << login.user.id
-                    << " - " << login.user.alias
-                    << " authenticated with level " << login.user.level;
+                    << " \"" << login.user.alias << "\" authenticated with level " << login.user.level;
             } else {
                 BOOSTER_WARNING("checkAuthentification") << username << " entered wrong password";
             }
@@ -48,5 +48,16 @@ namespace data {
         return login.user.isAuthenticated;
     }
 
+
+    bool UserMapper::update(const User& user) {
+        std::string query = "UPDATE user SET privacy = ? "
+            "WHERE id = ? ";
+
+        BOOSTER_DEBUG("update") << query << user.privacy << ", " << user.id;
+
+        cppdb::statement st = connection() << query << user.privacy << user.id << cppdb::exec;
+
+        return st.affected() >= 1;
+    }
 
 }   // namespace data

@@ -29,15 +29,23 @@ $(document).ready(function() {
     };
 
     var userProposedSongs = {
-        search: $('#profile .proposed-songs .search'),
-        table: $('#profile .proposed-songs table'),
+        editForm: $('#profile > .edit > form'),
+        search: $('#profile > .proposed-songs .search'),
+        table: $('#profile > .proposed-songs table'),
         init: function() {
             var that = this;
 
             // Events
+            this.editForm.find('input').change(function(e) {
+                that.updateUser();
+            });
             this.search.keyup(function(e) {
                 that.filterTable($(this).val());
             });
+        },
+        updateUser: function() {
+            var url = '/playlists/user/ajax-update';
+            $.post(url, this.editForm.serialize());
         },
         filterTable: function(filter) {
             var that = this;
