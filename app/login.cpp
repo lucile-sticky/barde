@@ -41,6 +41,7 @@ namespace app {
                     session().set<unsigned int>("id", login.user.id);
                     session()["alias"] = login.user.alias;
                     session().set<unsigned int>("level", login.user.level);
+                    session()["privacy"] = login.user.privacy;
                     login.alerts.success.push_back("Authenticated");
                     redirectTo(login.user, "/playlist");
                 }

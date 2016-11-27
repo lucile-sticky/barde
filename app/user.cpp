@@ -34,6 +34,9 @@ namespace app {
 
         data::UserMapper userMapper(connectionString_);
         bool success = userMapper.update(updateUser);
+        if (success) {
+            session()["privacy"] = updateUser.privacy;
+        }
 
         cppcms::json::value jsonOutput;
         jsonOutput["success"] = success;

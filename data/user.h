@@ -6,6 +6,7 @@
 #include <data/song.h>
 
 #include <string>
+#include <sstream>
 #include <vector>
 
 namespace data {
@@ -53,6 +54,13 @@ namespace data {
             privacy = PRIVACY_PRIVATE;
 
             nbComments = 0;
+        }
+
+        std::string toString() {
+            std::ostringstream oss;
+            oss << "{ id: " << id << ", alias: " << alias << ", level: " << level
+                << ", privacy: " << privacy << " }";
+            return oss.str();
         }
     };
 

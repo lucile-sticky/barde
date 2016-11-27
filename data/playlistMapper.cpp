@@ -40,10 +40,11 @@ namespace data {
             "p.description, UNIX_TIMESTAMP(p.publication) AS publication, "
             "vp.vote AS vote, "
             "s.id AS song_id, s.title AS song_title, a.name AS artist_name, s.file, s.url, "
-            "s.duration, s.show_video, vs.vote AS song_vote "
+            "s.duration, s.show_video, u.alias AS proposer, vs.vote AS song_vote "
             "FROM playlist p "
             "LEFT JOIN song s ON s.playlist_id = p.id "
             "INNER JOIN artist a ON a.id = s.artist_id "
+            "LEFT JOIN user u ON u.id = s.proposer_id AND u.privacy = 'public' "
             "LEFT JOIN playlist_vote vp ON vp.playlist_id = p.id AND vp.user_id = ? "
             "LEFT JOIN song_vote vs ON vs.song_id = s.id AND vs.user_id = ? "
             "WHERE p.id = ? ";
@@ -78,6 +79,7 @@ namespace data {
                 song.url = result.get<std::string>("url", "");
                 song.duration = result.get<unsigned int>("duration", 0);
                 song.showVideo = result.get<unsigned short>("show_video", 0);
+                song.proposer = result.get<std::string>("proposer", User::ANONYMOUS_ALIAS);
                 song.vote.value = result.get<short>("song_vote", 0);
 
                 dest.songs.push_back(song);
@@ -94,7 +96,7 @@ namespace data {
 
         std::string query="SELECT song_id, SUM(vote) AS total_votes, "
             "s.title AS song_title, a.name AS artist_name, s.file, s.url, "
-            "IFNULL(s.duration, 0) "
+            "s.duration, s.show_video, u.alias AS proposer "
             "FROM ( "
                 "SELECT sv.song_id, s.playlist_id, SUM(sv.vote) AS vote "
                 "FROM song_vote sv "
@@ -108,6 +110,7 @@ namespace data {
             ") votes "
             "INNER JOIN song s ON s.id = song_id "
             "INNER JOIN artist a ON a.id = s.artist_id "
+            "LEFT JOIN user u ON u.id = s.proposer_id AND u.privacy = 'public' "
             "WHERE s.file IS NOT NULL "
             "GROUP BY song_id ";
 
@@ -132,8 +135,15 @@ namespace data {
 
         while (result.next()) {
             data::Song song;
-            result >> song.id >> song.vote.totalValues >> song.title >> song.artist
-                >> song.file >> song.url >> song.duration;
+            song.id = result.get<unsigned int>("song_id");
+            song.vote.totalValues = result.get<float>("total_votes");
+            song.title = result.get<std::string>("song_title", "");
+            song.artist = result.get<std::string>("artist_name", "");
+            song.file = result.get<std::string>("file", "");
+            song.url = result.get<std::string>("url", "");
+            song.duration = result.get<unsigned int>("duration", 0);
+            song.showVideo = result.get<unsigned short>("show_video", 0);
+            song.proposer = result.get<std::string>("proposer", User::ANONYMOUS_ALIAS);
             dest.songs.push_back(song);
 
             success = true;
@@ -148,7 +158,7 @@ namespace data {
 
         std::string query="SELECT votes.song_id, SUM(votes.vote) AS total_votes, "
             "s.title AS song_title, a.name AS artist_name, s.file, s.url, "
-            "IFNULL(s.duration, 0), "
+            "s.duration, s.show_video, u.alias AS proposer, "
             "sv.vote AS user_vote "
             "FROM ( "
                 "SELECT sv.song_id, s.playlist_id, SUM(sv.vote) AS vote "
@@ -163,6 +173,7 @@ namespace data {
             ") votes "
             "INNER JOIN song s ON s.id = song_id "
             "INNER JOIN artist a ON a.id = s.artist_id "
+            "LEFT JOIN user u ON u.id = s.proposer_id AND u.privacy = 'public' "
             "LEFT JOIN song_vote sv ON sv.song_id = s.id AND sv.user_id = ? "
             "WHERE s.file IS NOT NULL "
             "AND (sv.vote IS NULL OR sv.vote >= 0) "
@@ -189,8 +200,15 @@ namespace data {
 
         while (result.next()) {
             data::Song song;
-            result >> song.id >> song.vote.totalValues >> song.title >> song.artist
-                >> song.file >> song.url >> song.duration;
+            song.id = result.get<unsigned int>("song_id");
+            song.vote.totalValues = result.get<float>("total_votes");
+            song.title = result.get<std::string>("song_title", "");
+            song.artist = result.get<std::string>("artist_name", "");
+            song.file = result.get<std::string>("file", "");
+            song.url = result.get<std::string>("url", "");
+            song.duration = result.get<unsigned int>("duration", 0);
+            song.showVideo = result.get<unsigned short>("show_video", 0);
+            song.proposer = result.get<std::string>("proposer", User::ANONYMOUS_ALIAS);
             dest.songs.push_back(song);
 
             success = true;

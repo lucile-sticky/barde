@@ -49,6 +49,9 @@ namespace app {
         if(session().is_set("alias")) {
             user.alias = session()["alias"];
         }
+        if(session().is_set("privacy")) {
+            user.privacy = session()["privacy"];
+        }
 
         // Check level
         std::string pathInfo = request().path_info();
@@ -61,6 +64,7 @@ namespace app {
             user.isAllowed = true;
             BOOSTER_INFO("checkAuth") << user.alias << " accesses " << pathInfo;
         }
+        BOOSTER_DEBUG("checkAuth") << "User -> " << user.toString();
 
         return user.isAllowed;
     }
