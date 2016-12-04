@@ -1,22 +1,12 @@
 #include "playlistMapper.h"
 
+#include <data/songMapper.h>
+
 #include <booster/log.h>
 
 using namespace std::chrono;
 
 namespace data {
-
-    const std::string PlaylistMapper::SQL_FROM_UNION_VOTES = "FROM ( "
-                "SELECT sv.song_id, s.playlist_id, SUM(sv.vote) AS vote "
-                "FROM song_vote sv "
-                "LEFT JOIN song s ON s.id = sv.song_id "
-                "GROUP BY sv.song_id, s.playlist_id "
-            "UNION "
-                "SELECT s.id, pv.playlist_id, SUM(pv.vote) / 2 "
-                "FROM playlist_vote pv "
-                "LEFT JOIN song s ON s.playlist_id = pv.playlist_id "
-                "GROUP BY s.id, playlist_id "
-            ") votes ";
 
     std::vector<PlaylistItem> PlaylistMapper::cachedPlaylistItems_ = {};
     time_point<system_clock> PlaylistMapper::cachedPlaylistItemsLastUpdated_ = system_clock::now();
@@ -109,7 +99,7 @@ namespace data {
         std::string query="SELECT votes.song_id, SUM(votes.vote) AS total_votes, "
             "s.title AS song_title, a.name AS artist_name, s.file, s.url, "
             "s.duration, s.show_video, u.alias AS proposer, sv.vote AS song_vote "
-            + SQL_FROM_UNION_VOTES +
+            "FROM " + SongMapper::SQL_GLOBAL_VOTES +
             "INNER JOIN song s ON s.id = votes.song_id "
             "INNER JOIN artist a ON a.id = s.artist_id "
             "LEFT JOIN user u ON u.id = s.proposer_id AND u.privacy = 'public' "
@@ -164,8 +154,8 @@ namespace data {
             "s.title AS song_title, a.name AS artist_name, s.file, s.url, "
             "s.duration, s.show_video, u.alias AS proposer, "
             "sv.vote AS song_vote "
-            + SQL_FROM_UNION_VOTES +
-            "INNER JOIN song s ON s.id = song_id "
+            "FROM " + SongMapper::SQL_GLOBAL_VOTES +
+            "INNER JOIN song s ON s.id = votes.song_id "
             "INNER JOIN artist a ON a.id = s.artist_id "
             "LEFT JOIN user u ON u.id = s.proposer_id AND u.privacy = 'public' "
             "LEFT JOIN song_vote sv ON sv.song_id = s.id AND sv.user_id = ? "

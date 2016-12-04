@@ -123,6 +123,9 @@ namespace app {
         data::SongMapper songMapper(connectionString_);
         songMapper.loadUserProposedSongs(allPlaylists.user);
 
+        data::PlaylistCommentMapper playlistCommentMapper(connectionString_);
+        playlistCommentMapper.loadUserNbComments(allPlaylists.user);
+
         render("allPlaylists", allPlaylists);
 
         cache().add_trigger(std::to_string(allPlaylists.user.id));
@@ -155,6 +158,9 @@ namespace app {
 
         data::PlaylistMapper playlistMapper(connectionString_);
         playlistMapper.loadTopPlaylist(playlist, playlist.user, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::DESC);
+
+        data::PlaylistCommentMapper playlistCommentMapper(connectionString_);
+        playlistCommentMapper.loadUserNbComments(playlist.user);
 
         doDisplay(playlist);
 
@@ -189,6 +195,9 @@ namespace app {
         data::PlaylistMapper playlistMapper(connectionString_);
         playlistMapper.loadTopPlaylist(playlist, playlist.user, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::ASC);
 
+        data::PlaylistCommentMapper playlistCommentMapper(connectionString_);
+        playlistCommentMapper.loadUserNbComments(playlist.user);
+
         doDisplay(playlist);
 
         cache().add_trigger(std::to_string(playlist.user.id));
@@ -221,6 +230,9 @@ namespace app {
 
         data::PlaylistMapper playlistMapper(connectionString_);
         playlistMapper.loadUserTopPlaylist(playlist, playlist.user, TOP_LIST_NB_SONGS, data::PlaylistMapper::OrderBy::RAND);
+
+        data::PlaylistCommentMapper playlistCommentMapper(connectionString_);
+        playlistCommentMapper.loadUserNbComments(playlist.user);
 
         doDisplay(playlist);
 

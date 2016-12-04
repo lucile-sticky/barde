@@ -14,8 +14,6 @@ namespace data {
     class PlaylistMapper : public DbMapper {
         static const unsigned int CACHE_EXPIRATION = 60;
 
-        static const std::string SQL_FROM_UNION_VOTES;
-
         static std::vector<PlaylistItem> cachedPlaylistItems_;
         static std::chrono::time_point<std::chrono::system_clock> cachedPlaylistItemsLastUpdated_;
 

@@ -14,7 +14,7 @@ namespace data {
         size_t nbSongs;
         bool enabled;
 
-        PlaylistItem() : enabled(0) {}
+        PlaylistItem() : enabled(false) {}
     };
 
 }   // namespace data

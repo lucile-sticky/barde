@@ -5,6 +5,19 @@
 
 namespace data {
 
+    const std::string SongMapper::SQL_GLOBAL_VOTES = "( "
+                "SELECT sv.song_id, s.playlist_id, SUM(sv.vote) AS vote "
+                "FROM song_vote sv "
+                "LEFT JOIN song s ON s.id = sv.song_id "
+                "GROUP BY sv.song_id, s.playlist_id "
+            "UNION "
+                "SELECT s.id, pv.playlist_id, SUM(pv.vote) / 2 "
+                "FROM playlist_vote pv "
+                "LEFT JOIN song s ON s.playlist_id = pv.playlist_id "
+                "GROUP BY s.id, playlist_id "
+            ") votes ";
+
+
     SongMapper::SongMapper(const std::string& connectionString)
         : DbMapper(connectionString)
     {}
@@ -44,14 +57,15 @@ namespace data {
 
         dest.proposedSongs.clear();
 
-        std::string query = "SELECT s.id AS song_id, s.title AS song_title, "
-            "a.name AS artist_name, s.url, "
+        std::string query="SELECT s.id AS song_id, SUM(votes.vote) AS total_votes, "
+            "s.title AS song_title, a.name AS artist_name, s.url, "
             "pl.id AS playlist_id, pl.name AS playlist_name, pl.enabled AS playlist_enabled "
             "FROM song s "
-            "LEFT JOIN playlist pl ON pl.id = s.playlist_id "
             "INNER JOIN artist a ON a.id = s.artist_id "
+            "LEFT JOIN " + SQL_GLOBAL_VOTES + " ON votes.song_id = s.id "
+            "LEFT JOIN playlist pl ON pl.id = s.playlist_id "
             "WHERE s.proposer_id = ? "
-            "ORDER BY s.id DESC";
+            "GROUP BY s.id DESC ";
 
         BOOSTER_DEBUG("loadUserProposedSongs") << query << ", " << dest.id;
 
@@ -59,10 +73,14 @@ namespace data {
 
         while (result.next()) {
             Song song;
-            unsigned short plEnabled;
-            result >> song.id >> song.title >> song.artist >> song.url
-                >> song.playlist.id >> song.playlist.name >> plEnabled;
-            song.playlist.enabled = plEnabled;
+            song.id = result.get<unsigned int>("song_id");
+            song.vote.totalValues = result.get<float>("total_votes", 0);
+            song.title = result.get<std::string>("song_title", "");
+            song.artist = result.get<std::string>("artist_name", "");
+            song.url = result.get<std::string>("url", "");
+            song.playlist.id = result.get<std::string>("playlist_id", "");
+            song.playlist.name = result.get<std::string>("playlist_name", "");
+            song.playlist.enabled = result.get<unsigned short>("playlist_enabled", 0);
             dest.proposedSongs.push_back(song);
 
             success = true;
@@ -89,8 +107,8 @@ namespace data {
 
         while (result.next()) {
             Song song;
-            result >> song.id >> song.title >> song.artist >> song.file >> song.url
-                >> song.proposer;
+            result >> song.id >> song.title >> song.artist >> song.file
+                >> song.url >> song.proposer;
             dest.pendingSongs.push_back(song);
 
             success = true;

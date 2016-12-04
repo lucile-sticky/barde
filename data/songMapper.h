@@ -11,6 +11,8 @@ namespace data {
 
     class SongMapper : public DbMapper {
     public:
+        static const std::string SQL_GLOBAL_VOTES;
+
         SongMapper(const std::string& connectionString);
 
         bool loadSong(Song& dest, const std::string& songId);

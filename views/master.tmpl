@@ -52,10 +52,11 @@
             <table>
                 <thead>
                     <th width='10%'></th>
-                    <th width='22.5%'></th>
-                    <th width='22.5%'></th>
+                    <th width='20%'></th>
+                    <th width='20%'></th>
                     <th width='10%'></th>
-                    <th width='22.5%'></th>
+                    <th width='20%'></th>
+                    <th width='10%'></th>
                 </thead>
                 <tbody>
                 <% item %>
@@ -72,17 +73,25 @@
                             </a>
                         <% end %>
                         </td>
-                        <td>
                         <% if song.playlist.enabled %>
+                        <td>
                             <a href="<% url "/playlist" using song.playlist.id %>" title="<%= song.playlist.name%>">
                                 <%= song.playlist.name %>
                             </a>
+                        </td>
+                        <td>
+                            <span title="<% gt "{1,num=fix,p=1}" using song.vote.totalValues %>">
+                                <% gt "{1,num=fix,p=1}" using song.vote.totalValues %>
+                            </span>
+                        </td>
                         <% else %>
+                        <td>
                             <span style="opacity: 0.35" title="<%= song.playlist.name%>">
                                 <%= song.playlist.name %>
                             </span>
-                        <% end %>
                         </td>
+                        <td><span style="opacity: 0.35">--</span></td>
+                        <% end %>
                     </tr>
                 <% end %>
                 </tbody>
