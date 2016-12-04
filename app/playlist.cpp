@@ -94,6 +94,7 @@ namespace app {
 
         doDisplay(playlist);
 
+        cache().add_trigger(std::to_string(playlist.user.id));
         cache().store_page(key, CACHE_TTL_MEDIUM);
         BOOSTER_DEBUG("display") << "Store cache for key=" << key;
     }
@@ -110,7 +111,7 @@ namespace app {
             return;
         }
 
-        std::string key = "ALL";
+        std::string key = getCacheKey("ALL", allPlaylists.user);
         if (cache().fetch_page(key)) {
             BOOSTER_DEBUG("displayAll") << "Fetch cache for key=" << key;
             return;
@@ -124,7 +125,8 @@ namespace app {
 
         render("allPlaylists", allPlaylists);
 
-        cache().store_page(key, CACHE_TTL_MEDIUM);
+        cache().add_trigger(std::to_string(allPlaylists.user.id));
+        cache().store_page(key, CACHE_TTL_LONG);
         BOOSTER_DEBUG("displayAll") << "Store cache for key=" << key;
     }
 
@@ -140,7 +142,7 @@ namespace app {
             return;
         }
 
-        std::string key = TOP_LIST_ID;
+        std::string key = getCacheKey(TOP_LIST_ID, playlist.user);
         if (cache().fetch_page(key)) {
             BOOSTER_DEBUG("displayTop") << "Fetch cache for key=" << key;
             return;
@@ -156,6 +158,7 @@ namespace app {
 
         doDisplay(playlist);
 
+        cache().add_trigger(std::to_string(playlist.user.id));
         cache().store_page(key, CACHE_TTL_SHORT);
         BOOSTER_DEBUG("displayTop") << "Store cache for key=" << key;
     }
@@ -172,7 +175,7 @@ namespace app {
             return;
         }
 
-        std::string key = WORST_LIST_ID;
+        std::string key = getCacheKey(WORST_LIST_ID, playlist.user);
         if (cache().fetch_page(key)) {
             BOOSTER_DEBUG("displayWorst") << "Fetch cache for key=" << key;
             return;
@@ -188,6 +191,7 @@ namespace app {
 
         doDisplay(playlist);
 
+        cache().add_trigger(std::to_string(playlist.user.id));
         cache().store_page(key, CACHE_TTL_SHORT);
         BOOSTER_DEBUG("displayWorst") << "Store cache for key=" << key;
     }
@@ -220,6 +224,7 @@ namespace app {
 
         doDisplay(playlist);
 
+        cache().add_trigger(std::to_string(playlist.user.id));
         cache().store_page(key, CACHE_TTL_MEDIUM);
         BOOSTER_DEBUG("displayRandom") << "Store cache for key=" << key;
     }

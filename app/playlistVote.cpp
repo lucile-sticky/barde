@@ -36,9 +36,8 @@ namespace app {
             data::PlaylistVote::stringToVote(vote)
         );
 
-        std::string key = Playlist::getCacheKey(playlistId, user);
-        cache().rise(key);
-        BOOSTER_DEBUG("ajaxVote") << "Clean cache for key=" << key;
+        cache().rise(std::to_string(user.id));
+        BOOSTER_DEBUG("ajaxComment") << "Clean caches for user ID " << user.id;
 
         cppcms::json::value jsonOutput;
         jsonOutput["success"] = result;

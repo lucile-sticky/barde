@@ -15,8 +15,8 @@ namespace app {
     class Master : public cppcms::application {
     protected:
         static const int CACHE_TTL_SHORT = 30;
-        static const int CACHE_TTL_MEDIUM = 300;
-        static const int CACHE_TTL_LONG = 3600;
+        static const int CACHE_TTL_MEDIUM = 60;
+        static const int CACHE_TTL_LONG = 300;
 
         static constexpr const char* PLAYLISTS_IMAGE_DIR = "/images/playlists";
 
