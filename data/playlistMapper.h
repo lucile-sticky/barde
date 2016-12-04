@@ -14,6 +14,8 @@ namespace data {
     class PlaylistMapper : public DbMapper {
         static const unsigned int CACHE_EXPIRATION = 60;
 
+        static const std::string SQL_FROM_UNION_VOTES;
+
         static std::vector<PlaylistItem> cachedPlaylistItems_;
         static std::chrono::time_point<std::chrono::system_clock> cachedPlaylistItemsLastUpdated_;
 
@@ -24,7 +26,7 @@ namespace data {
 
         std::string findCurrentPlaylistId();
         bool loadPlaylist(PlaylistPage& dest, const std::string& playlistId, const User& user);
-        bool loadTopPlaylist(PlaylistPage& dest, unsigned short nbSongs, OrderBy orderBy);
+        bool loadTopPlaylist(PlaylistPage& dest, const User& user, unsigned short nbSongs, OrderBy orderBy);
         bool loadUserTopPlaylist(PlaylistPage& dest, const User& user, unsigned short nbSongs, OrderBy orderBy);
         bool loadProposedPlaylist(PlaylistPage& dest);
         bool loadAllPlaylists(AllPlaylistsPage& dest);  // Result is cached

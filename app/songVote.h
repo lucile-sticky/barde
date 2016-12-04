@@ -11,7 +11,7 @@ namespace app {
 
     public:
         SongVote(cppcms::service& s);
-        void ajaxVote(std::string playlistId, std::string songId, std::string vote);
+        void ajaxVote(std::string songId, std::string vote);
 
     private:
         bool insert(unsigned int userId, unsigned int songId, short vote);

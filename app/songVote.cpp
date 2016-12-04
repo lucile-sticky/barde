@@ -14,11 +14,11 @@ namespace app {
     SongVote::SongVote(cppcms::service& s) :
         app::Master(s)
     {
-        dispatcher().assign("/ajax-vote/([0-9a-z]+)/(\\d+)/(.+)", &SongVote::ajaxVote, this, 1, 2, 3);
-        mapper().assign("/{1}/{2}/{3}");
+        dispatcher().assign("/ajax-vote/(\\d+)/(.+)", &SongVote::ajaxVote, this, 1, 2);
+        mapper().assign("/{1}/{2}");
     }
 
-    void SongVote::ajaxVote(std::string playlistId, std::string songId, std::string vote) {
+    void SongVote::ajaxVote(std::string songId, std::string vote) {
         data::User user;
 
         if (! checkAuth(user, data::User::CITIZEN)) {

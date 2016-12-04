@@ -6,6 +6,18 @@ using namespace std::chrono;
 
 namespace data {
 
+    const std::string PlaylistMapper::SQL_FROM_UNION_VOTES = "FROM ( "
+                "SELECT sv.song_id, s.playlist_id, SUM(sv.vote) AS vote "
+                "FROM song_vote sv "
+                "LEFT JOIN song s ON s.id = sv.song_id "
+                "GROUP BY sv.song_id, s.playlist_id "
+            "UNION "
+                "SELECT s.id, pv.playlist_id, SUM(pv.vote) / 2 "
+                "FROM playlist_vote pv "
+                "LEFT JOIN song s ON s.playlist_id = pv.playlist_id "
+                "GROUP BY s.id, playlist_id "
+            ") votes ";
+
     std::vector<PlaylistItem> PlaylistMapper::cachedPlaylistItems_ = {};
     time_point<system_clock> PlaylistMapper::cachedPlaylistItemsLastUpdated_ = system_clock::now();
 
@@ -89,28 +101,19 @@ namespace data {
         return success;
     }
 
-    bool PlaylistMapper::loadTopPlaylist(PlaylistPage& dest, unsigned short nbSongs, OrderBy orderBy) {
+    bool PlaylistMapper::loadTopPlaylist(PlaylistPage& dest, const User& user, unsigned short nbSongs, OrderBy orderBy) {
         bool success = false;
 
         dest.songs.clear();
 
-        std::string query="SELECT song_id, SUM(vote) AS total_votes, "
+        std::string query="SELECT votes.song_id, SUM(votes.vote) AS total_votes, "
             "s.title AS song_title, a.name AS artist_name, s.file, s.url, "
-            "s.duration, s.show_video, u.alias AS proposer "
-            "FROM ( "
-                "SELECT sv.song_id, s.playlist_id, SUM(sv.vote) AS vote "
-                "FROM song_vote sv "
-                "LEFT JOIN song s ON s.id = sv.song_id "
-                "GROUP BY sv.song_id, s.playlist_id "
-            "UNION "
-                "SELECT s.id, pv.playlist_id, SUM(pv.vote) / 2 "
-                "FROM playlist_vote pv "
-                "LEFT JOIN song s ON s.playlist_id = pv.playlist_id "
-                "GROUP BY s.id, playlist_id "
-            ") votes "
-            "INNER JOIN song s ON s.id = song_id "
+            "s.duration, s.show_video, u.alias AS proposer, sv.vote AS song_vote "
+            + SQL_FROM_UNION_VOTES +
+            "INNER JOIN song s ON s.id = votes.song_id "
             "INNER JOIN artist a ON a.id = s.artist_id "
             "LEFT JOIN user u ON u.id = s.proposer_id AND u.privacy = 'public' "
+            "LEFT JOIN song_vote sv ON sv.song_id = s.id AND sv.user_id = ? "
             "WHERE s.file IS NOT NULL "
             "GROUP BY song_id ";
 
@@ -129,9 +132,9 @@ namespace data {
 
         query += "LIMIT ? ";
 
-        BOOSTER_DEBUG("loadTopPlaylist") << query << ", " << nbSongs;
+        BOOSTER_DEBUG("loadTopPlaylist") << query << ", " << user.id << ", " << nbSongs;
 
-        cppdb::result result = connection() << query << nbSongs;
+        cppdb::result result = connection() << query << user.id << nbSongs;
 
         while (result.next()) {
             data::Song song;
@@ -144,6 +147,7 @@ namespace data {
             song.duration = result.get<unsigned int>("duration", 0);
             song.showVideo = result.get<unsigned short>("show_video", 0);
             song.proposer = result.get<std::string>("proposer", User::ANONYMOUS_ALIAS);
+            song.vote.value = result.get<short>("song_vote", 0);
             dest.songs.push_back(song);
 
             success = true;
@@ -159,18 +163,8 @@ namespace data {
         std::string query="SELECT votes.song_id, SUM(votes.vote) AS total_votes, "
             "s.title AS song_title, a.name AS artist_name, s.file, s.url, "
             "s.duration, s.show_video, u.alias AS proposer, "
-            "sv.vote AS user_vote "
-            "FROM ( "
-                "SELECT sv.song_id, s.playlist_id, SUM(sv.vote) AS vote "
-                "FROM song_vote sv "
-                "LEFT JOIN song s ON s.id = sv.song_id "
-                "GROUP BY sv.song_id, s.playlist_id "
-            "UNION "
-                "SELECT s.id, pv.playlist_id, SUM(pv.vote) / 2 "
-                "FROM playlist_vote pv "
-                "LEFT JOIN song s ON s.playlist_id = pv.playlist_id "
-                "GROUP BY s.id, playlist_id "
-            ") votes "
+            "sv.vote AS song_vote "
+            + SQL_FROM_UNION_VOTES +
             "INNER JOIN song s ON s.id = song_id "
             "INNER JOIN artist a ON a.id = s.artist_id "
             "LEFT JOIN user u ON u.id = s.proposer_id AND u.privacy = 'public' "
@@ -181,14 +175,14 @@ namespace data {
 
         switch(orderBy) {
             case OrderBy::DESC:
-                query += "ORDER BY user_vote DESC, total_votes DESC, song_id DESC ";
+                query += "ORDER BY song_vote DESC, total_votes DESC, song_id DESC ";
                 break;
             case OrderBy::ASC:
-                query += "ORDER BY user_vote, total_votes ASC, song_id ASC ";
+                query += "ORDER BY song_vote, total_votes ASC, song_id ASC ";
                 break;
             default:
                 query += "HAVING total_votes > 0 "; // Increase random playlist quality
-                query += "ORDER BY user_vote DESC, RAND() ";
+                query += "ORDER BY song_vote DESC, RAND() ";
                 break;
         }
 
@@ -209,6 +203,7 @@ namespace data {
             song.duration = result.get<unsigned int>("duration", 0);
             song.showVideo = result.get<unsigned short>("show_video", 0);
             song.proposer = result.get<std::string>("proposer", User::ANONYMOUS_ALIAS);
+            song.vote.value = result.get<short>("song_vote", 0);
             dest.songs.push_back(song);
 
             success = true;
