@@ -76,6 +76,7 @@ namespace app {
         data::PlaylistPage playlist(page_);
 
         if (! checkAuth(playlist.user)) {
+            forbidAccess(playlist.user);
             return;
         }
 
@@ -105,9 +106,7 @@ namespace app {
         data::AllPlaylistsPage allPlaylists(page_);
 
         if (! checkAuth(allPlaylists.user)) {
-            response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("displayAll") << "Forbid user "
-                << allPlaylists.user.alias << " to access all playlists";
+            forbidAccess(allPlaylists.user);
             return;
         }
 
@@ -139,9 +138,7 @@ namespace app {
         data::PlaylistPage playlist(page_);
 
         if (! checkAuth(playlist.user)) {
-            response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("displayTop") << "Forbid user "
-                << playlist.user.alias << " to access top playlist";
+            forbidAccess(playlist.user);
             return;
         }
 
@@ -175,9 +172,7 @@ namespace app {
         data::PlaylistPage playlist(page_);
 
         if (! checkAuth(playlist.user)) {
-            response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("displayWorst") << "Forbid user "
-                << playlist.user.alias << " to access worst playlist";
+            forbidAccess(playlist.user);
             return;
         }
 
@@ -211,9 +206,7 @@ namespace app {
         data::PlaylistPage playlist(page_);
 
         if (! checkAuth(playlist.user)) {
-            response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("displayRandom") << "Forbid user "
-                << playlist.user.alias << " to access random playlist";
+            forbidAccess(playlist.user);
             return;
         }
 
@@ -247,10 +240,8 @@ namespace app {
         data::PlaylistPage playlist(page_);
 
         if (! checkAuth(playlist.user, data::User::ADMINISTRATOR)) {
-            response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("displayProposed") << "Forbid user "
-                << playlist.user.alias << " to access next playlist";
-                return;
+            forbidAccess(playlist.user);
+            return;
         }
 
         playlist.name = PROPOSED_LIST_NAME;
@@ -268,10 +259,8 @@ namespace app {
         data::NewPlaylistPage newPlaylist(page_);
 
         if (! checkAuth(newPlaylist.user, data::User::ADMINISTRATOR)) {
-            response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("displayNew") << "Forbid user "
-                << newPlaylist.user.alias << " to access new playlist";
-                return;
+            forbidAccess(newPlaylist.user);
+            return;
         }
 
         if (request().request_method() == "POST") {

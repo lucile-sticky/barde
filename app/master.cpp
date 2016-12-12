@@ -34,8 +34,6 @@ namespace app {
     }
 
     bool Master::checkAuth(data::User& user, data::User::Level requiredLevel) {
-        user.clear();     // user should never be used
-
         user.clear();
 
         // Load user data from session
@@ -56,10 +54,7 @@ namespace app {
         // Check level
         std::string pathInfo = request().path_info();
         if (user.level < static_cast<unsigned int>(requiredLevel)) {
-            BOOSTER_WARNING("checkAuth") << user.alias << " is not allowed to access " << pathInfo;
-
-            response().make_error_response(response::forbidden);
-
+            forbidAccess(user);
         } else {    // Allowed
             user.isAllowed = true;
             BOOSTER_INFO("checkAuth") << user.alias << " accesses " << pathInfo;
@@ -73,6 +68,15 @@ namespace app {
         std::string location = page_.httpScript + internalLocation;
         BOOSTER_INFO("redirectTo") << "Redirect user " << user.alias << " to internal location " << location;
         response().set_redirect_header(location);
+    }
+
+    void Master::forbidAccess(const data::User& user) {
+        std::string internalLocation = request().path_info();
+        BOOSTER_WARNING("forbidAccess") << "Forbid " << user.alias << " to access " << internalLocation;
+
+        session()["error"] = translate("You have to authenticate to access the requested page!");
+        session()["location"] = internalLocation;
+        redirectTo(user, "/login");
     }
 
     std::string Master::composeImagePlaylistPath(const cppcms::http::file* mediaFile) const {

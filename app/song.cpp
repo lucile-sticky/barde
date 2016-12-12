@@ -42,9 +42,7 @@ namespace app {
         data::SongAdminPage pageSong(page_);
 
         if (! checkAuth(pageSong.user, data::User::ADMINISTRATOR)) {
-            response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("displayProposed") << "Forbid user "
-                << pageSong.user.alias << " to view proposed songs";
+            forbidAccess(pageSong.user);
             return;
         }
 
@@ -65,9 +63,7 @@ namespace app {
         data::EditSongPage pageSong(page_);
 
         if (! checkAuth(pageSong.user, data::User::ADMINISTRATOR)) {
-            response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("displayEdit") << "Forbid user "
-                << pageSong.user.alias << " to edit song";
+            forbidAccess(pageSong.user);
             return;
         }
 

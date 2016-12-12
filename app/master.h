@@ -32,6 +32,7 @@ namespace app {
     protected:
         bool checkAuth(data::User& user, data::User::Level requiredLevel = data::User::GUEST);
         void redirectTo(const data::User& user, const std::string& internalLocation);
+        void forbidAccess(const data::User& user);
 
         std::string composeImagePlaylistPath(const cppcms::http::file* mediaFile) const;
         std::string composeUploadDestPath(const cppcms::http::file* mediaFile) const;

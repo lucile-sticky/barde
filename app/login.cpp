@@ -17,17 +17,23 @@ namespace app {
     void Login::display() {
         BOOSTER_DEBUG("display");
 
-        session().clear();
-
         data::LoginPage login(page_);
-        login.pageTitle = "Authentification";
+        login.pageTitle = translate("Authentification");
         login.user.isAllowed = true;
+
+        session().erase("level");
+        session().erase("id");
+        session().erase("alias");
+
+        if(session().is_set("error")) {
+            login.alerts.errors.push_back(session()["error"]);
+        }
 
         if(request().request_method() == "POST") {
             login.input.load(context());
 
             if(! login.input.validate()) {
-                login.alerts.errors.push_back("Invalid or missing fields!");
+                login.alerts.errors.push_back(translate("Invalid or missing fields!"));
             } else {
                 std::string username = login.input.username.value();
                 std::string password = login.input.password.value();
@@ -35,15 +41,20 @@ namespace app {
                 data::UserMapper userMapper(connectionString_);
 
                 if(! userMapper.checkAuthentification(username, password, login)) {
-                    login.alerts.errors.push_back("Wrong authentification!");
+                    login.alerts.errors.push_back(translate("Wrong authentification!"));
                 } else {
+                    std::string location = session().is_set("location") ? session()["location"] : "/playlist";
+
                     session().clear();
                     session().set<unsigned int>("id", login.user.id);
                     session()["alias"] = login.user.alias;
                     session().set<unsigned int>("level", login.user.level);
                     session()["privacy"] = login.user.privacy;
-                    login.alerts.success.push_back("Authenticated");
-                    redirectTo(login.user, "/playlist");
+
+                    login.alerts.clear();
+                    login.alerts.success.push_back(translate("Authenticated"));
+
+                    redirectTo(login.user, location);
                 }
             }
             login.input.clear();
