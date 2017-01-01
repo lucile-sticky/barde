@@ -76,7 +76,7 @@ namespace data {
 
                 song.id = songId;
                 song.title = result.get<std::string>("song_title", "");
-                song.artist = result.get<std::string>("artist_name", "");
+                song.artist.name = result.get<std::string>("artist_name", "");
                 song.file = result.get<std::string>("file", "");
                 song.url = result.get<std::string>("url", "");
                 song.duration = result.get<unsigned int>("duration", 0);
@@ -131,7 +131,7 @@ namespace data {
             song.id = result.get<unsigned int>("song_id");
             song.vote.totalValues = result.get<float>("total_votes");
             song.title = result.get<std::string>("song_title", "");
-            song.artist = result.get<std::string>("artist_name", "");
+            song.artist.name = result.get<std::string>("artist_name", "");
             song.file = result.get<std::string>("file", "");
             song.url = result.get<std::string>("url", "");
             song.duration = result.get<unsigned int>("duration", 0);
@@ -187,7 +187,7 @@ namespace data {
             song.id = result.get<unsigned int>("song_id");
             song.vote.totalValues = result.get<float>("total_votes");
             song.title = result.get<std::string>("song_title", "");
-            song.artist = result.get<std::string>("artist_name", "");
+            song.artist.name = result.get<std::string>("artist_name", "");
             song.file = result.get<std::string>("file", "");
             song.url = result.get<std::string>("url", "");
             song.duration = result.get<unsigned int>("duration", 0);
@@ -219,7 +219,7 @@ namespace data {
 
         while (result.next()) {
             data::Song song;
-            result >> song.id >> song.title >> song.artist >> song.file >> song.url;
+            result >> song.id >> song.title >> song.artist.name >> song.file >> song.url;
             dest.songs.push_back(song);
 
             success = true;

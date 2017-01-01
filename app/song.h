@@ -20,6 +20,8 @@ namespace app {
     private:
         bool insert(const data::User& author, const data::Song& song);
         bool update(const data::Song& song);
+
+        unsigned int loadSongArtistId(unsigned int songId);
     };
 }   // namespace app
 

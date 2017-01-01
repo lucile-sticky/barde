@@ -143,7 +143,7 @@
                                     <%= song.title %>
                                 </a>
                             </td>
-                            <td class='selectable' title='<%= song.artist %>'><%= song.artist %></td>
+                            <td class='selectable' title='<%= song.artist.name %>'><%= song.artist.name %></td>
                             <td class='selectable secondary-information duration'><%= song.duration | strftime("%M:%S") %></td>
                             <td class='selectable secondary-information'><%= song.proposer %></td>
                             <% if ( content.user.level >= content.user.ADMINISTRATOR ) %>

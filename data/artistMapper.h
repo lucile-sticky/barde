@@ -3,15 +3,16 @@
 
 
 #include "dbMapper.h"
-
+#include <data/artist.h>
 
 namespace data {
 
     class ArtistMapper : public DbMapper {
     public:
         ArtistMapper(const std::string& connectionString);
-        unsigned int insert(const std::string& name);
-        unsigned int getByName(const std::string& name);
+        bool getByName(Artist& dest, const std::string& name);
+        unsigned int insert(const Artist& artist);
+        bool update(const Artist& artist);
     };
 
 

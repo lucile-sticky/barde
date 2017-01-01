@@ -77,7 +77,7 @@ namespace app {
             } else {
                 song.id = std::stoi(songId);
                 song.title = pageSong.input.title.value();
-                song.artist = pageSong.input.artist.value();
+                song.artist.name = pageSong.input.artist.value();
                 song.file = pageSong.input.file.value();
                 song.url = pageSong.input.url.value();
                 song.showVideo = pageSong.input.showVideo.value();
@@ -93,7 +93,7 @@ namespace app {
             }
         } else if (!songId.empty() && songMapper.loadSong(song, songId)) {
             BOOSTER_DEBUG("displayEdit") << "Loading fields for song " << songId;
-            pageSong.input.artist.value(song.artist);
+            pageSong.input.artist.value(song.artist.name);
             pageSong.input.title.value(song.title);
             pageSong.input.file.value(song.file);
             pageSong.input.url.value(song.url);
@@ -120,7 +120,7 @@ namespace app {
 
         data::Song song;
         song.title = request().post("title");
-        song.artist = request().post("artist");
+        song.artist.name = request().post("artist");
         song.url = request().post("url");
 
         validator::SongValidator validator(song);
@@ -207,15 +207,15 @@ namespace app {
         data::ArtistMapper artistMapper(connectionString_);
         data::SongMapper songMapper(connectionString_);
 
-        unsigned int artistId = artistMapper.getByName(song.artist);
-        if (artistId == 0) {
-            artistId = artistMapper.insert(song.artist);
+        data::Song song2 = song;    // modifiable Song
+        if (!artistMapper.getByName(song2.artist, song.artist.name)) {
+            song2.artist.id = artistMapper.insert(song2.artist);
         }
 
-        if (artistId == 0) {
-            BOOSTER_DEBUG("addNew") << "Could not create artist " << song.artist;
+        if (song2.artist.empty()) {
+            BOOSTER_DEBUG("insert") << "Could not create artist " << song.artist.name;
         } else {
-            success = songMapper.insert(proposer, artistId, song);
+            success = songMapper.insert(proposer, song2);
         }
 
         return success;
@@ -227,18 +227,26 @@ namespace app {
         data::ArtistMapper artistMapper(connectionString_);
         data::SongMapper songMapper(connectionString_);
 
-        unsigned int artistId = artistMapper.getByName(song.artist);
-        if (artistId == 0) {
-            artistId = artistMapper.insert(song.artist);
-        }
-
-        if (artistId == 0) {
-            BOOSTER_DEBUG("update") << "Could not create artist " << song.artist;
+        data::Song song2 = song;    // modifiable Song
+        song2.artist.id = loadSongArtistId(song.id);
+        if (song2.artist.empty()) {
+            BOOSTER_DEBUG("update") << "Missing artist for song " << song.id;
+        } else if (!artistMapper.update(song2.artist)) {
+            BOOSTER_DEBUG("update") << "Could not update artist for song " << song.id;
         } else {
-            success = songMapper.update(artistId, song);
+            success = songMapper.update(song2);
         }
-
         return success;
+    }
+
+    unsigned int Song::loadSongArtistId(unsigned int songId) {
+        data::Song song;
+        data::SongMapper songMapper(connectionString_);
+
+        if (songMapper.loadSong(song, std::to_string(songId))) {
+            return song.artist.id;
+        }
+        return 0;
     }
 
 }   // namespace app

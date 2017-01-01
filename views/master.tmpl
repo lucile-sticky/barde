@@ -63,7 +63,7 @@
                     <tr>
                         <td><%= song.id %> </td>
                         <td><span title="<%= song.title %>"><%= song.title %></span></td>
-                        <td><span title="<%= song.artist %>"><%= song.artist %></span></td>
+                        <td><span title="<%= song.artist.name %>"><%= song.artist.name %></span></td>
                         <td>
                         <% if empty song.url %>
                         <% else %>

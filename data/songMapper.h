@@ -19,8 +19,8 @@ namespace data {
         bool loadUserProposedSongs(User& dest);
         bool loadPendingSongs(SongAdminPage& dest);
 
-        bool insert(const User& proposer, unsigned int artistId, const Song& song);
-        bool update(unsigned int artistId, const Song& song);
+        bool insert(const User& proposer, const Song& song);
+        bool update(const Song& song);
         bool updatePlaylistId(unsigned int songId, unsigned int playlistId);
         bool updateDuration(unsigned int songId, unsigned int duration);
     };

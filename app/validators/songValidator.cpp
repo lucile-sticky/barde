@@ -17,9 +17,9 @@ namespace app { namespace validator {
             message << "Missing song title";
         } else if (song_.title.length() > 100) {
             message << "Title is too long";
-        } else if (song_.artist.empty()) {
+        } else if (song_.artist.name.empty()) {
             message << "Missing artist";
-        } else if (song_.artist.length() > 100) {
+        } else if (song_.artist.name.length() > 100) {
             message << "Artist is too long";
         } else if (song_.url.empty()) {
             message << "Missing URL";

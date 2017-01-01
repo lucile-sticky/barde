@@ -37,6 +37,7 @@ namespace data {
 
         unsigned int nbComments;
 
+
         User() {
             clear();
         }

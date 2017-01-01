@@ -3,6 +3,7 @@
 
 #include <cppcms/view.h>
 
+#include <data/artist.h>
 #include <data/playlist.h>
 #include <data/songVote.h>
 
@@ -11,7 +12,7 @@ namespace data {
 	struct Song : public cppcms::base_content {
         unsigned int id;
 		std::string title;
-		std::string artist;
+		Artist artist;
 		std::string file;
 		std::string url;
         unsigned int duration;

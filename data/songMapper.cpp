@@ -26,8 +26,8 @@ namespace data {
         bool success = false;
 
         std::string query = "SELECT s.id, s.title, "
-            "a.name AS artist, s.file, s.url, s.duration, "
-            "s.show_video, s.position "
+            "s.artist_id, a.name AS artist_name, s.file, s.url, "
+            "s.duration, s.show_video, s.position "
             "FROM song s "
             "INNER JOIN artist a ON a.id = s.artist_id "
             "WHERE s.id = ? ";
@@ -40,7 +40,8 @@ namespace data {
         if (! result.empty()) {
             dest.id = result.get<unsigned int>("id");
             dest.title = result.get<std::string>("title");
-            dest.artist = result.get<std::string>("artist");
+            dest.artist.id = result.get<unsigned int>("id");
+            dest.artist.name = result.get<std::string>("artist_name");
             dest.file = result.get<std::string>("file", "");
             dest.url = result.get<std::string>("url", "");
             dest.duration = result.get<unsigned int>("duration", 0);
@@ -76,7 +77,7 @@ namespace data {
             song.id = result.get<unsigned int>("song_id");
             song.vote.totalValues = result.get<float>("total_votes", 0);
             song.title = result.get<std::string>("song_title", "");
-            song.artist = result.get<std::string>("artist_name", "");
+            song.artist.name = result.get<std::string>("artist_name", "");
             song.url = result.get<std::string>("url", "");
             song.playlist.id = result.get<std::string>("playlist_id", "");
             song.playlist.name = result.get<std::string>("playlist_name", "");
@@ -107,7 +108,7 @@ namespace data {
 
         while (result.next()) {
             Song song;
-            result >> song.id >> song.title >> song.artist >> song.file
+            result >> song.id >> song.title >> song.artist.name >> song.file
                 >> song.url >> song.proposer;
             dest.pendingSongs.push_back(song);
 
@@ -116,29 +117,29 @@ namespace data {
         return success;
     }
 
-    bool SongMapper::insert(const User& proposer, unsigned int artistId, const Song& song) {
+    bool SongMapper::insert(const User& proposer, const Song& song) {
         std::string query = "INSERT INTO song "
             "(title, artist_id, url, playlist_id, position, proposer_id) "
             "VALUES (?, ?, ?, 0, 10000, ?) ";
 
         BOOSTER_DEBUG("insert") << query << ", " << song.title <<  ", "
-            << artistId <<  ", " << song.url <<  ", " << proposer.id;
+            << song.artist.id <<  ", " << song.url <<  ", " << proposer.id;
 
-        cppdb::statement st = connection() << query << song.title << artistId << song.url << proposer.id << cppdb::exec;
+        cppdb::statement st = connection() << query << song.title << song.artist.id << song.url << proposer.id << cppdb::exec;
 
         return st.affected() >= 1;
     }
 
-    bool SongMapper::update(unsigned int artistId, const Song& song) {
+    bool SongMapper::update(const Song& song) {
         std::string query = "UPDATE song SET title = ?, artist_id = ?, "
             "file = ?, url = ?, show_video = ?, position = ? "
             "WHERE id = ? ";
 
-        BOOSTER_DEBUG("update") << query << ", " << song.title <<  ", " << artistId
+        BOOSTER_DEBUG("update") << query << ", " << song.title <<  ", " << song.artist.id
             <<  ", " << song.file << ", " << song.url <<  ", " << song.showVideo
             << ", " << song.position << ", " << song.id;
 
-        cppdb::statement st = connection() << query << song.title << artistId << song.file
+        cppdb::statement st = connection() << query << song.title << song.artist.id << song.file
             << song.url << song.showVideo << song.position << song.id << cppdb::exec;
 
         return st.affected() >= 1;
