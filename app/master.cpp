@@ -57,22 +57,22 @@ namespace app {
             forbidAccess(user);
         } else {    // Allowed
             user.isAllowed = true;
-            BOOSTER_INFO("checkAuth") << user.alias << " accesses " << pathInfo;
+            BOOSTER_INFO(__func__) << user.alias << " accesses " << pathInfo;
         }
-        BOOSTER_DEBUG("checkAuth") << "User -> " << user.toString();
+        BOOSTER_DEBUG(__func__) << "User -> " << user.toString();
 
         return user.isAllowed;
     }
 
     void Master::redirectTo(const data::User& user, const std::string& internalLocation) {
         std::string location = page_.httpScript + internalLocation;
-        BOOSTER_INFO("redirectTo") << "Redirect user " << user.alias << " to internal location " << location;
+        BOOSTER_INFO(__func__) << "Redirect user " << user.alias << " to internal location " << location;
         response().set_redirect_header(location);
     }
 
     void Master::forbidAccess(const data::User& user) {
         std::string internalLocation = request().path_info();
-        BOOSTER_WARNING("forbidAccess") << "Forbid " << user.alias << " to access " << internalLocation;
+        BOOSTER_WARNING(__func__) << "Forbid " << user.alias << " to access " << internalLocation;
 
         session()["error"] = translate("You have to authenticate to access the requested page!");
         session()["location"] = internalLocation;

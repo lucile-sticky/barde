@@ -23,7 +23,7 @@ namespace data {
             "AND publication <= CURDATE() "
             "ORDER BY publication DESC LIMIT 1 ";
 
-        BOOSTER_DEBUG("findCurrentplaylistId") << query;
+        BOOSTER_DEBUG(__func__) << query;
 
         cppdb::result result = connection() << query;
 
@@ -57,7 +57,7 @@ namespace data {
 
         query += "ORDER BY s.position ";
 
-        BOOSTER_DEBUG("loadPlaylist") << query << ", " << user.id <<
+        BOOSTER_DEBUG(__func__) << query << ", " << user.id <<
             ", " << user.id << ", " << playlistId;
 
         cppdb::result result = connection() << query << user.id << user.id << playlistId;
@@ -122,7 +122,7 @@ namespace data {
 
         query += "LIMIT ? ";
 
-        BOOSTER_DEBUG("loadTopPlaylist") << query << ", " << user.id << ", " << nbSongs;
+        BOOSTER_DEBUG(__func__) << query << ", " << user.id << ", " << nbSongs;
 
         cppdb::result result = connection() << query << user.id << nbSongs;
 
@@ -178,7 +178,7 @@ namespace data {
 
         query += "LIMIT ? ";
 
-        BOOSTER_DEBUG("loadUserTopPlaylist") << query << ", " << user.id << ", " << nbSongs;
+        BOOSTER_DEBUG(__func__) << query << ", " << user.id << ", " << nbSongs;
 
         cppdb::result result = connection() << query << user.id << nbSongs;
 
@@ -213,7 +213,7 @@ namespace data {
             "INNER JOIN artist a ON a.id = s.artist_id "
             "WHERE pl.id IS  NULL";
 
-        BOOSTER_DEBUG("loadProposedPlaylist") << query;
+        BOOSTER_DEBUG(__func__) << query;
 
         cppdb::result result = connection() << query;
 
@@ -244,7 +244,7 @@ namespace data {
                 "GROUP BY p.id "
                 "ORDER BY p.publication DESC ";
 
-            BOOSTER_DEBUG("loadAllPlaylists") << query;
+            BOOSTER_DEBUG(__func__) << query;
 
             cppdb::result result = connection() << query;
 
@@ -275,7 +275,7 @@ namespace data {
             "GROUP BY p.id "
             "ORDER BY publication ASC ";
 
-        BOOSTER_DEBUG("loadComingPlaylists") << query;
+        BOOSTER_DEBUG(__func__) << query;
 
         cppdb::result result = connection() << query;
 
@@ -295,7 +295,7 @@ namespace data {
             "(name, image, description, enabled) "
             "VALUES (?, ?, ?, 0) ";
 
-        BOOSTER_DEBUG("insert") << query << ", " << playlist.name << ", " << playlist.image
+        BOOSTER_DEBUG(__func__) << query << ", " << playlist.name << ", " << playlist.image
             << ", " << playlist.description;
 
         cppdb::statement st = connection() << query <<  playlist.name << playlist.image

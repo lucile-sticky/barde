@@ -52,7 +52,7 @@ public:
 
 int main(int argc,char ** argv)
 {
-    BOOSTER_INFO("main") << "Running...";
+    BOOSTER_INFO(__func__) << "Running...";
     try {
         cppcms::service srv(argc,argv);
         srv.applications_pool().mount(cppcms::applications_factory<WepApp>());
@@ -60,10 +60,10 @@ int main(int argc,char ** argv)
     }
     catch(const std::exception& e) {
         std::cerr << e.what() << std::endl;
-        BOOSTER_ERROR("main") << e.what();
+        BOOSTER_ERROR(__func__) << e.what();
         return 1;
     }
-    BOOSTER_INFO("main") << "Done";
+    BOOSTER_INFO(__func__) << "Done";
     return 0;
 }
 

@@ -37,7 +37,7 @@ namespace app {
     }
 
     void Song::displayProposed() {
-        BOOSTER_DEBUG("displayProposed");
+        BOOSTER_DEBUG(__func__);
 
         data::SongAdminPage pageSong(page_);
 
@@ -58,7 +58,7 @@ namespace app {
     }
 
     void Song::displayEdit(std::string songId) {
-        BOOSTER_DEBUG("displayEdit");
+        BOOSTER_DEBUG(__func__);
 
         data::EditSongPage pageSong(page_);
 
@@ -88,11 +88,11 @@ namespace app {
                     std::ostringstream message;
                     message << "Successfully modified \"" << song.title << "\".";
                     pageSong.alerts.success.push_back(message.str());
-                    BOOSTER_INFO("displayEdit") << message.str();
+                    BOOSTER_INFO(__func__) << message.str();
                 }
             }
         } else if (!songId.empty() && songMapper.loadSong(song, songId)) {
-            BOOSTER_DEBUG("displayEdit") << "Loading fields for song " << songId;
+            BOOSTER_DEBUG(__func__) << "Loading fields for song " << songId;
             pageSong.input.artist.value(song.artist.name);
             pageSong.input.title.value(song.title);
             pageSong.input.file.value(song.file);
@@ -111,12 +111,12 @@ namespace app {
 
         if (! checkAuth(user, data::User::CITIZEN)) {
             response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("ajaxNew") << "Forbid user "
+            BOOSTER_WARNING(__func__) << "Forbid user "
                 << user.alias << " to add new song";
             return;
         }
 
-        BOOSTER_DEBUG("ajaxNew");
+        BOOSTER_DEBUG(__func__);
 
         data::Song song;
         song.title = request().post("title");
@@ -139,9 +139,9 @@ namespace app {
         }
 
         if (success) {
-            BOOSTER_INFO("ajaxNew") << message;
+            BOOSTER_INFO(__func__) << message;
         } else {
-            BOOSTER_ERROR("ajaxNew") << message;
+            BOOSTER_ERROR(__func__) << message;
         }
 
         cppcms::json::value jsonOutput;
@@ -155,12 +155,12 @@ namespace app {
 
         if (! checkAuth(user, data::User::ADMINISTRATOR)) {
             response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("ajaxSetPlaylist") << "Forbid user "
+            BOOSTER_WARNING(__func__) << "Forbid user "
                 << user.alias << " to set song playlist";
             return;
         }
 
-        BOOSTER_DEBUG("ajaxSetPlaylist");
+        BOOSTER_DEBUG(__func__);
 
         data::SongMapper songMapper(connectionString_);
 
@@ -170,7 +170,7 @@ namespace app {
         );
 
         cache().rise(std::to_string(user.id));
-        BOOSTER_DEBUG("ajaxComment") << "Clean caches for user ID " << user.id;
+        BOOSTER_DEBUG(__func__) << "Clean caches for user ID " << user.id;
 
         cppcms::json::value jsonOutput;
         jsonOutput["success"] = result;
@@ -182,12 +182,12 @@ namespace app {
 
         if (! checkAuth(user, data::User::GUEST)) {
             response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("ajaxSetPlaylist") << "Forbid user "
+            BOOSTER_WARNING(__func__) << "Forbid user "
                 << user.alias << " to set song playlist";
             return;
         }
 
-        BOOSTER_DEBUG("ajaxSetDuration");
+        BOOSTER_DEBUG(__func__);
 
         data::SongMapper songMapper(connectionString_);
 
@@ -213,7 +213,7 @@ namespace app {
         }
 
         if (song2.artist.empty()) {
-            BOOSTER_DEBUG("insert") << "Could not create artist " << song.artist.name;
+            BOOSTER_DEBUG(__func__) << "Could not create artist " << song.artist.name;
         } else {
             success = songMapper.insert(proposer, song2);
         }
@@ -230,9 +230,9 @@ namespace app {
         data::Song song2 = song;    // modifiable Song
         song2.artist.id = loadSongArtistId(song.id);
         if (song2.artist.empty()) {
-            BOOSTER_DEBUG("update") << "Missing artist for song " << song.id;
+            BOOSTER_DEBUG(__func__) << "Missing artist for song " << song.id;
         } else if (!artistMapper.update(song2.artist)) {
-            BOOSTER_DEBUG("update") << "Could not update artist for song " << song.id;
+            BOOSTER_DEBUG(__func__) << "Could not update artist for song " << song.id;
         } else {
             success = songMapper.update(song2);
         }

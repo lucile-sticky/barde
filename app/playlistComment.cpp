@@ -23,7 +23,7 @@ namespace app {
 
         if (! checkAuth(user, data::User::CITIZEN)) {
             response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("ajaxComment") << "Forbid user "
+            BOOSTER_WARNING(__func__) << "Forbid user "
                 << user.alias << " to comment playlist " << playlistId;
             return;
         }
@@ -39,7 +39,7 @@ namespace app {
                 playlistComment);
 
         cache().rise(std::to_string(user.id));
-        BOOSTER_DEBUG("ajaxComment") << "Clean caches for user ID " << user.id;
+        BOOSTER_DEBUG(__func__) << "Clean caches for user ID " << user.id;
 
         cppcms::json::value jsonOutput;
         jsonOutput["success"] = success;

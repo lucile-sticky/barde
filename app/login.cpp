@@ -15,7 +15,7 @@ namespace app {
     }
 
     void Login::display() {
-        BOOSTER_DEBUG("display");
+        BOOSTER_DEBUG(__func__);
 
         data::LoginPage login(page_);
         login.pageTitle = translate("Authentification");

@@ -32,7 +32,7 @@ namespace data {
             "INNER JOIN artist a ON a.id = s.artist_id "
             "WHERE s.id = ? ";
 
-        BOOSTER_DEBUG("loadSong") << query << ", " << songId;
+        BOOSTER_DEBUG(__func__) << query << ", " << songId;
 
         cppdb::statement statement = connection() << query << songId;
         cppdb::result result = statement.row();
@@ -68,7 +68,7 @@ namespace data {
             "WHERE s.proposer_id = ? "
             "GROUP BY s.id DESC ";
 
-        BOOSTER_DEBUG("loadUserProposedSongs") << query << ", " << dest.id;
+        BOOSTER_DEBUG(__func__) << query << ", " << dest.id;
 
         cppdb::result result = connection() << query << dest.id;
 
@@ -102,7 +102,7 @@ namespace data {
             "WHERE s.playlist_id = 0 "
             "ORDER BY s.id DESC";
 
-        BOOSTER_DEBUG("loadProposedPlaylist") << query;
+        BOOSTER_DEBUG(__func__) << query;
 
         cppdb::result result = connection() << query;
 
@@ -122,7 +122,7 @@ namespace data {
             "(title, artist_id, url, playlist_id, position, proposer_id) "
             "VALUES (?, ?, ?, 0, 10000, ?) ";
 
-        BOOSTER_DEBUG("insert") << query << ", " << song.title <<  ", "
+        BOOSTER_DEBUG(__func__) << query << ", " << song.title <<  ", "
             << song.artist.id <<  ", " << song.url <<  ", " << proposer.id;
 
         cppdb::statement st = connection() << query << song.title << song.artist.id << song.url << proposer.id << cppdb::exec;
@@ -135,7 +135,7 @@ namespace data {
             "file = ?, url = ?, show_video = ?, position = ? "
             "WHERE id = ? ";
 
-        BOOSTER_DEBUG("update") << query << ", " << song.title <<  ", " << song.artist.id
+        BOOSTER_DEBUG(__func__) << query << ", " << song.title <<  ", " << song.artist.id
             <<  ", " << song.file << ", " << song.url <<  ", " << song.showVideo
             << ", " << song.position << ", " << song.id;
 
@@ -148,7 +148,7 @@ namespace data {
     bool SongMapper::updatePlaylistId(unsigned int songId, unsigned int playlistId) {
         std::string query = "UPDATE song SET playlist_id = ? WHERE id = ? ";
 
-        BOOSTER_DEBUG("updatePlaylistId") << query << ", " << playlistId <<  ", "
+        BOOSTER_DEBUG(__func__) << query << ", " << playlistId <<  ", "
             << songId;
 
         cppdb::statement st = connection() << query << playlistId << songId << cppdb::exec;
@@ -159,7 +159,7 @@ namespace data {
     bool SongMapper::updateDuration(unsigned int songId, unsigned int duration) {
         std::string query = "UPDATE song SET duration = ? WHERE id = ? ";
 
-        BOOSTER_DEBUG("updateDuration") << query << ", " << duration << ", "
+        BOOSTER_DEBUG(__func__) << query << ", " << duration << ", "
             << songId;
 
         cppdb::statement st = connection() << query << duration << songId << cppdb::exec;

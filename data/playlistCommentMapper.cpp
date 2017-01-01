@@ -16,7 +16,7 @@ namespace data {
         std::string query = "SELECT COUNT(*) FROM playlist_comment "
             "WHERE author_id = ? ";
 
-        BOOSTER_DEBUG("loadUserNbComments") << query << ", " << dest.id;
+        BOOSTER_DEBUG(__func__) << query << ", " << dest.id;
 
         cppdb::result result = connection() << query << dest.id << cppdb::row;
 
@@ -43,7 +43,7 @@ namespace data {
             "ORDER BY position_id DESC, pc.id ASC";
 
 
-        BOOSTER_DEBUG("loadComments") << query << ", " << playlistId;
+        BOOSTER_DEBUG(__func__) << query << ", " << playlistId;
 
         cppdb::result result = connection() << query << playlistId;
 
@@ -62,12 +62,12 @@ namespace data {
             }
 
             if (dest.comments.empty()) {
-                BOOSTER_ERROR("loadComments") << "No comment to add reply " << comment.id;
+                BOOSTER_ERROR(__func__) << "No comment to add reply " << comment.id;
                 continue;
             }
 
             if (dest.comments.back().id != comment.parentId) {
-                BOOSTER_ERROR("loadComments") << "Missing lastest comment " << comment.parentId <<
+                BOOSTER_ERROR(__func__) << "Missing lastest comment " << comment.parentId <<
                     " to add reply " << comment.id;
                 continue;
             }
@@ -82,7 +82,7 @@ namespace data {
             "(playlist_id, parent_id, comment, author_id, status, creation) "
             "VALUES (?, ?, ?, ?, 'published', NOW()) ";
 
-        BOOSTER_DEBUG("insert") << query << ", " << playlistId <<  ", "
+        BOOSTER_DEBUG(__func__) << query << ", " << playlistId <<  ", "
             << comment.parentId <<  ", " << comment.comment <<  ", " << authorId;
 
         cppdb::statement st = connection() << query;

@@ -58,20 +58,20 @@ namespace app {
     }
 
     void Playlist::displayCurrent() {
-        BOOSTER_DEBUG("displayCurrent");
+        BOOSTER_DEBUG(__func__);
 
         data::PlaylistMapper playlistMapper(connectionString_);
         std::string playlistId = playlistMapper.findCurrentPlaylistId();
 
         if (playlistId.empty()) {
             playlistId = TOP_LIST_ID;
-            BOOSTER_WARNING("displayCurrent") << "No current playlist, falling back on " << playlistId;
+            BOOSTER_WARNING(__func__) << "No current playlist, falling back on " << playlistId;
         }
         display(playlistId);
     }
 
     void Playlist::display(std::string playlistId) {
-        BOOSTER_DEBUG("display") << "playlist ID: " << playlistId;
+        BOOSTER_DEBUG(__func__) << "playlist ID: " << playlistId;
 
         data::PlaylistPage playlist(page_);
 
@@ -82,7 +82,7 @@ namespace app {
 
         std::string key = getCacheKey(playlistId, playlist.user);
         if (cache().fetch_page(key)) {
-            BOOSTER_DEBUG("display") << "Fetch cache for key=" << key;
+            BOOSTER_DEBUG(__func__) << "Fetch cache for key=" << key;
             return;
         }
 
@@ -97,11 +97,11 @@ namespace app {
 
         cache().add_trigger(std::to_string(playlist.user.id));
         cache().store_page(key, CACHE_TTL_MEDIUM);
-        BOOSTER_DEBUG("display") << "Store cache for key=" << key;
+        BOOSTER_DEBUG(__func__) << "Store cache for key=" << key;
     }
 
     void Playlist::displayAll() {
-        BOOSTER_DEBUG("displayAll");
+        BOOSTER_DEBUG(__func__);
 
         data::AllPlaylistsPage allPlaylists(page_);
 
@@ -112,7 +112,7 @@ namespace app {
 
         std::string key = getCacheKey("ALL", allPlaylists.user);
         if (cache().fetch_page(key)) {
-            BOOSTER_DEBUG("displayAll") << "Fetch cache for key=" << key;
+            BOOSTER_DEBUG(__func__) << "Fetch cache for key=" << key;
             return;
         }
 
@@ -129,11 +129,11 @@ namespace app {
 
         cache().add_trigger(std::to_string(allPlaylists.user.id));
         cache().store_page(key, CACHE_TTL_LONG);
-        BOOSTER_DEBUG("displayAll") << "Store cache for key=" << key;
+        BOOSTER_DEBUG(__func__) << "Store cache for key=" << key;
     }
 
     void Playlist::displayTop() {
-        BOOSTER_DEBUG("displayTop");
+        BOOSTER_DEBUG(__func__);
 
         data::PlaylistPage playlist(page_);
 
@@ -144,7 +144,7 @@ namespace app {
 
         std::string key = getCacheKey(TOP_LIST_ID, playlist.user);
         if (cache().fetch_page(key)) {
-            BOOSTER_DEBUG("displayTop") << "Fetch cache for key=" << key;
+            BOOSTER_DEBUG(__func__) << "Fetch cache for key=" << key;
             return;
         }
 
@@ -163,11 +163,11 @@ namespace app {
 
         cache().add_trigger(std::to_string(playlist.user.id));
         cache().store_page(key, CACHE_TTL_SHORT);
-        BOOSTER_DEBUG("displayTop") << "Store cache for key=" << key;
+        BOOSTER_DEBUG(__func__) << "Store cache for key=" << key;
     }
 
     void Playlist::displayWorst() {
-        BOOSTER_DEBUG("displayWorst");
+        BOOSTER_DEBUG(__func__);
 
         data::PlaylistPage playlist(page_);
 
@@ -178,7 +178,7 @@ namespace app {
 
         std::string key = getCacheKey(WORST_LIST_ID, playlist.user);
         if (cache().fetch_page(key)) {
-            BOOSTER_DEBUG("displayWorst") << "Fetch cache for key=" << key;
+            BOOSTER_DEBUG(__func__) << "Fetch cache for key=" << key;
             return;
         }
 
@@ -197,11 +197,11 @@ namespace app {
 
         cache().add_trigger(std::to_string(playlist.user.id));
         cache().store_page(key, CACHE_TTL_SHORT);
-        BOOSTER_DEBUG("displayWorst") << "Store cache for key=" << key;
+        BOOSTER_DEBUG(__func__) << "Store cache for key=" << key;
     }
 
     void Playlist::displayRandom() {
-        BOOSTER_DEBUG("displayRandom");
+        BOOSTER_DEBUG(__func__);
 
         data::PlaylistPage playlist(page_);
 
@@ -212,7 +212,7 @@ namespace app {
 
         std::string key = getCacheKey(RANDOM_LIST_ID, playlist.user);
         if (cache().fetch_page(key)) {
-            BOOSTER_DEBUG("displayRandom") << "Fetch cache for key=" << key;
+            BOOSTER_DEBUG(__func__) << "Fetch cache for key=" << key;
             return;
         }
 
@@ -231,11 +231,11 @@ namespace app {
 
         cache().add_trigger(std::to_string(playlist.user.id));
         cache().store_page(key, CACHE_TTL_MEDIUM);
-        BOOSTER_DEBUG("displayRandom") << "Store cache for key=" << key;
+        BOOSTER_DEBUG(__func__) << "Store cache for key=" << key;
     }
 
     void Playlist::displayProposed() {
-        BOOSTER_DEBUG("displayProposed");
+        BOOSTER_DEBUG(__func__);
 
         data::PlaylistPage playlist(page_);
 
@@ -254,7 +254,7 @@ namespace app {
     }
 
     void Playlist::displayNew() {
-        BOOSTER_DEBUG("displayNew");
+        BOOSTER_DEBUG(__func__);
 
         data::NewPlaylistPage newPlaylist(page_);
 
@@ -281,23 +281,23 @@ namespace app {
                 std::ostringstream msg;
                 try {
                     imageFile->save_to(uploadFileName);
-                    BOOSTER_INFO("displayNew") << "Uploaded file " << uploadFileName;
+                    BOOSTER_INFO(__func__) << "Uploaded file " << uploadFileName;
 
                     if (! playlistMapper.insert(playlist)) {
                         msg << "Could not create playlist " << playlist.name;
                         newPlaylist.alerts.errors.push_back(msg.str());
-                        BOOSTER_ERROR("displayNew") << msg.str();
+                        BOOSTER_ERROR(__func__) << msg.str();
                     } else {
                         msg << "Successfully created playlist " << playlist.name;
                         newPlaylist.alerts.success.push_back(msg.str());
-                        BOOSTER_INFO("displayNew") << msg.str();
+                        BOOSTER_INFO(__func__) << msg.str();
 
                         newPlaylist.input.clear();
                     }
                 } catch(const cppcms::cppcms_error& e) {
                     msg << "Could not upload file " << uploadFileName;
                     newPlaylist.alerts.errors.push_back(msg.str());
-                    BOOSTER_ERROR("displayNew") << msg.str() << " - - " << e.trace();
+                    BOOSTER_ERROR(__func__) << msg.str() << " - - " << e.trace();
                 }
             }
         }

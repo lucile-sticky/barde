@@ -15,7 +15,7 @@ namespace data {
             "(playlist_id, user_id, vote, creation) VALUES (?, ?, ?, NOW()) "
             "ON DUPLICATE KEY UPDATE vote = ?";
 
-        BOOSTER_DEBUG("insert") << query << ", " << playlistId << ", "
+        BOOSTER_DEBUG(__func__) << query << ", " << playlistId << ", "
             << userId << ", " << vote << ", " << vote << ", " << cppdb::exec;
 
         cppdb::statement st = connection() << query << playlistId << userId << vote << vote << cppdb::exec;

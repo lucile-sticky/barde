@@ -13,7 +13,7 @@ namespace data {
         std::string query = "SELECT id, name FROM artist WHERE LCASE(name) = LCASE(?) "
             "ORDER BY id DESC LIMIT 1 ";
 
-        BOOSTER_DEBUG("getByName") << query << ", " << name;
+        BOOSTER_DEBUG(__func__) << query << ", " << name;
 
         cppdb::statement statement = connection() << query << name;
         cppdb::result result = statement.row();
@@ -30,7 +30,7 @@ namespace data {
     unsigned int ArtistMapper::insert(const Artist& artist) {
         std::string query = "INSERT INTO artist (name) VALUES (?)";
 
-        BOOSTER_DEBUG("insert") << query << ", " << artist.name;
+        BOOSTER_DEBUG(__func__) << query << ", " << artist.name;
 
         cppdb::statement statement = connection() << query << artist.name << cppdb::exec;
 
@@ -43,7 +43,7 @@ namespace data {
     bool ArtistMapper::update(const Artist& artist) {
         std::string query = "UPDATE artist SET name = ? WHERE id = ?";
 
-        BOOSTER_DEBUG("update") << query << ", " << artist.name << ", " << artist.id;
+        BOOSTER_DEBUG(__func__) << query << ", " << artist.name << ", " << artist.id;
 
         cppdb::statement statement = connection() << query << artist.name << artist.id << cppdb::exec;
 

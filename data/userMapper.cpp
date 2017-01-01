@@ -22,7 +22,7 @@ namespace data {
             "FROM user "
             "WHERE username = ?";
 
-        BOOSTER_DEBUG("checkAuthentification") << query;
+        BOOSTER_DEBUG(__func__) << query;
 
         cppdb::statement statement = connection() << query << username;
         cppdb::result result = statement.row();
@@ -36,13 +36,13 @@ namespace data {
                 login.user.privacy = result.get<std::string>(4);
                 login.user.isAuthenticated = true;
 
-                BOOSTER_INFO("checkAuthentification") << login.user.id
+                BOOSTER_INFO(__func__) << login.user.id
                     << " \"" << login.user.alias << "\" authenticated with level " << login.user.level;
             } else {
-                BOOSTER_WARNING("checkAuthentification") << username << " entered wrong password";
+                BOOSTER_WARNING(__func__) << username << " entered wrong password";
             }
         } else {
-            BOOSTER_WARNING("checkAuthentification") << "Unknown user " << username << " tried to authenticate";
+            BOOSTER_WARNING(__func__) << "Unknown user " << username << " tried to authenticate";
         }
 
         return login.user.isAuthenticated;
@@ -53,7 +53,7 @@ namespace data {
         std::string query = "UPDATE user SET privacy = ? "
             "WHERE id = ? ";
 
-        BOOSTER_DEBUG("update") << query << user.privacy << ", " << user.id;
+        BOOSTER_DEBUG(__func__) << query << user.privacy << ", " << user.id;
 
         cppdb::statement st = connection() << query << user.privacy << user.id << cppdb::exec;
 

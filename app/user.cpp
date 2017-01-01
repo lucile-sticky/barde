@@ -21,12 +21,12 @@ namespace app {
 
         if (! checkAuth(user, data::User::CITIZEN)) {
             response().make_error_response(response::forbidden);
-            BOOSTER_WARNING("ajaxUpdate") << "Forbid user "
+            BOOSTER_WARNING(__func__) << "Forbid user "
                 << user.alias << " to update user";
             return;
         }
 
-        BOOSTER_DEBUG("ajaxUpdate");
+        BOOSTER_DEBUG(__func__);
 
         data::User updateUser;
         updateUser.id = user.id;
