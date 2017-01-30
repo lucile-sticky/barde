@@ -60,7 +60,9 @@ namespace data {
 
         std::string query="SELECT s.id AS song_id, SUM(votes.vote) AS total_votes, "
             "s.title AS song_title, a.name AS artist_name, s.url, "
-            "pl.id AS playlist_id, pl.name AS playlist_name, pl.enabled AS playlist_enabled "
+            "pl.id AS playlist_id, pl.name AS playlist_name, "
+            "UNIX_TIMESTAMP(pl.publication) AS playlist_publication, "
+            "pl.enabled AS playlist_enabled "
             "FROM song s "
             "INNER JOIN artist a ON a.id = s.artist_id "
             "LEFT JOIN " + SQL_GLOBAL_VOTES + " ON votes.song_id = s.id "
@@ -81,6 +83,7 @@ namespace data {
             song.url = result.get<std::string>("url", "");
             song.playlist.id = result.get<std::string>("playlist_id", "");
             song.playlist.name = result.get<std::string>("playlist_name", "");
+            song.playlist.publication = result.get<time_t>("playlist_publication", 0);
             song.playlist.enabled = result.get<unsigned short>("playlist_enabled", 0);
             dest.proposedSongs.push_back(song);
 

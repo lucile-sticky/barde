@@ -75,7 +75,8 @@
                         </td>
                         <% if song.playlist.enabled %>
                         <td>
-                            <a href="<% url "/playlist" using song.playlist.id %>" title="<%= song.playlist.name%>">
+                            <a href="<% url "/playlist" using song.playlist.id %>"
+                                    title="<%= song.playlist.name%> (<%= song.playlist.publication | strftime("%B %Y") %>)" >
                                 <%= song.playlist.name %>
                             </a>
                         </td>
@@ -86,7 +87,8 @@
                         </td>
                         <% else %>
                         <td>
-                            <span style="opacity: 0.35" title="<%= song.playlist.name%>">
+                            <span style="opacity: 0.35"
+                                    title="<%= song.playlist.name%> (<%= song.playlist.publication | strftime("%B %Y") %>)" >
                                 <%= song.playlist.name %>
                             </span>
                         </td>
