@@ -102,6 +102,7 @@ namespace app {
         }
 
         pageSong.pageTitle = "Modify a song";
+        pageSong.song = song;
 
         render("editSong", pageSong);
     }

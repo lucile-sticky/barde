@@ -5,6 +5,14 @@
 <% template pageContent() %>
 <h2><% include title() %></h2>
 <article id="edit-song">
+    <hr />
+    <a class='js-show-video' target="_blank" href="<%= song.url %>" alt="<%= song.url %>"
+            title="<% gt "Watch {1} video clip" using song.title %>" >
+        <% gt "Preview" %>
+        <span class='flaticon-big-play-button'></span>
+    </a>
+    <hr />
+
     <form method="post">
     <% form as_p input %>
     </form>

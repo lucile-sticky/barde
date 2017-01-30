@@ -32,6 +32,7 @@ namespace data {
 
     struct EditSongPage : public SongPage {
         EditSongForm input;
+        Song song;
 
         EditSongPage(const HtmlPage& other) :
             SongPage(other)
