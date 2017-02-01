@@ -232,12 +232,9 @@ namespace app {
         song2.artist.id = loadSongArtistId(song.id);
         if (song2.artist.empty()) {
             BOOSTER_DEBUG(__func__) << "Missing artist for song " << song.id;
-        } else if (!artistMapper.update(song2.artist)) {
-            BOOSTER_DEBUG(__func__) << "Could not update artist for song " << song.id;
         } else {
-            success = songMapper.update(song2);
+            success = artistMapper.update(song2.artist) | songMapper.update(song2);
         }
-        return success;
     }
 
     unsigned int Song::loadSongArtistId(unsigned int songId) {
