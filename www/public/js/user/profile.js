@@ -8,7 +8,7 @@ $(document).ready(function() {
 
             // Events
             this.button.click(function (e) {
-                that.expand();
+                that.toggle();
                 e.stopPropagation();
             });
             $(document).click(function (e) {
@@ -18,8 +18,10 @@ $(document).ready(function() {
                 }
             });
         },
-        expand: function() {
-            if (!$('body').hasClass('pushed')) {
+        toggle: function() {
+            if ($('body').hasClass('pushed')) {
+                collapse();
+            } else {
                 $('body').addClass('pushed');
             }
         },
