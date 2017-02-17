@@ -28,10 +28,12 @@ set(PLAYLISTS_SRC
     app/song.cpp
     app/songVote.cpp
     app/user.cpp
+    app/util/pathMethods.cpp
     app/util/stringMethods.cpp
     app/validators/songValidator.cpp
     data/dbMapper.cpp
     data/artistMapper.cpp
+    data/mediaMapper.cpp
     data/playlistMapper.cpp
     data/playlistVoteMapper.cpp
     data/playlistCommentMapper.cpp

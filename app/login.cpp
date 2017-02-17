@@ -48,6 +48,7 @@ namespace app {
                     session().clear();
                     session().set<unsigned int>("id", login.user.id);
                     session()["alias"] = login.user.alias;
+                    session()["avatar"] = serializeMedia(login.user.avatar.id);
                     session().set<unsigned int>("level", login.user.level);
                     session()["privacy"] = login.user.privacy;
 

@@ -8,16 +8,16 @@
 
 <% template pageCss() %>
     <link href="https://fonts.googleapis.com/css?family=Amatica+SC|Source+Sans+Pro:300,400,600,700" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="<%= mediaRootUrl %>/css/playlist.css" />
+    <link rel="stylesheet" type="text/css" href="<%= publicUrl %>/css/playlist.css" />
 <% end %>
 
 <% template pageJs() %>
-    <script type="text/javascript" src="<%= mediaRootUrl %>/js/jquery-2.2.1.min.js"></script>
-    <script type="text/javascript" src="<%= mediaRootUrl %>/js/modernizr.custom.js"></script>
-    <script type="text/javascript" src="<%= mediaRootUrl %>/js/moment.js"></script>
-    <script type="text/javascript" src="<%= mediaRootUrl %>/js/views/master.js"></script>
-    <script type="text/javascript" src="<%= mediaRootUrl %>/js/song/new.js"></script>
-    <script type="text/javascript" src="<%= mediaRootUrl %>/js/user/profile.js"></script>
+    <script type="text/javascript" src="<%= publicUrl %>/js/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="<%= publicUrl %>/js/modernizr.custom.js"></script>
+    <script type="text/javascript" src="<%= publicUrl %>/js/moment.js"></script>
+    <script type="text/javascript" src="<%= publicUrl %>/js/views/master.js"></script>
+    <script type="text/javascript" src="<%= publicUrl %>/js/song/new.js"></script>
+    <script type="text/javascript" src="<%= publicUrl %>/js/user/profile.js"></script>
 <% end %>
 
 <% template proposeSong() %>
@@ -109,7 +109,17 @@
             <div>
                 <div class='avatar'>
                     <div>Click to <br> change :) </div>
-                    <img src='<%= mediaRootUrl %>/images/default-user.jpg' alt='avatar'>
+                    <% if user.hasAvatar() %>
+                        <img src='<%= publicUrl %><%= user.avatar.file %>' alt='avatar'>
+                    <% else %>
+                        <img src='<%= publicUrl %>/images/default-user.jpg' alt='avatar'>
+                    <% end %>
+                </div>
+                <div class='avatar-upload' style='display:none'>
+                    <form method="post" enctype="multipart/form-data" action="<% url "/user" %>/ajax-update-avatar">
+                        <input type="file" name="media" />
+                        <input type="submit" />
+                    </form>
                 </div>
             </div>
             <div>
@@ -139,7 +149,7 @@
     <header>
         <div class='logo'>
             <a href="<% url "/playlist" %>">
-                <img src="<%= mediaRootUrl %>/images/logo.svg" alt="<%= siteTitle %>" />
+                <img src="<%= publicUrl %>/images/logo.svg" alt="<%= siteTitle %>" />
             </a>
         </div>
         <div class='title'>
@@ -199,7 +209,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/png" href="<%= mediaRootUrl %>/favicon.png" />
+    <link rel="icon" type="image/png" href="<%= publicUrl %>/favicon.png" />
     <title><%= siteTitle %> - <% include title() %></title>
     <% include pageCss() %>
     <% include pageJs() %>

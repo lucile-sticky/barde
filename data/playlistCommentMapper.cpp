@@ -34,10 +34,12 @@ namespace data {
         dest.comments.clear();
 
         std::string query = "SELECT pc.id, pc.parent_id, pc.comment, "
-            "u.alias AS author, UNIX_TIMESTAMP(pc.creation) AS creation, "
+            "u.alias AS author_alias, m.id AS avatar_id, m.file AS avatar_file, "
+            "UNIX_TIMESTAMP(pc.creation) AS creation, "
             "IFNULL(pc.parent_id, pc.id) AS position_id "
             "FROM playlist_comment pc "
             "INNER JOIN user u ON u.id = pc.author_id "
+            "LEFT JOIN media m ON m.id = u.avatar_id "
             "WHERE pc.playlist_id = ? "
             "AND status IN ('published', 'approved') "
             "ORDER BY position_id DESC, pc.id ASC";
@@ -52,7 +54,9 @@ namespace data {
             comment.id = result.get<unsigned int>("id");
             comment.parentId = result.get<unsigned int>("parent_id", 0);
             comment.comment = result.get<std::string>("comment");
-            comment.author = result.get<std::string>("author");
+            comment.author.alias = result.get<std::string>("author_alias");
+            comment.author.avatar.id = result.get<unsigned int>("avatar_id", 0);
+            comment.author.avatar.file = result.get<std::string>("avatar_file", "");
             comment.creation = result.get<time_t>("creation");
 
             if (comment.parentId == 0) {

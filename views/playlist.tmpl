@@ -4,9 +4,9 @@
 
 <% template pageJs() %>
 <% include master::pageJs() %>
-    <script type="text/javascript" src="<%= mediaRootUrl %>/js/playlist/player.js"></script>
-    <script type="text/javascript" src="<%= mediaRootUrl %>/js/playlist/votes.js"></script>
-    <script type="text/javascript" src="<%= mediaRootUrl %>/js/playlist/comments.js"></script>
+    <script type="text/javascript" src="<%= publicUrl %>/js/playlist/player.js"></script>
+    <script type="text/javascript" src="<%= publicUrl %>/js/playlist/votes.js"></script>
+    <script type="text/javascript" src="<%= publicUrl %>/js/playlist/comments.js"></script>
 <% end %>
 
 <% template player() %>
@@ -32,11 +32,15 @@
             <% item %>
             <div class='one-comment'>
                 <div>
-                    <img src='<%= mediaRootUrl %>/images/default-user.jpg' alt='avatar'>
+                <% if comment.author.hasAvatar() %>
+                    <img src='<%= publicUrl %><%= comment.author.avatar.file %>' alt='avatar'>
+                <% else %>
+                    <img src='<%= publicUrl %>/images/default-user.jpg' alt='avatar'>
+                <% end %>
                 </div>
                 <div>
                     <div class='information'>
-                        <%= comment.author %>
+                        <%= comment.author.alias %>
                         <small><%= comment.creation | strftime("%F") %></small>
                     </div>
                     <div class='content'><%= comment.comment %></div>
@@ -46,11 +50,15 @@
                         <% item %>
                         <div class='one-comment'>
                             <div>
-                                <img src='<%= mediaRootUrl %>/images/default-user.jpg' alt='avatar'>
+                            <% if reply.author.hasAvatar() %>
+                                <img src='<%= publicUrl %><%= reply.author.avatar.file %>' alt='avatar'>
+                            <% else %>
+                                <img src='<%= publicUrl %>/images/default-user.jpg' alt='avatar'>
+                            <% end %>
                             </div>
                             <div>
                                 <div class='information'>
-                                    <%= reply.author %>
+                                    <%= reply.author.alias %>
                                     <small><%= reply.creation | strftime("%F") %></small>
                                 </div>
                                 <div class='content'><%= reply.comment %></div>
@@ -80,7 +88,7 @@
                 <div class='description'>
                     <div>
                     <% if not empty image %>
-                        <img class="img-thumbnail" src="<%= mediaRootUrl %><%= image %>" />
+                        <img class="img-thumbnail" src="<%= publicUrl %><%= image %>" />
                     <% end %>
                     </div>
                     <div>
@@ -139,7 +147,7 @@
                             <td class='selectable secondary-information'><span class='num-song'></span></td>
                             <td class='selectable play'><span /></td>
                             <td class='selectable' title='<%= song.title %>'>
-                                <a class="js-song" href="<%= mediaRootUrl %><%= song.file %>">
+                                <a class="js-song" href="<%= publicUrl %><%= song.file %>">
                                     <%= song.title %>
                                 </a>
                             </td>

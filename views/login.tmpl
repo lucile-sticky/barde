@@ -4,7 +4,7 @@
 
 <% template pageJs() %>
 <% include master::pageJs() %>
-<script type="text/javascript" src="<%= mediaRootUrl %>/js/views/login.js"></script>
+<script type="text/javascript" src="<%= publicUrl %>/js/views/login.js"></script>
 <% end %>
 
 <% template header() %>
@@ -21,11 +21,11 @@
             <a href='<% url "/playlist" %>'>Current playlist</a>
         </p>
     <% else %>
-        <img class='loader' src="<%= mediaRootUrl %>/images/loader.svg" width="80" alt="">
+        <img class='loader' src="<%= publicUrl %>/images/loader.svg" width="80" alt="">
         <div id='login-wrapper'>
             <div class='title'>
                 <div class='logo'>
-                    <img src="<%= mediaRootUrl %>/images/logo.svg"
+                    <img src="<%= publicUrl %>/images/logo.svg"
                             alt="<% include title() %>" />
                 </div>
                 <h1><% include title() %></h1>

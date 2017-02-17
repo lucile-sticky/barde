@@ -39,7 +39,8 @@ namespace data {
         // HTML data
         std::string siteTitle;
         std::string pageTitle;
-        std::string mediaRootUrl;
+        std::string publicUrl;
+        std::string publicPath;
         std::string httpScript;
 
         // User data
@@ -57,7 +58,8 @@ namespace data {
         HtmlPage(const HtmlPage& other) :
             siteTitle(other.siteTitle),
             pageTitle(other.pageTitle),
-            mediaRootUrl(other.mediaRootUrl),
+            publicUrl(other.publicUrl),
+            publicPath(other.publicPath),
             httpScript(other.httpScript)
         {}
     };

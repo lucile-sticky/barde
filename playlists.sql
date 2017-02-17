@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.53, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.54, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: playlists
 -- ------------------------------------------------------
--- Server version	5.5.53-0+deb8u1
+-- Server version	5.5.54-0+deb8u1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -26,6 +26,29 @@ CREATE TABLE `artist` (
   `id` int(9) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `media`
+--
+
+DROP TABLE IF EXISTS `media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `media` (
+  `id` int(9) unsigned NOT NULL AUTO_INCREMENT,
+  `type` enum('avatar','playlist') NOT NULL,
+  `label` varchar(20) NOT NULL,
+  `file` varchar(100) NOT NULL,
+  `content_type` varchar(20) NOT NULL,
+  `length` int(9) unsigned zerofill NOT NULL,
+  `md5sum` varchar(100) DEFAULT NULL,
+  `creator_id` int(9) unsigned NOT NULL,
+  `creation` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`creator_id`),
+  CONSTRAINT `creator_id` FOREIGN KEY (`creator_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -147,13 +170,16 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(9) unsigned NOT NULL AUTO_INCREMENT,
   `alias` varchar(20) NOT NULL,
+  `avatar_id` int(9) unsigned DEFAULT NULL,
   `username` varchar(30) CHARACTER SET latin1 NOT NULL,
   `password` varchar(100) CHARACTER SET latin1 NOT NULL,
   `level` smallint(3) unsigned NOT NULL DEFAULT '10',
   `privacy` enum('private','public') NOT NULL DEFAULT 'private',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
-  UNIQUE KEY `alias` (`alias`)
+  UNIQUE KEY `alias` (`alias`),
+  UNIQUE KEY `avatar_id` (`avatar_id`),
+  CONSTRAINT `avatar` FOREIGN KEY (`avatar_id`) REFERENCES `media` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -166,4 +192,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-20 23:20:15
+-- Dump completed on 2017-02-13 23:05:28

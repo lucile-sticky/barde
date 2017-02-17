@@ -36,6 +36,7 @@ $(function() {
             $(document).keypress(function(e) {
                 if ((e.which == 32 || e.which == 112) && $(e.target).is('body')) {
                     that.togglePlayPause();
+                    e.preventDefault();
                 }
             });
 

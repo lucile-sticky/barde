@@ -1,8 +1,11 @@
 {
     "general" : {
-        "site_title": "Sticky playlists",
-        "media_root_url": "http://localhost/public",
-        "upload_root_path": "/tmp"
+        "site_title": "Sticky playlists"
+    },
+    "public" : {
+        "path" : "/public",
+        "host" : "localhost",
+        "www_root" : "/var/www"
     },
 	"service" : {
 		"api" : "http",

@@ -3,6 +3,8 @@
 
 #include <cppcms/view.h>
 
+#include <data/user.h>
+
 #include <vector>
 
 namespace data {
@@ -11,7 +13,7 @@ namespace data {
         unsigned int id;
         unsigned int parentId;
 		std::string comment;
-        std::string author;
+        User author;
         time_t creation;
 
         std::vector<PlaylistComment> replies;

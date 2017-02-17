@@ -3,6 +3,7 @@
 
 #include <cppcms/view.h>
 
+#include <data/media.h>
 #include <data/song.h>
 
 #include <string>
@@ -27,6 +28,7 @@ namespace data {
 
         unsigned int id;
         std::string alias;
+        Media avatar;
         unsigned int level;
         bool isAuthenticated;
         bool isAllowed;
@@ -46,9 +48,14 @@ namespace data {
             return privacy == PRIVACY_PUBLIC;
         }
 
+        bool hasAvatar() {
+            return avatar.id > 0;
+        }
+
         void clear() {
             id = 0;
             alias = ANONYMOUS_ALIAS;
+            avatar.clear();
             level = data::User::ANONYMOUS;
             isAuthenticated = false;
             isAllowed = false;
@@ -57,10 +64,10 @@ namespace data {
             nbComments = 0;
         }
 
-        std::string toString() {
+        std::string toString() const {
             std::ostringstream oss;
-            oss << "{ id: " << id << ", alias: " << alias << ", level: " << level
-                << ", privacy: " << privacy << " }";
+            oss << "{ id: " << id << ", alias: " << alias << ", avatar: " << avatar.id
+                << ", level: " << level << ", privacy: " << privacy << " }";
             return oss.str();
         }
     };

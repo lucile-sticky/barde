@@ -51,7 +51,7 @@ $(document).ready(function() {
             var that = this;
 
             $.post(url, this.form.serialize()).done(function(response) {
-                json = JSON.parse(response);
+                var json = JSON.parse(response);
                 if (json.success) {
                     that.hide();
                     that.clear();

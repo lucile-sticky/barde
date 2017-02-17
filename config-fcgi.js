@@ -1,8 +1,11 @@
 {
     "general" : {
-        "site_title": "Sticky playlists",
-        "media_root_url": "/public",
-        "upload_root_path": "/var/lib/playlists/upload"
+        "site_title" : "Sticky playlists"
+    },
+    "public" : {
+        "path" : "/public"
+        "www_root" : "/var/www",
+        "host" : "",
     },
 	"service" : {
 		"api" : "fastcgi",

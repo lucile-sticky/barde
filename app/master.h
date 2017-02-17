@@ -18,10 +18,9 @@ namespace app {
         static const int CACHE_TTL_MEDIUM = 60;
         static const int CACHE_TTL_LONG = 300;
 
-        static constexpr const char* PLAYLISTS_IMAGE_DIR = "/images/playlists";
+        static constexpr const char* UPLOAD_PATH = "/upload";
 
         std::string connectionString_;
-        std::string uploadRootPath_;
         data::HtmlPage page_;
 
     public:
@@ -34,11 +33,13 @@ namespace app {
         void redirectTo(const data::User& user, const std::string& internalLocation);
         void forbidAccess(const data::User& user);
 
-        std::string composeImagePlaylistPath(const cppcms::http::file* mediaFile) const;
-        std::string composeUploadDestPath(const cppcms::http::file* mediaFile) const;
+        std::string toUploadRelativePath(const cppcms::http::file* uploadedFile) const;
+        std::string toFullPath(const std::string& relativePath) const;
+        std::string toPublicUrl(const std::string& relativePath) const;
 
-    private:
-        std::string composeFilePath(const std::string& dirPath, const cppcms::http::file* mediaFile) const;
+        std::string serializeMedia(unsigned int id) const;
+        std::string serializeMedia(const data::Media& src) const;
+        data::Media& deserializeMedia(data::Media& dest, const std::string serialized) const;
     };
 }   // namespace app
 

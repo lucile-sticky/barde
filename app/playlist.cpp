@@ -75,7 +75,7 @@ namespace app {
 
         data::PlaylistPage playlist(page_);
 
-        if (! checkAuth(playlist.user)) {
+        if (!checkAuth(playlist.user)) {
             forbidAccess(playlist.user);
             return;
         }
@@ -272,17 +272,18 @@ namespace app {
                 playlist.name = newPlaylist.input.name.value();
 
                 file* imageFile = newPlaylist.input.image.value().get();
-                std::string uploadFileName = composeUploadDestPath(imageFile);
+                std::string uploadFileName = toUploadRelativePath(imageFile);
+                playlist.image = uploadFileName;
 
-                playlist.image = composeImagePlaylistPath(imageFile);
                 playlist.description = newPlaylist.input.description.value();
 
-                data::PlaylistMapper playlistMapper(connectionString_);
                 std::ostringstream msg;
                 try {
+                    std::string imageFullPath = toFullPath(uploadFileName);
                     imageFile->save_to(uploadFileName);
-                    BOOSTER_INFO(__func__) << "Uploaded file " << uploadFileName;
+                    BOOSTER_INFO(__func__) << "Uploaded file " << imageFullPath;
 
+                    data::PlaylistMapper playlistMapper(connectionString_);
                     if (! playlistMapper.insert(playlist)) {
                         msg << "Could not create playlist " << playlist.name;
                         newPlaylist.alerts.errors.push_back(msg.str());

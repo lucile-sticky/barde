@@ -6,10 +6,33 @@ $(document).ready(function() {
         init: function() {
             var that = this;
 
+            var avatar = this.profile.find('.avatar');
+            var avatarUploadForm = this.profile.find('.avatar-upload form');
+            var avatarUploadFile = this.profile.find('.avatar-upload input:file');
+
             // Events
             this.button.click(function (e) {
                 that.toggle();
                 e.stopPropagation();
+            });
+            avatar.click(function(e) {
+                avatarUploadFile.click();
+            });
+            avatarUploadFile.change(function(e) {
+                $.ajax({
+                    url: '/playlists/user/ajax-update-avatar',
+                    type: 'POST',
+                    data: new FormData(avatarUploadForm[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        var json = JSON.parse(response);
+                        if (json.success) {
+                            avatar.find('img').attr('src', json.image);
+                        }
+                    }
+                });
             });
             $(document).click(function (e) {
                 if (!that.profile.is(e.target) && that.profile.has(e.target).length == 0) {

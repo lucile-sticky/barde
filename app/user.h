@@ -9,6 +9,7 @@ namespace app {
     public:
         User(cppcms::service& s);
         void ajaxUpdate();
+        void ajaxUpdateAvatar();
     };
 }   // namespace app
 

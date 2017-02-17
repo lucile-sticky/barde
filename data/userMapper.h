@@ -19,6 +19,7 @@ namespace data {
                 LoginPage& login);
 
         bool update(const User& user);
+        bool updateAvatarId(unsigned int userId, unsigned int avatarId);
 
     };
 

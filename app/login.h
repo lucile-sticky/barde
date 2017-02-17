@@ -11,6 +11,10 @@ namespace app {
         Login(cppcms::service& s);
         void display();
 
+    private:
+        // Return empty string if missing avatar
+        std::string getSerializedAvatar(unsigned int avatarId);
+
     };
 }   // namespace app
 
