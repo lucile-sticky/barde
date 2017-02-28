@@ -40,7 +40,7 @@ namespace data {
         if (! result.empty()) {
             dest.id = result.get<unsigned int>("id");
             dest.title = result.get<std::string>("title");
-            dest.artist.id = result.get<unsigned int>("id");
+            dest.artist.id = result.get<unsigned int>("artist_id");
             dest.artist.name = result.get<std::string>("artist_name");
             dest.file = result.get<std::string>("file", "");
             dest.url = result.get<std::string>("url", "");
