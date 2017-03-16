@@ -5,12 +5,14 @@
 #include <cppcms/url_dispatcher.h>
 #include <booster/log.h>
 
+#include <app/validator/imageValidator.h>
 #include <data/userMapper.h>
 #include <data/mediaMapper.h>
 
 #include <sstream>
 
 using namespace cppcms::http;
+using namespace app::validator;
 using namespace std;
 
 namespace app {
@@ -74,30 +76,36 @@ namespace app {
             user.avatar.contentType = uploadedFile->mime();
             user.avatar.length = uploadedFile->size();
 
-            try {
-                std::string avatarFullPath = toFullPath(user.avatar.file);
-                uploadedFile->save_to(avatarFullPath);
-                BOOSTER_INFO(__func__) << "Uploaded file " << avatarFullPath;
+            ImageValidator validator(user.avatar);
+            if (!validator.validate()) {
+                message << validator.lastMessage();
+                success = false;
+            } else {
+                try {
+                    std::string avatarFullPath = toFullPath(user.avatar.file);
+                    uploadedFile->save_to(avatarFullPath);
+                    BOOSTER_INFO(__func__) << "Uploaded file " << avatarFullPath;
 
-                data::MediaMapper mediaMapper(connectionString_);
-                data::UserMapper userMapper(connectionString_);
+                    data::MediaMapper mediaMapper(connectionString_);
+                    data::UserMapper userMapper(connectionString_);
 
-                if (user.hasAvatar()) {
-                    mediaMapper.disable(user.avatar);
+                    if (user.hasAvatar()) {
+                        mediaMapper.disable(user.avatar);
+                    }
+
+                    user.avatar.id = mediaMapper.insert(user.id, user.avatar);
+                    if (user.avatar.id != 0) {
+                        success = userMapper.updateAvatarId(user.id, user.avatar.id);
+                    }
+
+                    if (success) {
+                        session()["avatar"] = serializeMedia(user.avatar);
+
+                        image = toPublicUrl(user.avatar.file);  // returned in JSON response
+                    }
+                } catch(const cppcms::cppcms_error& e) {
+                    BOOSTER_ERROR(__func__) << "Could not upload file " << user.avatar.file << " - - " << e.trace();
                 }
-
-                user.avatar.id = mediaMapper.insert(user.id, user.avatar);
-                if (user.avatar.id != 0) {
-                    success = userMapper.updateAvatarId(user.id, user.avatar.id);
-                }
-
-                if (success) {
-                    session()["avatar"] = serializeMedia(user.avatar);
-
-                    image = toPublicUrl(user.avatar.file);  // returned in JSON response
-                }
-            } catch(const cppcms::cppcms_error& e) {
-                BOOSTER_ERROR(__func__) << "Could not upload file " << user.avatar.file << " - - " << e.trace();
             }
         }
 

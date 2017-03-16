@@ -40,7 +40,8 @@ namespace data {
         std::string toString() const {
             std::ostringstream oss;
             oss << "{ id: " << id << ", type: " << type << ", label: " << label
-                << ", file: " << file;
+                << ", file: " << file << ", contentType: " << contentType
+                << ", length: " << length << " }";
             return oss.str();
         }
     };

@@ -46,8 +46,9 @@ CREATE TABLE `media` (
   `md5sum` varchar(100) DEFAULT NULL,
   `creator_id` int(9) unsigned NOT NULL,
   `creation` datetime NOT NULL,
+  `enabled` tinyint(1) unsigned zerofill NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`creator_id`),
+  KEY `creator_id` (`creator_id`),
   CONSTRAINT `creator_id` FOREIGN KEY (`creator_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -192,4 +193,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-13 23:05:28
+-- Dump completed on 2017-03-14 20:28:53

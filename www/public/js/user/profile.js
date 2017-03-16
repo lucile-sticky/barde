@@ -30,7 +30,10 @@ $(document).ready(function() {
                         var json = JSON.parse(response);
                         if (json.success) {
                             avatar.find('img').attr('src', json.image);
+                        } else {
+                            alert(json.message);
                         }
+
                     }
                 });
             });

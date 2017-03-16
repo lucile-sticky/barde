@@ -30,7 +30,8 @@ set(PLAYLISTS_SRC
     app/user.cpp
     app/util/pathMethods.cpp
     app/util/stringMethods.cpp
-    app/validators/songValidator.cpp
+    app/validator/imageValidator.cpp
+    app/validator/songValidator.cpp
     data/dbMapper.cpp
     data/artistMapper.cpp
     data/mediaMapper.cpp

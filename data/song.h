@@ -23,6 +23,13 @@ namespace data {
         SongVote vote;
 
         Song() : showVideo(false), proposer(""), position(0)  {}
+
+        std::string toString() const {
+            std::ostringstream oss;
+            oss << "{ id: " << id << ", title: " << title << ", artist: " << artist.name
+                << ", playlist: " << playlist.id << " }";
+            return oss.str();
+        }
 	};
 
 }   // namespace data

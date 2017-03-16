@@ -1,5 +1,7 @@
 #include "songValidator.h"
 
+#include <booster/log.h>
+
 #include <sstream>
 
 
@@ -30,6 +32,11 @@ namespace app { namespace validator {
         }
 
         lastMessage_ = message.str();
+
+        if (!result) {
+            BOOSTER_WARNING(__func__) << lastMessage_ << " -- " << song_.toString();
+        }
+
         return result;
     }
 

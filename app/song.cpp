@@ -5,7 +5,7 @@
 #include <booster/log.h>
 
 #include <app/playlist.h>
-#include <app/validators/songValidator.h>
+#include <app/validator/songValidator.h>
 
 #include <data/artistMapper.h>
 #include <data/playlistMapper.h>
