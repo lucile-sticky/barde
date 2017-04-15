@@ -280,7 +280,7 @@ namespace app {
                 std::ostringstream msg;
                 try {
                     std::string imageFullPath = toFullPath(uploadFileName);
-                    imageFile->save_to(uploadFileName);
+                    imageFile->save_to(imageFullPath);
                     BOOSTER_INFO(__func__) << "Uploaded file " << imageFullPath;
 
                     data::PlaylistMapper playlistMapper(connectionString_);
