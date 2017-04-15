@@ -272,14 +272,13 @@ namespace app {
                 playlist.name = newPlaylist.input.name.value();
 
                 file* imageFile = newPlaylist.input.image.value().get();
-                std::string uploadFileName = toUploadRelativePath(imageFile);
-                playlist.image = uploadFileName;
+                playlist.image = toUploadRelativePath(imageFile);
 
                 playlist.description = newPlaylist.input.description.value();
 
                 std::ostringstream msg;
                 try {
-                    std::string imageFullPath = toFullPath(uploadFileName);
+                    std::string imageFullPath = toFullPath(playlist.image);
                     imageFile->save_to(imageFullPath);
                     BOOSTER_INFO(__func__) << "Uploaded file " << imageFullPath;
 
@@ -296,7 +295,7 @@ namespace app {
                         newPlaylist.input.clear();
                     }
                 } catch(const cppcms::cppcms_error& e) {
-                    msg << "Could not upload file " << uploadFileName;
+                    msg << "Could not upload file " << playlist.image;
                     newPlaylist.alerts.errors.push_back(msg.str());
                     BOOSTER_ERROR(__func__) << msg.str() << " - - " << e.trace();
                 }

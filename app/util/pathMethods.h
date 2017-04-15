@@ -10,6 +10,8 @@ namespace app { namespace util {
     public:
         static std::string combine(const std::string& directoryPath, const std::string& fileName);
         static std::string combine(const std::string& directoryPath, const std::string& directoryName, const std::string& fileName);
+
+        static std::string getExtension(const std::string fileName);
     };
 }}
 

@@ -34,6 +34,7 @@ namespace app {
         void forbidAccess(const data::User& user);
 
         std::string toUploadRelativePath(const cppcms::http::file* uploadedFile) const;
+        std::string toUploadRelativePath(const cppcms::http::file* uploadedFile, const std::string forceFilename) const;
         std::string toFullPath(const std::string& relativePath) const;
         std::string toPublicUrl(const std::string& relativePath) const;
 

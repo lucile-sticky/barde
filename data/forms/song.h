@@ -9,7 +9,8 @@ namespace data {
 	struct SongForm:public cppcms::form {
 		cppcms::widgets::text artist;
 		cppcms::widgets::text title;
-		cppcms::widgets::regex_field file;
+		cppcms::widgets::file newFile;
+		cppcms::widgets::hidden file;
 		cppcms::widgets::regex_field url;
 		cppcms::widgets::checkbox showVideo;
 		cppcms::widgets::numeric<unsigned short> position;
@@ -28,13 +29,15 @@ namespace data {
 			title.message(translate("Title:"));
 			title.limits(1, 100);
 
+			newFile.id("new_file");
+			newFile.message(translate("File:"));
+			newFile.limits(1000, 10000000);
+            newFile.mime(booster::regex("(audio|video)/.+"));
+
 			file.id("file");
-			file.message(translate("file Address:"));
-            file.regex(booster::regex("/media/.+ogg$"));  // fix me for better files
-			file.limits(8, 200);
 
 			url.id("url");
-			url.message(translate("URL Address:"));
+			url.message(translate("URL:"));
             url.regex(booster::regex("^https?://.+"));  // fix me for better URLs
             url.value("http://");
 			url.limits(8, 200);
@@ -65,6 +68,7 @@ namespace data {
         EditSongForm() : SongForm() {
 			inputs.add(artist);
 			inputs.add(title);
+			inputs.add(newFile);
 			inputs.add(file);
 			inputs.add(url);
 			inputs.add(showVideo);

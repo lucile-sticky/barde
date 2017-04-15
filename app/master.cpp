@@ -106,6 +106,18 @@ namespace app {
         return result;
     }
 
+    std::string Master::toUploadRelativePath(const cppcms::http::file* uploadedFile, const std::string forceFilename) const {
+        std::string newFilename = forceFilename;
+        newFilename += util::PathMethods::getExtension(uploadedFile->filename());
+
+        std::string result = util::PathMethods::combine(
+                UPLOAD_PATH,
+                util::StringMethods::toSnakeCase(newFilename));
+
+        BOOSTER_DEBUG(__func__) << result;
+        return result;
+    }
+
     std::string Master::toFullPath(const std::string& relativePath) const {
         std::string result = util::PathMethods::combine(
                 page_.publicPath,

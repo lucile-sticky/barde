@@ -6,6 +6,7 @@
 
 #include <app/playlist.h>
 #include <app/validator/songValidator.h>
+#include <app/util/stringMethods.h>
 
 #include <data/artistMapper.h>
 #include <data/playlistMapper.h>
@@ -70,7 +71,7 @@ namespace app {
         data::SongMapper songMapper(connectionString_);
         data::Song song;
 
-        if (request().request_method() == "POST") {
+    if (request().request_method() == "POST") {
             pageSong.input.load(context());
             if(! pageSong.input.validate()) {
                 pageSong.alerts.errors.push_back("Invalid or missing fields!");
@@ -78,17 +79,40 @@ namespace app {
                 song.id = std::stoi(songId);
                 song.title = pageSong.input.title.value();
                 song.artist.name = pageSong.input.artist.value();
-                song.file = pageSong.input.file.value();
+
+                file* songFile = 0;
+                if (pageSong.input.newFile.set()) {
+                    songFile = pageSong.input.newFile.value().get();
+                    song.file = toUploadRelativePath(songFile, song.artist.name + '-' + song.title);
+                } else {
+                    song.file = pageSong.input.file.value();
+                }
+
                 song.url = pageSong.input.url.value();
                 song.showVideo = pageSong.input.showVideo.value();
                 song.position = pageSong.input.position.value();
-                if (! update(song)) {
-                    pageSong.alerts.errors.push_back("Could not modify the song, please retry later!");
-                } else {
-                    std::ostringstream message;
-                    message << "Successfully modified \"" << song.title << "\".";
-                    pageSong.alerts.success.push_back(message.str());
-                    BOOSTER_INFO(__func__) << message.str();
+
+                std::ostringstream msg;
+                try {
+                    if (songFile) {
+                        std::string songFullPath = toFullPath(song.file);
+                        songFile->save_to(songFullPath);
+                        BOOSTER_INFO(__func__) << "Uploaded file " << songFullPath;
+                    }
+
+                    if (! update(song)) {
+                        msg << "Could not modifiy \"" << song.title << "\".";
+                        pageSong.alerts.errors.push_back(msg.str());
+                        BOOSTER_ERROR(__func__) << msg.str();
+                    } else {
+                        msg << "Successfully modified \"" << song.title << "\".";
+                        pageSong.alerts.success.push_back(msg.str());
+                        BOOSTER_INFO(__func__) << msg.str();
+                    }
+                } catch(const cppcms::cppcms_error& e) {
+                    msg << "Could not upload file " << song.file;
+                    pageSong.alerts.errors.push_back(msg.str());
+                    BOOSTER_ERROR(__func__) << msg.str() << " - - " << e.trace();
                 }
             }
         } else if (!songId.empty() && songMapper.loadSong(song, songId)) {
@@ -223,8 +247,6 @@ namespace app {
     }
 
     bool Song::update(const data::Song& song) {
-        bool success = false;
-
         data::ArtistMapper artistMapper(connectionString_);
         data::SongMapper songMapper(connectionString_);
 
@@ -233,8 +255,11 @@ namespace app {
         if (song2.artist.empty()) {
             BOOSTER_DEBUG(__func__) << "Missing artist for song " << song.id;
         } else {
-            success = artistMapper.update(song2.artist) | songMapper.update(song2);
+            artistMapper.update(song2.artist);
+            songMapper.update(song2);
+            return true;
         }
+        return false;
     }
 
     unsigned int Song::loadSongArtistId(unsigned int songId) {
